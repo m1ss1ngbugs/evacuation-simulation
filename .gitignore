@@ -1,0 +1,27 @@
+# --- Kompilaty i pliki binarne Javy ---
+*.class
+*.log
+*.jar
+*.war
+
+# --- Foldery budowania projektu (Maven / Gradle) ---
+target/
+build/
+bin/
+out/
+
+# --- Pliki konfiguracyjne VS Code ---
+.vscode/
+*.code-workspace
+
+# --- Pliki konfiguracyjne innych IDE (na wypadek, gdyby kolega używał czegoś innego) ---
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.factorypath
+
+# --- Systemowe pliki śmieci ---
+Thumbs.db
+.DS_Store
