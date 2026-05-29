@@ -1,5 +1,7 @@
 package evacuation.sim.model;
 
+import evacuation.sim.agent.Agent;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
