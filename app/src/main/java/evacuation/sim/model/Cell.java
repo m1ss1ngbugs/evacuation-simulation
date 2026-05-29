@@ -7,12 +7,12 @@ public class Cell {
     private DynamicState dynamicState;
     private int visitCount;
 
-    public Cell(int logicalX, int logicalY) {
+    public Cell(int logicalX, int logicalY, BaseType baseType) {
         this.logicalX = logicalX;
         this.logicalY = logicalY;
-        baseType = BaseType.FLOOR;
-        dynamicState = DynamicState.NONE;
-        visitCount = 0;
+        this.baseType = baseType;
+        this.dynamicState = DynamicState.NONE;
+        this.visitCount = 0;
     }
 
     public int getLogicalX() {
