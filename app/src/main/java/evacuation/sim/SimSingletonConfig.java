@@ -1,6 +1,8 @@
 package evacuation.sim;
 
-public class SimConfig {
+public class SimSingletonConfig {
+    private static SimSingletonConfig instance;
+
     private float maxEvacuationTime;
     private int initialEvacueeCount;
     private float leaderRatio;
@@ -15,7 +17,7 @@ public class SimConfig {
     private float fireSpreadInterval;
     private float smokeSpreadInterval;
 
-    public SimConfig() {
+    private SimSingletonConfig() {
         this.maxEvacuationTime = 600.0f;     // max 10 minutes simulation
         this.initialEvacueeCount = 50;       // 50 people to escape
         this.leaderRatio = 0.15f;            // 15% of leaders
@@ -35,8 +37,15 @@ public class SimConfig {
 
     }
 
-    public void loadFromGUI(){
+    public static SimSingletonConfig getInstance(){
+        if (instance == null){
+            instance = new SimSingletonConfig();
+        }
+        return instance;
+    }
 
+    public void loadFromGUI(){
+        // metoda potrzebuje implementacji w przyszłości, kiedy dojdziemy do interfejsu graficznego użytkownika
     }
 
     public float getMaxEvacuationTime() {
