@@ -17,8 +17,4 @@ public abstract class Hazard extends Agent {
     public float getDamagePerSecond() {
         return damagePerSecond;
     }
-
-    protected void setDamagePerSecond(float damagePerSecond) {
-        this.damagePerSecond = damagePerSecond;
-    }
 }
