@@ -34,7 +34,7 @@ public class Board {
         for (Agent agent : agentsFromSimulation) {
             // save coordinates of agent in the form of a key
             String key = agent.getLogicalX() + "," + agent.getLogicalY();
-            // if the agent is the first one on the cell
+            // if "coordinate" key is mentioned for the first time
             if (!spatialIndex.containsKey(key)) {
                 spatialIndex.put(key, new ArrayList<>());
             }
