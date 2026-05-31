@@ -16,6 +16,7 @@ public class SimSingletonConfig {
     private float socialVariance;
     private float fireSpreadInterval;
     private float smokeSpreadInterval;
+    private String mapFilePath;
 
     private SimSingletonConfig() {
         this.maxEvacuationTime = 600.0f;     // max 10 minutes simulation
@@ -34,7 +35,7 @@ public class SimSingletonConfig {
 
         this.fireSpreadInterval = 3.0f;      // fire spreads every 3 seconds
         this.smokeSpreadInterval = 1.5f;     // smoke spreads faster - every 1.5 seconds
-
+        this.mapFilePath = null;
     }
 
     public static SimSingletonConfig getInstance(){
@@ -48,6 +49,8 @@ public class SimSingletonConfig {
         // metoda potrzebuje implementacji w przyszłości, kiedy dojdziemy do interfejsu graficznego użytkownika
     }
 
+
+    // standard getters
     public float getMaxEvacuationTime() {
         return maxEvacuationTime;
     }
@@ -98,5 +101,9 @@ public class SimSingletonConfig {
 
     public float getSmokeSpreadInterval() {
         return smokeSpreadInterval;
+    }
+
+    public String getMapFilePath() {
+        return mapFilePath;
     }
 }

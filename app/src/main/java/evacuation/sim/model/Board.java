@@ -2,16 +2,14 @@ package evacuation.sim.model;
 
 import evacuation.sim.agent.Agent;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.io.IOException;
 
 public class Board {
@@ -21,10 +19,8 @@ public class Board {
     // A quick map (spatial indexing) that assigns each agent to a specific cell (updates every dt)
     private Map<String, List<Agent>> spatialIndex = new HashMap<>();
 
-    public Board(int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.grid = new Cell[width][height];
+    public Board(String mapFilePath) {
+        loadMapFromFile(mapFilePath);
     }
 
     // Method which updates spatial index (makes map: agent - position on the board)
@@ -75,13 +71,29 @@ public class Board {
 
     // method designed for loading a map from a text file
     public void loadMapFromFile(String path){
-        try(BufferedReader br = new BufferedReader(new FileReader(path))){
-            String line;
-            int y = 0;
-            while((line = br.readLine()) != null && y < height){
-                // we iterate through each character in a given line (X axis)
-                for(int x = 0; x < width; x++){
+        try {
+            // converts String path to Path path to the file and then reads and save all lines from the file
+            List<String> lines = Files.readAllLines(Paths.get(path));
+
+            // checks if the file is empty
+            if (lines.isEmpty()) {
+                throw new IOException("Plik mapy jest pusty!");
+            }
+
+            // learn the sizes directly from the file
+            this.height = lines.size();
+            this.width = lines.getFirst().length();
+            // initialize grid
+            this.grid = new Cell[width][height];
+
+            // a loop that converts characters to Cell objects
+            for (int y = 0; y < height; y++) {
+                String line = lines.get(y);
+                // iterate through each character in a given line (X axis)
+                for (int x = 0; x < width; x++) {
                     char c = line.charAt(x);
+
+                    // assigning tile type
                     BaseType type = switch (c) {
                         case '#' -> BaseType.WALL;
                         case 'E' -> BaseType.EXIT;
@@ -90,10 +102,9 @@ public class Board {
                     // initialization of a new cell
                     grid[x][y] = new Cell(x, y, type);
                 }
-                y++;
             }
-        } catch (IOException e){
-            System.err.println("Error during reading map from the file: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Błąd ładowania mapy, tworzę awaryjną planszę 10x10... " + e.getMessage());
             // generate default floor on error
             generateDefaultFloor();
         }
@@ -101,6 +112,9 @@ public class Board {
 
     // auxiliary method for loadMapFromFile method
     private void generateDefaultFloor() {
+        this.width = 10;
+        this.height = 10;
+        this.grid = new Cell[width][height];
         for(int y = 0; y <= height; y++){
             for(int x = 0; x <= width; x++){
                 if(grid[x][y] == null){
@@ -109,4 +123,15 @@ public class Board {
             }
         }
     }
+
+    // standard getters
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
 }
