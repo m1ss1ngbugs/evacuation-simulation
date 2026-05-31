@@ -1,6 +1,10 @@
 package evacuation.sim.agent.hazard;
 
+import evacuation.sim.agent.Agent;
+import evacuation.sim.agent.Damageable;
 import evacuation.sim.model.Board;
+
+import java.util.List;
 
 public class Fire extends Hazard{
     private float spreadInterval;
@@ -18,8 +22,24 @@ public class Fire extends Hazard{
     }
 
     @Override
-    public void update(Board board, float ft){
-        // potrzeba napisania logiki updatu w kroku dt
+    public void update(Board board, float dt) {
+
+        // ta metoda posiada jeszcze niepełną logikę, potrzebuje dopisania
+
+
+        // damage causing
+        // downloading the list of agents
+        List<Agent> agentsAtCell = board.getAgentsAt(this.getLogicalX(), this.getLogicalY());
+        // review all agents in the field
+        for (Agent agent : agentsAtCell) {
+            // check if agents implements Damageable interface
+            if (agent instanceof Damageable) {
+                // calculate damage for this frame
+                float damageForThisTick = this.getDamagePerSecond() * dt;
+                // agent type casting to Damageable interface and cause damage
+                ((Damageable) agent).takeDamage(damageForThisTick);
+            }
+        }
     }
 
     private void emitSmoke(Board board){

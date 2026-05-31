@@ -47,8 +47,15 @@ public abstract class Evacuee extends Agent implements Damageable, PathfindingSt
     }
 
     @Override
-    public void takeDamage(float amount){
-        // napisać metodę odpowiadającą za otrzymanie obrażeń przez agentów
+    public void takeDamage(float amount) {
+        // health reduce by a certain amount
+        float newHealth = this.getHealth() - amount;
+        this.setHealth(newHealth);
+
+        // logic checking agent death
+        if (this.getHealth() <= 0) {
+            this.deactivate();
+        }
     }
 
     protected abstract void handlePanic(float dt);
