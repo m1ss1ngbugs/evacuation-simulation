@@ -31,7 +31,7 @@ public abstract class Evacuee extends Agent implements Damageable, PathfindingSt
 
     @Override
     public void update(Board board, float dt){
-
+        // napisać logikę tego, co musi robić ewakuant
     }
 
     protected void move(float dt){
@@ -109,6 +109,10 @@ public abstract class Evacuee extends Agent implements Damageable, PathfindingSt
 
     public List<Cell> getPlannedPath() {
         return plannedPath;
+    }
+
+    protected void setPlannedPath(List<Cell> plannedPath) {
+        this.plannedPath = plannedPath;
     }
 
     public Cell[][] getMentalMap() {
