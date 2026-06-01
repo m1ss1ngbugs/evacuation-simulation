@@ -1,8 +1,12 @@
 package evacuation.sim.agent.hazard;
 
+import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.agent.Agent;
 import evacuation.sim.agent.Damageable;
+import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Board;
+import evacuation.sim.model.Cell;
+import evacuation.sim.model.DynamicState;
 
 import java.util.List;
 
@@ -42,8 +46,19 @@ public class Fire extends Hazard{
         }
     }
 
-    private void emitSmoke(Board board){
-        // potrzeba napisania logiki emitowania dymu
+    private void emitSmoke(Board board) {
+        // gets neighbors of this cell
+        List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+
+        for (Cell cell : neighbors) {
+            if (cell.getBaseType() == BaseType.FLOOR && cell.getDynamicState() == DynamicState.NONE) {
+
+                // changes cell state to smoked
+                cell.setDynamicState(DynamicState.SMOKE);
+
+                // trzeba dopisać później
+            }
+        }
     }
 
     private void propagate(Board board){

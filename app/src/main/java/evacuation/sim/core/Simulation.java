@@ -31,10 +31,10 @@ public class Simulation {
         this.agents = new ArrayList<>();
 
         // później trzeba też dopisać tę metodę, która stworzy ludzi i ogień na starcie symulacji
-        spawnInitialAgents();
+        initialize();
 
         // initialize the statistics class, passing it the starting data
-        int totalPeople = this.config.getInitialEvacueeCount();
+        int totalPeople = this.config.getInitialEvacueesCount();
         this.stats = new Statistics(totalPeople);
     }
 
@@ -42,6 +42,7 @@ public class Simulation {
         // zadania inicjalizacyjne
         // Przygotowuje środowisko – ładuje planszę, tworzy agentów i ustawia
         // parametry początkowe
+        spawnInitialAgents();
     }
 
     public void spawnInitialAgents(){
