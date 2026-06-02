@@ -1,6 +1,11 @@
 package evacuation.sim.agent.hazard;
 
 import evacuation.sim.model.Board;
+import evacuation.sim.model.BaseType;
+import evacuation.sim.model.Cell;
+import evacuation.sim.model.DynamicState;
+import evacuation.sim.agent.Agent;
+import java.util.List;
 
 public class Smoke extends Hazard{
     private float density;
@@ -17,15 +22,62 @@ public class Smoke extends Hazard{
 
     @Override
     public void update(Board board, float dt){
-        // TODO: potrzeba napisania logiki updatu w kroku dt
+        fade(dt);
+
+        if (isReadyToSpread(dt) && this.density > this.duplicationThreshold) {
+            duplicate(board); 
+        }
     }
 
     private void duplicate(Board board){
-        // TODO: potrzeba napisania logiki duplikacji
+        List<Cell> neighborCells = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+
+        for (Cell cell : neighborCells) {
+
+            if (cell.getBaseType() == BaseType.WALL) {
+                continue; // Skip walls
+            }
+
+            int nx = cell.getLogicalX();
+            int ny = cell.getLogicalY();
+
+            Smoke existingSmoke = null;
+            List<Agent> agentsAtCell = board.getAgentsAt(nx, ny);
+
+            for (Agent agent : agentsAtCell) {
+                if (agent instanceof Smoke) {
+                    existingSmoke = (Smoke) agent;
+                    break;
+                }
+            }
+
+            if (existingSmoke != null) {
+
+                float newDensity = existingSmoke.getDensity() + this.density * 0.4f;
+                existingSmoke.density = Math.min(newDensity, 1.0f); // Cap density at 1.0f
+            } else {
+                int newId = (int) (Math.random() * 1000000);
+
+                Smoke newSmoke = new Smoke.Builder()
+                        .setId(newId)
+                        .setPosition(nx, ny)
+                        .setDensity(this.density * 0.4f) // New smoke starts with a fraction of the original density
+                        .setFadeRatePerSecond(this.fadeRatePerSecond)
+                        .setSpreadInterval(this.getSpreadInterval())
+                        .setDuplicationThreshold(this.duplicationThreshold)
+                        .setDamagePerSecond(this.getDamagePerSecond())
+                        .build();
+
+                //TODO: dodać newSmoke do Simulation, żeby to działało
+            }
+        }
     }
 
     private void fade(float dt) {
-        // TODO: potrzeba napisania logiki zanikania dymu
+        this.density -= this.fadeRatePerSecond * dt; // decrease density based on fade rate and time
+        if (this.density < 0.0f) {
+            this.density = 0.0f; // ensure density does not go below zero
+        }
     }
 
     public float getDensity(){
