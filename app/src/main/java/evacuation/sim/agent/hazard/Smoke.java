@@ -3,7 +3,6 @@ package evacuation.sim.agent.hazard;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Cell;
-import evacuation.sim.model.DynamicState;
 import evacuation.sim.agent.Agent;
 import java.util.List;
 

@@ -89,4 +89,18 @@ public class AgentFactory {
                 .build();
 
     }
+
+    // Auxiliary method for randomizing agent type
+    public static Agent createRandomEvacuee(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
+        // randomly select the agent type (from 0.0 to 1.0)
+        double randomType = Math.random();
+        // decide who the agent will be, based on configuration
+        if (randomType < config.getLeaderRatio()) {
+            return createLeader(logicalX, logicalY, pathfinder);
+        } else if (randomType < config.getLeaderRatio() + config.getPanickedRatio()) {
+            return createPanicked(logicalX, logicalY, pathfinder);
+        } else {
+            return createFollower(logicalX, logicalY, pathfinder);
+        }
+    }
 }

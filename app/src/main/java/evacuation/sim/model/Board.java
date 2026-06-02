@@ -69,6 +69,30 @@ public class Board {
         return neighbors;
     }
 
+    // Auxiliary method for finding a safe starting point
+    public Cell getRandomEmptyFloor() {
+        int maxAttempts = 1000;
+        for (int i = 0; i < maxAttempts; i++) {
+            // draw the coordinates
+            int random_x = (int) (Math.random() * this.width);
+            int random_y = (int) (Math.random() * this.height);
+
+            Cell cell = getCell(random_x, random_y);
+
+            // cheks if agent can be placed here
+            if (cell != null && cell.getBaseType() == BaseType.FLOOR
+                    && cell.getDynamicState() == DynamicState.NONE) {
+
+                // check if the Cell is Empty from other Agents
+                if (getAgentsAt(random_x, random_y).isEmpty()) {
+                     return cell; // place to spawn was found
+
+                 }
+            }
+        }
+        return null;  // place can't be found after 1000 attempts
+    }
+
     // method designed for loading a map from a text file
     public void loadMapFromFile(String path){
         try {
