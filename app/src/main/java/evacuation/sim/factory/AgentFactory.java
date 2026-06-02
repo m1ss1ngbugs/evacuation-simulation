@@ -10,6 +10,7 @@ import evacuation.sim.routing.PathfindingStrategy;
 
 public class AgentFactory {
     private static int nextId = 0;
+    static SimSingletonConfig config = SimSingletonConfig.getInstance();
 
     private AgentFactory() {}
 
@@ -21,7 +22,7 @@ public class AgentFactory {
 
     public static Agent createFire(int logicalX, int logicalY) {
         int id = getNextId();
-        SimSingletonConfig config = SimSingletonConfig.getInstance();
+
         return new Fire.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
@@ -33,7 +34,6 @@ public class AgentFactory {
 
     public static Agent createSmoke(int logicalX, int logicalY, float density) {
         int id = getNextId();
-        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Smoke.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
@@ -49,7 +49,6 @@ public class AgentFactory {
 
     public static Agent createLeader(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
-        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Leader.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
@@ -62,7 +61,6 @@ public class AgentFactory {
 
     public static Agent createFollower(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
-        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Follower.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
@@ -79,7 +77,6 @@ public class AgentFactory {
 
     public static Agent createPanicked(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
-        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Panicked.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
