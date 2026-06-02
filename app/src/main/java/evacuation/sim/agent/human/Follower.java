@@ -16,14 +16,14 @@ public class Follower extends Evacuee {
 
     @Override
     protected void handlePanic(float dt){
-        // logika radzenia sobie z paniką dla followera
+        // TODO: logika radzenia sobie z paniką dla followera
     }
 
     @Override
     protected boolean shouldPanic(){
         boolean shouldPanic = true;
 
-        // napisać logikę tego, kiedy agent musi panikować, a kiedy nie
+        // TODO: napisać logikę tego, kiedy agent musi panikować, a kiedy nie
 
         return shouldPanic;
     }

@@ -77,7 +77,7 @@ public class SimSingletonConfig {
     }
 
     public void loadFromGUI(){
-        // metoda potrzebuje implementacji w przyszłości, kiedy dojdziemy do interfejsu graficznego użytkownika
+        // TODO: metoda potrzebuje implementacji w przyszłości, kiedy dojdziemy do interfejsu graficznego użytkownika
     }
 
 

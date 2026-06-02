@@ -11,14 +11,14 @@ public class Panicked extends Evacuee{
 
     @Override
     protected void handlePanic(float dt){
-        // dopisać to, jak ten agent będzie radził sobie z paniką
+        // TODO: dopisać to, jak ten agent będzie radził sobie z paniką
     }
 
     @Override
     protected boolean shouldPanic(){
         boolean shouldPanic = true;
 
-        // napisać logikę tego, kiedy agent musi panikować, a kiedy nie
+        // TODO: napisać logikę tego, kiedy agent musi panikować, a kiedy nie
 
         return shouldPanic;
     }

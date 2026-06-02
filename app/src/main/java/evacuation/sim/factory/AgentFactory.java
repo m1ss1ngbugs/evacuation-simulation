@@ -21,25 +21,27 @@ public class AgentFactory {
 
     public static Agent createFire(int logicalX, int logicalY) {
         int id = getNextId();
+        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Fire.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
-                .setSpreadInterval(SimSingletonConfig.getInstance().getFireSpreadInterval())
-                .setDamagePerSecond(SimSingletonConfig.getInstance().getFireDamagePerSecond())
-                .setIncubationDelay(SimSingletonConfig.getInstance().getFireIncubationDelay())
+                .setSpreadInterval(config.getFireSpreadInterval())
+                .setDamagePerSecond(config.getFireDamagePerSecond())
+                .setIncubationDelay(config.getFireIncubationDelay())
                 .build();
     }
 
     public static Agent createSmoke(int logicalX, int logicalY, float density) {
         int id = getNextId();
+        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Smoke.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
                 .setDensity(density)
-                .setFadeRatePerSecond(SimSingletonConfig.getInstance().getSmokeFadeRatePerSecond())
-                .setSpreadInterval(SimSingletonConfig.getInstance().getSmokeSpreadInterval())
-                .setDuplicationThreshold(SimSingletonConfig.getInstance().getSmokeDuplicationThreshold())
-                .setDamagePerSecond(SimSingletonConfig.getInstance().getSmokeDamagePerSecond())
+                .setFadeRatePerSecond(config.getSmokeFadeRatePerSecond())
+                .setSpreadInterval(config.getSmokeSpreadInterval())
+                .setDuplicationThreshold(config.getSmokeDuplicationThreshold())
+                .setDamagePerSecond(config.getSmokeDamagePerSecond())
                 .build();
     }
 
@@ -47,45 +49,45 @@ public class AgentFactory {
 
     public static Agent createLeader(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
+        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Leader.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
-                .setHealth(SimSingletonConfig.getInstance().getEvacueeHealth())
-                .setBaseSpeed(SimSingletonConfig.getInstance().getMeanBaseSpeed())
-                .setReactionTime(SimSingletonConfig.getInstance().getEvacueeReactionTime())
-                // TODO: otrzymuje średni: MeanPanicThreshold - potencjalnie poprawić
-                .setPanicThreshold(SimSingletonConfig.getInstance().getMeanPanicThreshold())
+                .setHealth(config.getEvacueeHealth())
+                .setBaseSpeed(config.getMeanBaseSpeed())
+                .setReactionTime(config.getEvacueeReactionTime())
                 .setPathfinder(pathfinder)
                 .build();
     }
 
     public static Agent createFollower(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
+        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Follower.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
-                .setHealth(SimSingletonConfig.getInstance().getEvacueeHealth())
-                .setBaseSpeed(SimSingletonConfig.getInstance().getMeanBaseSpeed())
-                .setReactionTime(SimSingletonConfig.getInstance().getEvacueeReactionTime())
+                .setHealth(config.getEvacueeHealth())
+                .setBaseSpeed(config.getMeanBaseSpeed())
+                .setReactionTime(config.getEvacueeReactionTime())
                 // TODO: otrzymuje średni: MeanPanicThreshold - potencjalnie poprawić
-                .setPanicThreshold(SimSingletonConfig.getInstance().getMeanPanicThreshold())
+                .setPanicThreshold(config.getMeanPanicThreshold())
                 .setPathfinder(pathfinder)
                 // TODO: otrzymuje średni: MeanSocialFactor - potencjalnie poprawić
-                .setSocialFactor(SimSingletonConfig.getInstance().getMeanSocialFactor())
+                .setSocialFactor(config.getMeanSocialFactor())
                 .build();
     }
 
     public static Agent createPanicked(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
-        // TODO: podłączyć EvacueeBuilder tu w przyszłości
+        SimSingletonConfig config = SimSingletonConfig.getInstance();
         return new Panicked.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
-                .setHealth(SimSingletonConfig.getInstance().getEvacueeHealth())
-                .setBaseSpeed(SimSingletonConfig.getInstance().getMeanBaseSpeed())
-                .setReactionTime(SimSingletonConfig.getInstance().getEvacueeReactionTime())
+                .setHealth(config.getEvacueeHealth())
+                .setBaseSpeed(config.getMeanBaseSpeed())
+                .setReactionTime(config.getEvacueeReactionTime())
                 // TODO: otrzymuje średni: MeanPanicThreshold - potencjalnie poprawić
-                .setPanicThreshold(SimSingletonConfig.getInstance().getMeanPanicThreshold())
+                .setPanicThreshold(config.getMeanPanicThreshold())
                 .setPathfinder(pathfinder)
                 .build();
 

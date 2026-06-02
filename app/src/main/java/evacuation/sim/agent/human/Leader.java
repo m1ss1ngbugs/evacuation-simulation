@@ -8,8 +8,8 @@ import java.util.List;
 public class Leader extends Evacuee{
 
     private Leader(int id, int logicalX, int logicalY, float health, float baseSpeed,
-                    PathfindingStrategy pathfinder, float panicLevel, float reactionTime) {
-        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicLevel, reactionTime);
+                    PathfindingStrategy pathfinder, float panicThreshold , float reactionTime) {
+        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicThreshold, reactionTime);
     }
 
     @Override
@@ -66,17 +66,13 @@ public class Leader extends Evacuee{
             return this;
         }
 
-        public Builder setPanicThreshold(float panicThreshold) {
-            this.panicThreshold = panicThreshold;
-            return this;
-        }
-
         public Builder setPathfinder(PathfindingStrategy pathfinder) {
             this.pathfinder = pathfinder;
             return this;
         }
 
         public Leader build(){
+            float panicThreshold = 0.0f;
             return new Leader(id, logicalX, logicalY, health,
                     baseSpeed, pathfinder, panicThreshold, reactionTime);
         }
