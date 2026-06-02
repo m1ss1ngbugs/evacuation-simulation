@@ -37,7 +37,7 @@ public class Leader extends Evacuee{
         private float health;
         private float baseSpeed;
         private float reactionTime;
-        private float panicLevel;
+        private float panicThreshold;
         private PathfindingStrategy pathfinder;
 
         public Builder setId(int id) {
@@ -66,8 +66,8 @@ public class Leader extends Evacuee{
             return this;
         }
 
-        public Builder setPanicLevel(float panicLevel) {
-            this.panicLevel = panicLevel;
+        public Builder setPanicThreshold(float panicThreshold) {
+            this.panicThreshold = panicThreshold;
             return this;
         }
 
@@ -78,7 +78,7 @@ public class Leader extends Evacuee{
 
         public Leader build(){
             return new Leader(id, logicalX, logicalY, health,
-                    baseSpeed, pathfinder, panicLevel, reactionTime);
+                    baseSpeed, pathfinder, panicThreshold, reactionTime);
         }
     }
 }

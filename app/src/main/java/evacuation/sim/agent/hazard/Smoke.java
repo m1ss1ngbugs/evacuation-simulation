@@ -5,31 +5,27 @@ import evacuation.sim.model.Board;
 public class Smoke extends Hazard{
     private float density;
     private float fadeRatePerSecond;
-    private float spreadInterval;
-    private float internalTimer;
-    private float threshold;
+    private float duplicationThreshold;
 
     private Smoke(int id, int logicalX, int logicalY, float damagePerSecond,
-                 float density, float fadeRatePerSecond, float spreadInterval, float threshold) {
-        super(id, logicalX, logicalY, damagePerSecond);
+                 float density, float fadeRatePerSecond, float spreadInterval, float duplicationThreshold) {
+        super(id, logicalX, logicalY, damagePerSecond, spreadInterval);
         this.density = density;
         this.fadeRatePerSecond = fadeRatePerSecond;
-        this.spreadInterval = spreadInterval;
-        this.threshold = threshold;
-        this.internalTimer = 0.0f;
+        this.duplicationThreshold = duplicationThreshold;
     }
 
     @Override
     public void update(Board board, float dt){
-        // potrzeba napisania logiki updatu w kroku dt
+        // TODO: potrzeba napisania logiki updatu w kroku dt
     }
 
     private void duplicate(Board board){
-        // potrzeba napisania logiki duplikacji
+        // TODO: potrzeba napisania logiki duplikacji
     }
 
     private void fade(float dt) {
-        // potrzeba napisania logiki zanikania dymu
+        // TODO: potrzeba napisania logiki zanikania dymu
     }
 
     public float getDensity(){
@@ -43,7 +39,7 @@ public class Smoke extends Hazard{
         private float density;
         private float fadeRatePerSecond;
         private float spreadInterval;
-        private float threshold;
+        private float duplicationThreshold;
         private float damagePerSecond;
 
         public Builder setId(int id) {
@@ -72,8 +68,8 @@ public class Smoke extends Hazard{
             return this;
         }
 
-        public Builder setThreshold(float threshold) {
-            this.threshold = threshold;
+        public Builder setDuplicationThreshold(float duplicationThreshold) {
+            this.duplicationThreshold = duplicationThreshold;
             return this;
         }
 
@@ -84,7 +80,7 @@ public class Smoke extends Hazard{
 
         public Smoke build(){
             return new Smoke(id, logicalX, logicalY, damagePerSecond,
-                    density, fadeRatePerSecond, spreadInterval, threshold);
+                    density, fadeRatePerSecond, spreadInterval, duplicationThreshold);
         }
     }
 }

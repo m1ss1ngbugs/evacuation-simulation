@@ -3,12 +3,10 @@ package evacuation.sim.agent.human;
 import evacuation.sim.routing.PathfindingStrategy;
 
 public class Panicked extends Evacuee{
-    private float panicThreshold;
 
     private Panicked(int id, int logicalX, int logicalY, float health, float baseSpeed,
                     PathfindingStrategy pathfinder, float panicLevel, float reactionTime, float panicThreshold) {
         super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicLevel, reactionTime);
-        this.panicThreshold = panicThreshold;
     }
 
     @Override
@@ -32,9 +30,8 @@ public class Panicked extends Evacuee{
         private float health;
         private float baseSpeed;
         private float reactionTime;
-        private float panicLevel;
-        private PathfindingStrategy pathfinder;
         private float panicThreshold;
+        private PathfindingStrategy pathfinder;
 
         public Builder setId(int id) {
             this.id = id;
@@ -62,11 +59,6 @@ public class Panicked extends Evacuee{
             return this;
         }
 
-        public Builder setPanicLevel(float panicLevel) {
-            this.panicLevel = panicLevel;
-            return this;
-        }
-
         public Builder setPathfinder(PathfindingStrategy pathfinder) {
             this.pathfinder = pathfinder;
             return this;
@@ -79,7 +71,7 @@ public class Panicked extends Evacuee{
 
         public Panicked build(){
             return new Panicked(id, logicalX, logicalY, health,
-                    baseSpeed, pathfinder, panicLevel, reactionTime, panicThreshold);
+                    baseSpeed, pathfinder, panicThreshold, reactionTime, panicThreshold);
         }
     }
 }

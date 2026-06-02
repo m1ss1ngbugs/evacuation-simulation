@@ -40,7 +40,7 @@ public class Follower extends Evacuee {
         private float health;
         private float baseSpeed;
         private float reactionTime;
-        private float panicLevel;
+        private float panicThreshold;
         private PathfindingStrategy pathfinder;
         private float socialFactor;
 
@@ -70,8 +70,8 @@ public class Follower extends Evacuee {
             return this;
         }
 
-        public Builder setPanicLevel(float panicLevel) {
-            this.panicLevel = panicLevel;
+        public Builder setPanicThreshold(float panicThreshold) {
+            this.panicThreshold = panicThreshold;
             return this;
         }
 
@@ -87,7 +87,7 @@ public class Follower extends Evacuee {
 
         public Follower build(){
             return new Follower(id, logicalX, logicalY, health,
-                    baseSpeed, pathfinder, panicLevel, reactionTime, socialFactor);
+                    baseSpeed, pathfinder, panicThreshold, reactionTime, socialFactor);
         }
     }
 

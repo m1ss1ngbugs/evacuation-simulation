@@ -10,23 +10,25 @@ import java.util.List;
 
 public abstract class Evacuee extends Agent implements Damageable, PathfindingStrategy {
     private float health;
-    private float baseSpeed;
+    private final float baseSpeed;
     private float currentSpeed;
-    private float reactionTime;
+    private final float reactionTime;
     private float panicLevel;
+    private float panicThreshold;
     private float internalTimer;
     private Cell[][] mentalMap;
     private List<Cell> plannedPath;
     private PathfindingStrategy pathfinder;
 
     public Evacuee(int id, int logicalX, int logicalY, float health, float baseSpeed,
-                   PathfindingStrategy pathfinder, float panicLevel, float reactionTime) {
+                   PathfindingStrategy pathfinder, float panicThreshold, float reactionTime) {
         super(id, logicalX, logicalY);
         this.health = health;
         this.baseSpeed = baseSpeed;
         this.pathfinder = pathfinder;
-        this.panicLevel = panicLevel;
+        this.panicLevel = 0.0f;
         this.reactionTime = reactionTime;
+        this.panicThreshold = panicThreshold;
     }
 
     @Override
