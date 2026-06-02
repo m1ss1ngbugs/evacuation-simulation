@@ -11,9 +11,9 @@ public class AStarPathfinder implements PathfindingStrategy{
     private static class Node implements Comparable<Node> {
         Cell cell;
         Node parent;
-        double gCost; // Cost from start to current node
-        double hCost; // Heuristic cost from current node to end
-        double fCost; // Total cost (gCost + hCost)
+        double gCost; // Cost from start to current node (A -> X)
+        double hCost; // Heuristic cost from current node to end (X -> B)
+        double fCost; // Total cost (gCost + hCost) 
 
         public Node(Cell cell, Node parent, double gCost, double hCost) {
             this.cell = cell;
@@ -28,24 +28,24 @@ public class AStarPathfinder implements PathfindingStrategy{
             return Double.compare(this.fCost, other.fCost);
         }
     }
+
     @Override
     public List<Cell> findPath(Cell Start, Cell End, List<Cell> map){
-        // List<Cell> path;
 
         if (Start == null || End == null || map == null) {
             return Collections.emptyList(); // Return empty path if start or end is null
         }
 
-        PriorityQueue<Node> openSet = new PriorityQueue<>();
-        Map<Cell, Node> closedSet = new HashMap<>();
-        Map<Cell, Node> allNodes = new HashMap<>();
+        PriorityQueue<Node> openSet = new PriorityQueue<>(); // Upcoming cells
+        Map<Cell, Node> closedSet = new HashMap<>(); // Visited cells
+        Map<Cell, Node> allNodes = new HashMap<>(); // For checking if a cell already has a Node
 
         Node startNode = new Node(Start, null, 0.0, heuristic(Start, End));
         openSet.add(startNode);
         allNodes.put(Start, startNode);
 
         while (!openSet.isEmpty()) {
-            Node currentNode = openSet.poll();
+            Node currentNode = openSet.poll(); 
 
             if (currentNode.cell.equals(End)) {
                 return reconstructPath(currentNode);
@@ -56,7 +56,7 @@ public class AStarPathfinder implements PathfindingStrategy{
 
             for (Cell neighbor : neighbors) {
                 if (closedSet.containsKey(neighbor)) {
-                    continue; // Ignore the neighbor which is already evaluated.
+                    continue; // Ignore the neighbor which is already evaluated
                 }
 
                 if (neighbor.getBaseType() == BaseType.OBSTACLE) {
@@ -67,11 +67,11 @@ public class AStarPathfinder implements PathfindingStrategy{
                     continue; // Ignore walls
                 }
 
-                double MoveCost = 1.0; // Assuming uniform cost for moving to a neighbor
+                double MoveCost = 1.0; 
                 if(neighbor.getDynamicState() == DynamicState.FIRE){
-                    MoveCost += 75.0; // Example of increased cost for fire
+                    MoveCost += 75.0; 
                 } else if(neighbor.getDynamicState() == DynamicState.SMOKE){
-                    MoveCost += 7.5; // Example of increased cost for smoke
+                    MoveCost += 7.5; 
                 }
 
                 double tentativeGCost = currentNode.gCost + MoveCost; // Calculate tentative gCost
@@ -109,5 +109,35 @@ public class AStarPathfinder implements PathfindingStrategy{
         }
         Collections.reverse(path); // Reverse the path to get the correct order from start to end
         return path;
+    }
+
+    private List<Cell> getNeighbors(Cell cell, List<Cell> map) {
+        List<Cell> neighbors = new ArrayList<>();
+        int currentX = cell.getLogicalX();
+        int currentY = cell.getLogicalY();
+
+        // Define possible directions (up, down, left, right)
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+        for (int[] dir : directions) {
+            int newX = currentX + dir[0];
+            int newY = currentY + dir[1];
+
+            Cell neighbor = findCellByCoordinates(newX, newY, map);
+            if (neighbor != null) {
+                neighbors.add(neighbor);
+            }
+        }
+
+        return neighbors;
+    }
+
+    private Cell findCellByCoordinates(int x, int y, List<Cell> map) {
+        for (Cell c : map) {
+            if (c.getLogicalX() == x && c.getLogicalY() == y) {
+            return c; // Return the cell if found
+            }
+        }
+        return null; // Return null if no cell with the specified coordinates is found
     }
 }
