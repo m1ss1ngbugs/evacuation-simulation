@@ -1,7 +1,9 @@
 package evacuation.sim.agent.hazard;
 
+import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.agent.Agent;
 import evacuation.sim.agent.Damageable;
+import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
 import evacuation.sim.model.DynamicState;
@@ -60,13 +62,18 @@ public class Fire extends Hazard{
         }
     }
 
-    private void emitSmoke(Board board){
-        Cell currentCell = board.getCell(this.getLogicalX(), this.getLogicalY());
-        
-        if (currentCell.getDynamicState() == DynamicState.NONE) {
-                currentCell.setDynamicState(DynamicState.SMOKE); // logic for emitting smoke, e.g., it can affect agents in the vicinity by reducing their visibility or causing them to take damage over time
-                // logic for how smoke can affect agents, e.g., it can reduce their visibility, cause them to take damage over time, or affect their movement decisions
-                // do dokończenia
+    private void emitSmoke(Board board) {
+        // gets neighbors of this cell
+        List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+
+        for (Cell cell : neighbors) {
+            if (cell.getBaseType() == BaseType.FLOOR && cell.getDynamicState() == DynamicState.NONE) {
+
+                // changes cell state to smoked
+                cell.setDynamicState(DynamicState.SMOKE);
+
+                // trzeba dopisać później
+            }
         }
     }
 
