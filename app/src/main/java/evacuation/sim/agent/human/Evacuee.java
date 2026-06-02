@@ -8,7 +8,7 @@ import evacuation.sim.routing.PathfindingStrategy;
 
 import java.util.List;
 
-public abstract class Evacuee extends Agent implements Damageable, PathfindingStrategy {
+public abstract class Evacuee extends Agent implements Damageable {
     private float health;
     private final float baseSpeed;
     private float currentSpeed;

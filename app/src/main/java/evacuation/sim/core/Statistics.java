@@ -48,4 +48,8 @@ public class Statistics {
         //  (np. "Sukces: 100% uciekło", "Porażka: Osiągnięto limit czasu")
         return "Hello World!";
     }
+
+    public int getSavedCount() {
+        return savedCount;
+    }
 }

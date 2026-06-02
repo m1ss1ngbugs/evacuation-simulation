@@ -30,33 +30,34 @@ public class Simulation {
     public Simulation() {
         // gets the configuration using Singleton
         this.config = SimSingletonConfig.getInstance();
-
         // gets the path to the map from the configuration
         String mapPath = this.config.getMapFilePath();
-
         // creates a board that will automatically adjust to this file
         this.board = new Board(mapPath);
 
         // initializing the rest of the structures:
-
         this.agents = new ArrayList<>();
         this.agentsToAdd = new ArrayList<>();
         this.agentsToRemove = new ArrayList<>();
         this.defaultPathfinder = new AStarPathfinder();
 
-        // TODO: później trzeba też dopisać tę metodę, która stworzy ludzi i ogień na starcie symulacji
+        // initialization activation
         initialize();
-
-        // initialize the statistics class, passing it the starting data
-        int totalPeople = this.config.getInitialEvacueesCount();
-        this.stats = new Statistics(totalPeople);
     }
 
-    public void initialize(){
-        // TODO: zadania inicjalizacyjne
-        // Przygotowuje środowisko – ładuje planszę, tworzy agentów i ustawia
-        // parametry początkowe
+    public void initialize() {
+        // resets simulation time and state (will be useful for restart)
+        this.currentTime = 0.0f;
+        this.isRunning = true;
+        // clear the lists in case of restart
+        this.agents.clear();
+        this.agentsToAdd.clear();
+        this.agentsToRemove.clear();
+        // People and hazards deploying
         spawnInitialAgents();
+        // initialize the statistic base on config starting data
+        int totalPeople = this.config.getInitialEvacueesCount();
+        this.stats = new Statistics(totalPeople);
     }
 
     public void spawnInitialAgents() {
@@ -93,7 +94,35 @@ public class Simulation {
     }
 
     public void run(){
-        // TODO: główna pętla symulacji (też potrzebuje napisania ;) )
+        System.out.println(" === ROZPOCZĘCIE SYMULACJI === ");
+
+        // fixed time step for simulation (1 step = 0.5 sec)
+        float dt = 0.5f;
+
+        // security for showing so that the console doesn't lock forever
+        int maxSteps = 20; // simulation will make 20 steps
+        int currentStep = 0;
+
+        while (isRunning && currentStep < maxSteps) {
+            System.out.println(" --- KROKL: " + currentStep + " (Czas symulacji: " + currentTime + "s) --- ");
+            // agent logic update
+            updateTick(dt);
+            // global clock and counter update
+            currentTime += dt;
+            currentStep++;
+            // proof of action to console
+            System.out.println("Liczba aktywnych agentów na planszy: " + agents.size());
+            System.out.println("Uratowani: " + stats.getSavedCount());
+
+            // put the loop to sleep for 500 millis
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.err.println("Symulacja przerwana!");
+                isRunning = false;
+            }
+        }
+        System.out.println("=== KONIEC SYMULACJI ===");
     }
 
     public void updateTick(float dt) {
