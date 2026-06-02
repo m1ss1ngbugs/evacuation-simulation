@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Leader extends Evacuee{
 
-    public Leader(int id, int logicalX, int logicalY, float health, float baseSpeed,
-                    PathfindingStrategy pathfinder, float panicLevel, float reactionTime, float panicThreshold) {
+    private Leader(int id, int logicalX, int logicalY, float health, float baseSpeed,
+                    PathfindingStrategy pathfinder, float panicLevel, float reactionTime) {
         super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicLevel, reactionTime);
     }
 
@@ -28,5 +28,57 @@ public class Leader extends Evacuee{
 
     public List<Cell> sharePath(){
         return getPlannedPath();
+    }
+
+    public static class Builder {
+        private int id;
+        private int logicalX;
+        private int logicalY;
+        private float health;
+        private float baseSpeed;
+        private float reactionTime;
+        private float panicLevel;
+        private PathfindingStrategy pathfinder;
+
+        public Builder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setPosition(int logicalX, int logicalY) {
+            this.logicalX = logicalX;
+            this.logicalY = logicalY;
+            return this;
+        }
+
+        public Builder setHealth(float health) {
+            this.health = health;
+            return this;
+        }
+
+        public Builder setBaseSpeed(float baseSpeed) {
+            this.baseSpeed = baseSpeed;
+            return this;
+        }
+
+        public Builder setReactionTime(float reactionTime) {
+            this.reactionTime = reactionTime;
+            return this;
+        }
+
+        public Builder setPanicLevel(float panicLevel) {
+            this.panicLevel = panicLevel;
+            return this;
+        }
+
+        public Builder setPathfinder(PathfindingStrategy pathfinder) {
+            this.pathfinder = pathfinder;
+            return this;
+        }
+
+        public Leader build(){
+            return new Leader(id, logicalX, logicalY, health,
+                    baseSpeed, pathfinder, panicLevel, reactionTime);
+        }
     }
 }

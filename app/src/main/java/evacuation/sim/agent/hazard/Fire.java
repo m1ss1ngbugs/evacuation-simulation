@@ -16,7 +16,7 @@ public class Fire extends Hazard{
     private float internalTimer;
     private boolean isIncubation;
 
-    public Fire(int id, int logicalX, int logicalY, float damagePerSecond,
+    private Fire(int id, int logicalX, int logicalY, float damagePerSecond,
                 float spreadInterval, float incubationDelay) {
         super(id, logicalX, logicalY, damagePerSecond);
         this.spreadInterval = spreadInterval;
@@ -64,4 +64,45 @@ public class Fire extends Hazard{
     private void propagate(Board board){
         // potrzeba napisania logiki propagowania ognia
     }
+
+    public static class Builder {
+        private int id;
+        private int logicalX;
+        private int logicalY;
+        private float spreadInterval;
+        private float damagePerSecond;
+        private float incubationDelay;
+
+        public Builder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setPosition(int logicalX, int logicalY) {
+            this.logicalX = logicalX;
+            this.logicalY = logicalY;
+            return this;
+        }
+
+        public Builder setSpreadInterval(float spreadInterval) {
+            this.spreadInterval = spreadInterval;
+            return this;
+        }
+
+        public Builder setDamagePerSecond(float damagePerSecond) {
+            this.damagePerSecond = damagePerSecond;
+            return this;
+        }
+
+        public Builder setIncubationDelay(float incubationDelay) {
+            this.incubationDelay = incubationDelay;
+            return this;
+        }
+
+        public Fire build(){
+            return new Fire(id, logicalX, logicalY, damagePerSecond,
+                    spreadInterval, incubationDelay);
+        }
+    }
+
 }

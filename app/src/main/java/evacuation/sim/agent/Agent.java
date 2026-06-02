@@ -3,7 +3,7 @@ package evacuation.sim.agent;
 import evacuation.sim.model.Board;
 
 public abstract class Agent {
-    private int id;
+    private final int id;
     private int logicalX;
     private int logicalY;
     private float renderX;
