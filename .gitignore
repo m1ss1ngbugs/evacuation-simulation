@@ -6,6 +6,7 @@
 
 # --- Foldery budowania projektu (Maven / Gradle) ---
 target/
+.gradle/
 build/
 bin/
 out/

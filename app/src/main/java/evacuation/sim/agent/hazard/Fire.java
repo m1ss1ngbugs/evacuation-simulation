@@ -3,6 +3,9 @@ package evacuation.sim.agent.hazard;
 import evacuation.sim.agent.Agent;
 import evacuation.sim.agent.Damageable;
 import evacuation.sim.model.Board;
+import evacuation.sim.model.Cell;
+import evacuation.sim.model.DynamicState;
+import evacuation.sim.model.BaseType;
 
 import java.util.List;
 
@@ -24,8 +27,23 @@ public class Fire extends Hazard{
     @Override
     public void update(Board board, float dt) {
 
-        // ta metoda posiada jeszcze niepełną logikę, potrzebuje dopisania
+        this.internalTimer += dt; // update internal timer for both incubation and spread logic
 
+        if (this.isIncubation) {
+
+            if (this.internalTimer >= this.incubationDelay) {
+                this.isIncubation = false; // end incubation phase
+                this.internalTimer = 0.0f; // reset timer for spread logic
+            }
+            return; // during incubation, fire does not spread or cause damage
+        } 
+
+        if (this.internalTimer >= this.spreadInterval) {
+            this.propagate(board); // logic for spreading fire to adjacent cells
+            this.internalTimer = 0.0f; // reset timer after spreading
+        }
+
+        this.emitSmoke(board); // logic for emitting smoke, which can affect agents in the vicinity
 
         // damage causing
         // downloading the list of agents
@@ -43,10 +61,26 @@ public class Fire extends Hazard{
     }
 
     private void emitSmoke(Board board){
-        // potrzeba napisania logiki emitowania dymu
+        Cell currentCell = board.getCell(this.getLogicalX(), this.getLogicalY());
+        
+        if (currentCell.getDynamicState() == DynamicState.NONE) {
+                currentCell.setDynamicState(DynamicState.SMOKE); // logic for emitting smoke, e.g., it can affect agents in the vicinity by reducing their visibility or causing them to take damage over time
+                // logic for how smoke can affect agents, e.g., it can reduce their visibility, cause them to take damage over time, or affect their movement decisions
+                // do dokończenia
+        }
     }
 
     private void propagate(Board board){
-        // potrzeba napisania logiki propagowania ognia
+        List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+
+        for (Cell neighbor : neighbors) {
+            if (neighbor.getBaseType() == BaseType.FLOOR && neighbor.getDynamicState() != DynamicState.FIRE) {
+                if (Math.random() < 0.3) { // example condition for fire spread
+                    neighbor.setDynamicState(DynamicState.FIRE); // logic for spreading fire to adjacent cells
+                    // logic for how fire can spread to adjacent cells, e.g., it can be based on the type of material in the cell, the presence of agents, or random chance
+                    // do dokonczenia
+                }
+            }
+        }
     }
 }

@@ -27,6 +27,10 @@ public class Cell {
         return baseType;
     }
 
+    public void setBaseType(BaseType baseType) {
+        this.baseType = baseType;
+    }
+
     public DynamicState getDynamicState() {
         return dynamicState;
     }
