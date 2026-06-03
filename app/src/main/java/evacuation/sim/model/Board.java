@@ -139,8 +139,8 @@ public class Board {
         this.width = 10;
         this.height = 10;
         this.grid = new Cell[width][height];
-        for(int y = 0; y <= height; y++){
-            for(int x = 0; x <= width; x++){
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
                 if(grid[x][y] == null){
                     grid[x][y] = new Cell(x, y, BaseType.FLOOR);
                 }

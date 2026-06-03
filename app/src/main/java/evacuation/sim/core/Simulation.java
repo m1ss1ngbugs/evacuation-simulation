@@ -2,6 +2,9 @@ package evacuation.sim.core;
 
 import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.agent.Agent;
+import evacuation.sim.event.SimEvent;
+import evacuation.sim.event.SimObserver;
+import evacuation.sim.event.SimSubject;
 import evacuation.sim.factory.AgentFactory;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
@@ -14,7 +17,7 @@ import java.util.List;
 
 import static evacuation.sim.factory.AgentFactory.createRandomEvacuee;
 
-public class Simulation {
+public class Simulation implements SimObserver {
     private Board board;
     private Statistics stats;
     private SimSingletonConfig config;
@@ -43,6 +46,21 @@ public class Simulation {
 
         // initialization activation
         initialize();
+    }
+
+    @Override
+    public void onNotify(SimEvent event) {
+        Cell targetCell = board.getCell(event.getX(), event.getY());
+
+        // simulation checks the label on the package and decides what to do
+        switch (event.getType()) {
+            case SPAWN_FIRE:
+                spawnFireAt(targetCell);
+                break;
+            case SPAWN_SMOKE:
+                spawnSmokeAt(targetCell, event.getDensity());
+                break;
+        }
     }
 
     public void initialize() {
@@ -147,6 +165,7 @@ public class Simulation {
     public void addAgent(Agent a) {
         // put new agent to add to the add buffer
         if (a != null) {
+            a.addObserver(this); // simulation will "listen" the agent communicates
             agentsToAdd.add(a);
         }
     }

@@ -1,14 +1,23 @@
 package evacuation.sim.agent;
 
+import evacuation.sim.event.SimEvent;
+import evacuation.sim.event.SimObserver;
+import evacuation.sim.event.SimSubject;
 import evacuation.sim.model.Board;
 
-public abstract class Agent {
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Agent implements SimSubject {
     private final int id;
     private int logicalX;
     private int logicalY;
     private float renderX;
     private float renderY;
     private boolean isActive;
+
+    // list of subscribers in case if we decide to add more than one (Simulation) observer later
+    private List<SimObserver> observers;
 
     public Agent(int id, int logicalX, int logicalY) {
         this.id = id;
@@ -17,6 +26,29 @@ public abstract class Agent {
         this.renderX = logicalX;
         this.renderY = logicalY;
         this.isActive = true;
+
+        this.observers = new ArrayList<>();
+    }
+
+    // adding methods from interface SimSubject
+
+    @Override
+    public void addObserver(SimObserver observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void removeObserver(SimObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(SimEvent event) {
+        for (SimObserver observer : observers) {
+            observer.onNotify(event); // Wypychamy paczkę do słuchacza!
+        }
     }
 
     public abstract void update(Board board, float dt);
@@ -25,6 +57,8 @@ public abstract class Agent {
     public void deactivate() {
         this.isActive = false;
     }
+
+    // standard getters and setters
 
     public int getId() {
         return id;

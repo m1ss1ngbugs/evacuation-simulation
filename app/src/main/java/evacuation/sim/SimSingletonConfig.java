@@ -38,7 +38,7 @@ public class SimSingletonConfig {
     private SimSingletonConfig() {
 
         this.maxEvacuationTime = 600.0f;     // max 10 minutes simulation
-        this.initialEvacueesCount = 50;       // 50 people to escape
+        this.initialEvacueesCount = 20;       // 50 people to escape
 
         this.leaderRatio = 0.15f;            // 15% of leaders
         this.followerRatio = 0.65f;          // 65% of followers
@@ -66,7 +66,7 @@ public class SimSingletonConfig {
         this.smokeFadeRatePerSecond = 10.0f;  // smoke fades 10% per second
         this.smokeDuplicationThreshold = 15.0f; // smoke duplicates only if it has density > threshold
 
-        this.mapFilePath = null;
+        this.mapFilePath = "mapa.txt";
     }
 
     public static SimSingletonConfig getInstance(){

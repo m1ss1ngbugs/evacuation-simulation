@@ -1,6 +1,5 @@
 package evacuation.sim.core;
 
-import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.model.Board;
 
 public class Statistics {

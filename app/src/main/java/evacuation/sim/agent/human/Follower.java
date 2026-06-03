@@ -1,9 +1,6 @@
 package evacuation.sim.agent.human;
 
-import evacuation.sim.model.Cell;
 import evacuation.sim.routing.PathfindingStrategy;
-
-import java.util.List;
 
 public class Follower extends Evacuee {
     private float socialFactor;

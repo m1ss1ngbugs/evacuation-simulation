@@ -1,12 +1,15 @@
 package evacuation.sim.agent.hazard;
 
 
+import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.agent.Agent;
 import evacuation.sim.agent.Damageable;
+import evacuation.sim.event.SimEvent;
 import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
 import evacuation.sim.model.DynamicState;
+import evacuation.sim.core.Simulation;
 
 
 import java.util.List;
@@ -24,7 +27,6 @@ public class Fire extends Hazard{
 
     @Override
     public void update(Board board, float dt) {
-
 
         if (this.isIncubation) {
             // fire incubating block
@@ -67,11 +69,9 @@ public class Fire extends Hazard{
 
         for (Cell cell : neighbors) {
             if (cell.getBaseType() == BaseType.FLOOR && cell.getDynamicState() == DynamicState.NONE) {
-
-                // changes cell state to smoked
-                cell.setDynamicState(DynamicState.SMOKE);
-
-                // TODO: trzeba dopisać później
+                // makes and send the package with request about new instance of Smoke spawning
+                notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_SMOKE, cell.getLogicalX(),
+                        cell.getLogicalY(), SimSingletonConfig.getInstance().getSmokeInitialDensity()));
             }
         }
     }
@@ -82,9 +82,9 @@ public class Fire extends Hazard{
         for (Cell neighbor : neighbors) {
             if (neighbor.getBaseType() == BaseType.FLOOR && neighbor.getDynamicState() != DynamicState.FIRE) {
                 if (Math.random() < 0.3) { // example condition for fire spread
-                    neighbor.setDynamicState(DynamicState.FIRE); // logic for spreading fire to adjacent cells
-                    // logic for how fire can spread to adjacent cells, e.g., it can be based on the type of material in the cell, the presence of agents, or random chance
-                    // TODO: do dokonczenia
+                    // makes and send the package with request about new instance of Fire spawning
+                    notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_FIRE, neighbor.getLogicalX(),
+                            neighbor.getLogicalY(), 0.0f));
                 }
             }
         }
