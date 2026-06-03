@@ -14,18 +14,39 @@ public class Follower extends Evacuee {
 
     @Override
     protected void handlePanic(float dt){
-        // TODO: logika radzenia sobie z paniką dla followera
+
+        if (shouldPanic()) {
+            setCurrentSpeed(getBaseSpeed() * 1.2f);
+
+            if (getPanicLevel() > getPanicThreshold() * 1.5f && getPlannedPath() != null) {
+                getPlannedPath().clear();
+            }
+        } else {
+
+            setCurrentSpeed(getBaseSpeed());
+
+            if (!sawHazard && getPanicLevel() > 0.0f) {
+                setPanicLevel(Math.max(0.0f, getPanicLevel() - 0.1f * dt));
+            }
+        }
     }
 
     @Override
     protected boolean shouldPanic(){
-        boolean shouldPanic = true;
 
-        // TODO: napisać logikę tego, kiedy agent musi panikować, a kiedy nie
-
-        return shouldPanic;
+        return getPanicLevel() > getPanicThreshold();
     }
 
+    public void tryFollowLeader(Leader leader){
+
+        int dx = leader.getLogicalX() - this.getLogicalX();
+        int dy = leader.getLogicalY() - this.getLogicalY();
+        double distanceToLeader = Math.sqrt(dx * dx + dy * dy);
+
+        if (distanceToLeader <= this.getVisionRadius() && socialFactor > 0.5f && !shouldPanic()) {
+            updatePathFromLeader(leader);
+        }
+    }
     // method of getting direction from the leader
     private void updatePathFromLeader(Leader leader){
         setPlannedPath(leader.sharePath());
@@ -35,13 +56,13 @@ public class Follower extends Evacuee {
         private int id;
         private int logicalX;
         private int logicalY;
-        private float health;
-        private float baseSpeed;
-        private float reactionTime;
-        private float panicThreshold;
+        private float health = 100.0f;
+        private float baseSpeed = 1.0f;
+        private float reactionTime = 0.3f;
+        private float panicThreshold = 5.0f;
         private PathfindingStrategy pathfinder;
-        private float socialFactor;
-        private int visionRadius;
+        private float socialFactor = 0.5f;
+        private int visionRadius = 4;
 
         public Builder setId(int id) {
             this.id = id;
@@ -90,6 +111,9 @@ public class Follower extends Evacuee {
         }
 
         public Follower build(){
+            if (pathfinder == null) {
+                throw new IllegalStateException("Pathfinder must be set for Follower agent");
+            }
             return new Follower(id, logicalX, logicalY, health,
                     baseSpeed, pathfinder, panicThreshold, reactionTime, socialFactor, visionRadius);
         }

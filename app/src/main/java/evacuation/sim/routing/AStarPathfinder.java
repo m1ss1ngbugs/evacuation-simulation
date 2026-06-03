@@ -3,6 +3,7 @@ package evacuation.sim.routing;
 import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Cell;
 import evacuation.sim.model.DynamicState;
+import evacuation.sim.model.Board;
 
 import java.util.*;
 
@@ -30,9 +31,9 @@ public class AStarPathfinder implements PathfindingStrategy{
     }
 
     @Override
-    public List<Cell> findPath(Cell Start, Cell End, List<Cell> map){
+    public List<Cell> findPath(Cell Start, Cell End, Board board){
 
-        if (Start == null || End == null || map == null) {
+        if (Start == null || End == null || board == null) {
             return Collections.emptyList(); // Return empty path if start or end is null
         }
 
@@ -52,7 +53,7 @@ public class AStarPathfinder implements PathfindingStrategy{
             }
 
             closedSet.put(currentNode.cell, currentNode);
-            List<Cell> neighbors = getNeighbors(currentNode.cell, map);
+            List<Cell> neighbors = getNeighbors(currentNode.cell, board);
 
             for (Cell neighbor : neighbors) {
                 if (closedSet.containsKey(neighbor)) {
@@ -111,7 +112,7 @@ public class AStarPathfinder implements PathfindingStrategy{
         return path;
     }
 
-    private List<Cell> getNeighbors(Cell cell, List<Cell> map) {
+    private List<Cell> getNeighbors(Cell cell, Board board) {
         List<Cell> neighbors = new ArrayList<>();
         int currentX = cell.getLogicalX();
         int currentY = cell.getLogicalY();
@@ -123,21 +124,12 @@ public class AStarPathfinder implements PathfindingStrategy{
             int newX = currentX + dir[0];
             int newY = currentY + dir[1];
 
-            Cell neighbor = findCellByCoordinates(newX, newY, map);
+            Cell neighbor = board.getCell(newX, newY);
             if (neighbor != null) {
                 neighbors.add(neighbor);
             }
         }
 
         return neighbors;
-    }
-
-    private Cell findCellByCoordinates(int x, int y, List<Cell> map) {
-        for (Cell c : map) {
-            if (c.getLogicalX() == x && c.getLogicalY() == y) {
-            return c; // Return the cell if found
-            }
-        }
-        return null; // Return null if no cell with the specified coordinates is found
     }
 }

@@ -56,7 +56,8 @@ public class Fire extends Hazard{
         List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
 
         for (Cell cell : neighbors) {
-            if (cell.getBaseType() == BaseType.FLOOR && cell.getDynamicState() == DynamicState.NONE) {
+            if (cell.getBaseType() == BaseType.FLOOR && 
+            (cell.getDynamicState() == DynamicState.NONE || cell.getDynamicState() == DynamicState.SMOKE)) {
                 // makes and send the package with request about new instance of Smoke spawning
                 notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_SMOKE, cell.getLogicalX(),
                         cell.getLogicalY(), SimSingletonConfig.getInstance().getSmokeInitialDensity()));

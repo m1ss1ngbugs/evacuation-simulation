@@ -14,6 +14,8 @@ public class Leader extends Evacuee{
 
     @Override
     protected void handlePanic(float dt){
+
+        setPanicLevel(0.0f);
         // doesn't need this logic, because he never panics
     }
 
@@ -34,12 +36,12 @@ public class Leader extends Evacuee{
         private int id;
         private int logicalX;
         private int logicalY;
-        private float health;
-        private float baseSpeed;
-        private float reactionTime;
-        private float panicThreshold;
+        private float health = 100.0f;
+        private float baseSpeed = 1.3f;
+        private float reactionTime = 0.1f;
+        // private float panicThreshold;
         private PathfindingStrategy pathfinder;
-        private int visionRadius;
+        private int visionRadius = 5;
 
         public Builder setId(int id) {
             this.id = id;
@@ -79,6 +81,9 @@ public class Leader extends Evacuee{
 
         public Leader build(){
             float panicThreshold = 0.0f;
+            if (pathfinder == null) {
+                throw new IllegalStateException("Pathfinder must be set for Leader agent");
+            }
             return new Leader(id, logicalX, logicalY, health,
                     baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
         }

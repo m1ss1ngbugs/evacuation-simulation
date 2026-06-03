@@ -36,6 +36,10 @@ public abstract class Hazard extends Agent {
         List<Agent> agentsAtCell = board.getAgentsAt(this.getLogicalX(), this.getLogicalY());
         // review all agents in the field
         for (Agent agent : agentsAtCell) {
+            if (agent == this) {
+                continue;
+            }
+            
             // check if agents implements Damageable interface
             if (agent instanceof Damageable) {
                 // calculate damage for this frame

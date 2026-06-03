@@ -4,6 +4,7 @@ import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.event.SimEvent;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.BaseType;
+import evacuation.sim.model.DynamicState;
 import evacuation.sim.model.Cell;
 import evacuation.sim.agent.Agent;
 import java.util.List;
@@ -41,6 +42,10 @@ public class Smoke extends Hazard{
 
             if (cell.getBaseType() == BaseType.WALL) {
                 continue; // Skip walls
+            }
+
+            if (cell.getDynamicState() == DynamicState.FIRE) {
+                continue; // Skip cells on fire
             }
 
             int nx = cell.getLogicalX();

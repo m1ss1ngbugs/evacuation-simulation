@@ -2,6 +2,10 @@ package evacuation.sim.core;
 
 import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.agent.Agent;
+import evacuation.sim.agent.hazard.Smoke;
+import evacuation.sim.agent.human.Evacuee;
+import evacuation.sim.agent.human.Follower;
+import evacuation.sim.agent.human.Leader;
 import evacuation.sim.event.SimEvent;
 import evacuation.sim.event.SimObserver;
 import evacuation.sim.event.SimSubject;
@@ -9,6 +13,7 @@ import evacuation.sim.factory.AgentFactory;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
 import evacuation.sim.model.DynamicState;
+import evacuation.sim.model.BaseType;
 import evacuation.sim.routing.AStarPathfinder;
 import evacuation.sim.routing.PathfindingStrategy;
 
@@ -97,6 +102,13 @@ public class Simulation implements SimObserver {
             addAgent(newEvacuee);
         }
 
+        if (!agentsToAdd.isEmpty()) {
+            agents.addAll(agentsToAdd);
+            agentsToAdd.clear();        
+        }
+
+        board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
+
         // fire spacing
         for (int i = 0; i < firesToSpawn; i++) {
             // looking for a new free space
@@ -107,6 +119,13 @@ public class Simulation implements SimObserver {
             }
             spawnFireAt(spawnPoint);
         }
+
+        if (!agentsToAdd.isEmpty()) {
+            agents.addAll(agentsToAdd);
+            agentsToAdd.clear();
+        }
+
+        board.updateSpatialIndex(agents); // so board can see added agents (fires)
         // first simulation tick
         updateTick(0.0f);
     }
@@ -118,11 +137,11 @@ public class Simulation implements SimObserver {
         final float dt = 0.5f;
 
         // security for showing so that the console doesn't lock forever
-        int maxSteps = 20; // simulation will make 20 steps
+        int maxSteps = 30; // simulation will make 30 steps
         int currentStep = 0;
 
         while (isRunning && currentStep < maxSteps) {
-            System.out.println(" --- KROKL: " + currentStep + " (Czas symulacji: " + currentTime + "s) --- ");
+            System.out.println(" --- KROK: " + currentStep + " (Czas symulacji: " + currentTime + "s) --- ");
             // agent logic update
             updateTick(dt);
             // global clock and counter update
@@ -134,7 +153,7 @@ public class Simulation implements SimObserver {
 
             // put the loop to sleep for 500 millis
             try {
-                Thread.sleep(500);
+                Thread.sleep(600);
             } catch (InterruptedException e) {
                 System.err.println("Symulacja przerwana!");
                 isRunning = false;
@@ -144,11 +163,36 @@ public class Simulation implements SimObserver {
     }
 
     public void updateTick(float dt) {
+
+        board.updateSpatialIndex(agents); // update of indexes before agents move
         // active agents make their moves
         for (Agent agent : agents) {
             agent.update(board, dt);
-        }
 
+            if (agent instanceof Evacuee evacueeAgent) {
+                Cell cell = board.getCell(evacueeAgent.getLogicalX(), evacueeAgent.getLogicalY());
+
+                if (cell != null && cell.getBaseType() == BaseType.EXIT) {
+                    stats.incrementSaved(dt);
+                    removeAgent(evacueeAgent);
+
+                }
+            }
+
+            if (agent instanceof Smoke smokeAgent) { 
+                if (smokeAgent.getDensity() <= 0.0f) {
+                    Cell cell = board.getCell(smokeAgent.getLogicalX(), smokeAgent.getLogicalY());
+                    // setting NONE only if the cell isn't FIRE
+                        if (cell.getDynamicState() == DynamicState.SMOKE) {
+                            cell.setDynamicState(DynamicState.NONE);
+                        }
+                    removeAgent(smokeAgent);
+                }
+            }
+        }
+        
+
+        
         // introduce agents from the waiting room to the main list of agents
         if (!agentsToAdd.isEmpty()) {
             agents.addAll(agentsToAdd);
@@ -181,8 +225,17 @@ public class Simulation implements SimObserver {
         if (cell == null || cell.getDynamicState() == DynamicState.FIRE) {
             return; // if it's already a fire - do nothing
         }
+
+        List<Agent> agentsHere = board.getAgentsAt(cell.getLogicalX(), cell.getLogicalY());
+        for (Agent a : agentsHere) {
+            if (a instanceof Smoke) {
+                removeAgent(a);
+            }
+        }
+
         // change the state of the board to FIRE, so that no one else can spawn on this Cell
         cell.setDynamicState(DynamicState.FIRE);
+
         // use AgentFabric to create new instance of Fire
         Agent newFire = AgentFactory.createFire(cell.getLogicalX(), cell.getLogicalY());
         // add fire agent to the buffer

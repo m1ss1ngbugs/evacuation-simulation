@@ -23,6 +23,12 @@ public class Board {
         loadMapFromFile(mapFilePath);
     }
 
+    public Board(Cell[][] grid) {
+        this.grid = grid;
+        this.width = grid.length;
+        this.height = grid[0].length;
+    }
+
     // Method which updates spatial index (makes map: agent - position on the board)
     public void updateSpatialIndex(List<Agent> agentsFromSimulation) {
         spatialIndex.clear();
@@ -51,6 +57,9 @@ public class Board {
     }
 
     public Cell getCell(int x, int y) {
+        if(!inBounds(x, y)){
+            return null; // Return null if out of bounds
+        }
         return grid[x][y];
     }
 
@@ -79,7 +88,7 @@ public class Board {
 
             Cell cell = getCell(random_x, random_y);
 
-            // cheks if agent can be placed here
+            // checks if agent can be placed here
             if (cell != null && cell.getBaseType() == BaseType.FLOOR
                     && cell.getDynamicState() == DynamicState.NONE) {
 
@@ -128,7 +137,7 @@ public class Board {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Błąd ładowania mapy, tworzę awaryjną planszę 10x10... " + e.getMessage());
+            System.err.println("Błąd ładowania mapy"  + e.getMessage() + ", tworzę awaryjną planszę 10x10... ");
             // generate default floor on error
             generateDefaultFloor();
         }
@@ -142,10 +151,17 @@ public class Board {
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
                 if(grid[x][y] == null){
-                    grid[x][y] = new Cell(x, y, BaseType.FLOOR);
+                    if(x == 0 || x == width - 1 || y == 0 || y == height - 1){
+                        grid[x][y] = new Cell(x, y, BaseType.WALL);
+                    } else {
+                        grid[x][y] = new Cell(x, y, BaseType.FLOOR);
+                    }
                 }
             }
         }
+
+        grid[7][0] = new Cell(7, 0, BaseType.EXIT); // Add an exit
+        grid[2][height-1] = new Cell(2, height-1, BaseType.EXIT); // Add another exit
     }
 
     // standard getters

@@ -11,28 +11,34 @@ public class Panicked extends Evacuee{
 
     @Override
     protected void handlePanic(float dt){
-        // TODO: dopisać to, jak ten agent będzie radził sobie z paniką
+        
+        if (shouldPanic()) {
+            setCurrentSpeed(getBaseSpeed() * 1.6f);
+
+            if (getPlannedPath() != null && !getPlannedPath().isEmpty()) {
+                getPlannedPath().clear();
+            }
+        } else {
+            setCurrentSpeed(getBaseSpeed());
+        }
     }
 
     @Override
     protected boolean shouldPanic(){
-        boolean shouldPanic = true;
 
-        // TODO: napisać logikę tego, kiedy agent musi panikować, a kiedy nie
-
-        return shouldPanic;
+        return getPanicLevel() > getPanicThreshold();
     }
 
     public static class Builder {
         private int id;
         private int logicalX;
         private int logicalY;
-        private float health;
-        private float baseSpeed;
-        private float reactionTime;
-        private float panicThreshold;
+        private float health = 100.0f;
+        private float baseSpeed = 1.1f;
+        private float reactionTime = 0.05f;
+        private float panicThreshold = 1.5f;
         private PathfindingStrategy pathfinder;
-        private int visionRadius;
+        private int visionRadius = 4;
 
         public Builder setId(int id) {
             this.id = id;
@@ -76,6 +82,9 @@ public class Panicked extends Evacuee{
         }
 
         public Panicked build(){
+            if (pathfinder == null) {
+                throw new IllegalStateException("Pathfinder must be setfor Panicked agent");
+            }
             return new Panicked(id, logicalX, logicalY, health,
                     baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
         }

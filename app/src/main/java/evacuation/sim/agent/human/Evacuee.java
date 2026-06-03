@@ -49,6 +49,11 @@ public abstract class Evacuee extends Agent implements Damageable {
         if(this.mentalMap == null) {
             initializeMentalMap(board, dt);
         }
+
+        if (this.plannedPath == null || this.plannedPath.isEmpty()) {
+            calculatePath(); 
+        }
+
         perceive(board);
         psychoReaction(sawHazard, dt);
         verifyPath();
@@ -56,7 +61,43 @@ public abstract class Evacuee extends Agent implements Damageable {
     }
 
     protected void move(float dt){
-        // TODO: napisz metodę dla ruchu: agent musi poruszać się currentSpeed*dt w potrzebną strone
+
+        if (plannedPath == null || plannedPath.isEmpty()) {
+            return;
+        }
+
+        if (!plannedPath.isEmpty() &&
+            plannedPath.get(0).getLogicalX() == this.getLogicalX() &&
+            plannedPath.get(0).getLogicalY() == this.getLogicalY()) {
+            plannedPath.remove(0);
+        }
+
+        if (plannedPath.isEmpty()) {
+            return;
+        }
+
+        Cell targetCell = plannedPath.get(0);
+
+        float targetX = targetCell.getLogicalX();
+        float targetY = targetCell.getLogicalY();
+
+        float dirX = targetX - getRenderX();
+        float dirY = targetY - this.getRenderY();
+        float distance = (float) Math.sqrt(dirX * dirX + dirY * dirY);
+
+        float distanceToMove = currentSpeed * dt;
+
+        if (distanceToMove>= distance) {
+            setRenderX(targetX);
+            setRenderY(targetY);
+            setLogicalX(targetCell.getLogicalX());
+            setLogicalY(targetCell.getLogicalY());
+
+            plannedPath.remove(0);
+        } else {
+            setRenderX(getRenderX() + (dirX / distance) * distanceToMove);
+            setRenderY(getRenderY() + (dirY / distance) * distanceToMove);
+        }
         // (algorytm calculatePath znalazł by kierunek, jeżeliby zgadzały parametry pathfinder.findPath z diagramem)
     }
 
@@ -117,7 +158,10 @@ public abstract class Evacuee extends Agent implements Damageable {
         Cell endCell = findClosestExit();
 
         if (startCell != null && endCell != null) {
-            // TODO: sprawdź algorytm poszukiwania drogi, coś jest tu źle
+            // creating virtual board, so pathfinder can work with it
+            Board virtualBoard = new Board(this.mentalMap);
+
+            this.plannedPath = pathfinder.findPath(startCell, endCell, virtualBoard);
          //   plannedPath = pathfinder.findPath(startCell, endCell, mentalMap);
         }
     }
@@ -131,7 +175,7 @@ public abstract class Evacuee extends Agent implements Damageable {
                 // reach to evacuee memory to check what it knows about the cell
                 Cell mentalCell = this.mentalMap[pathCell.getLogicalX()][pathCell.getLogicalY()];
 
-                // checks road safety...
+                // checks road safety
                 if (mentalCell != null &&
                         (mentalCell.getDynamicState() == DynamicState.FIRE ||
                                 mentalCell.getBaseType() == BaseType.OBSTACLE)) {
@@ -222,6 +266,12 @@ public abstract class Evacuee extends Agent implements Damageable {
         this.panicLevel = panicLevel;
     }
 
+    public float getPanicThreshold() {
+        return panicThreshold;
+    }
+
+    
+
     public float getBaseSpeed() {
         return baseSpeed;
     }
@@ -244,5 +294,9 @@ public abstract class Evacuee extends Agent implements Damageable {
 
     public Cell[][] getMentalMap() {
         return mentalMap;
+    }
+
+    public int getVisionRadius() {
+        return visionRadius;
     }
 }
