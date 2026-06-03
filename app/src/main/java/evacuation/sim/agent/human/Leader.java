@@ -8,8 +8,8 @@ import java.util.List;
 public class Leader extends Evacuee{
 
     private Leader(int id, int logicalX, int logicalY, float health, float baseSpeed,
-                    PathfindingStrategy pathfinder, float panicThreshold , float reactionTime) {
-        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicThreshold, reactionTime);
+                    PathfindingStrategy pathfinder, float panicThreshold , float reactionTime, int visionRadius) {
+        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class Leader extends Evacuee{
         private float reactionTime;
         private float panicThreshold;
         private PathfindingStrategy pathfinder;
+        private int visionRadius;
 
         public Builder setId(int id) {
             this.id = id;
@@ -71,10 +72,15 @@ public class Leader extends Evacuee{
             return this;
         }
 
+        public Builder setVisionRadius(int visionRadius) {
+            this.visionRadius = visionRadius;
+            return this;
+        }
+
         public Leader build(){
             float panicThreshold = 0.0f;
             return new Leader(id, logicalX, logicalY, health,
-                    baseSpeed, pathfinder, panicThreshold, reactionTime);
+                    baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
         }
     }
 }

@@ -115,7 +115,7 @@ public class Simulation implements SimObserver {
         System.out.println(" === ROZPOCZĘCIE SYMULACJI === ");
 
         // fixed time step for simulation (1 step = 0.5 sec)
-        float dt = 0.5f;
+        final float dt = 0.5f;
 
         // security for showing so that the console doesn't lock forever
         int maxSteps = 20; // simulation will make 20 steps

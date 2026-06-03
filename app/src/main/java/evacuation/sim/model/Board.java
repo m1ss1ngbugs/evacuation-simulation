@@ -158,4 +158,7 @@ public class Board {
         return height;
     }
 
+    public Cell[][] getGrid() {
+        return grid;
+    }
 }

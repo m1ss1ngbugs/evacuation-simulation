@@ -5,8 +5,8 @@ import evacuation.sim.routing.PathfindingStrategy;
 public class Panicked extends Evacuee{
 
     private Panicked(int id, int logicalX, int logicalY, float health, float baseSpeed,
-                    PathfindingStrategy pathfinder, float panicLevel, float reactionTime, float panicThreshold) {
-        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicLevel, reactionTime);
+                    PathfindingStrategy pathfinder, float panicThreshold, float reactionTime, int visionRadius) {
+        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
     }
 
     @Override
@@ -32,6 +32,7 @@ public class Panicked extends Evacuee{
         private float reactionTime;
         private float panicThreshold;
         private PathfindingStrategy pathfinder;
+        private int visionRadius;
 
         public Builder setId(int id) {
             this.id = id;
@@ -69,9 +70,14 @@ public class Panicked extends Evacuee{
             return this;
         }
 
+        public Builder setVisionRadius(int visionRadius) {
+            this.visionRadius = visionRadius;
+            return this;
+        }
+
         public Panicked build(){
             return new Panicked(id, logicalX, logicalY, health,
-                    baseSpeed, pathfinder, panicThreshold, reactionTime, panicThreshold);
+                    baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
         }
     }
 }

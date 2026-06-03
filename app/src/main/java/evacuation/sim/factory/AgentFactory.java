@@ -56,6 +56,7 @@ public class AgentFactory {
                 .setBaseSpeed(config.getMeanBaseSpeed())
                 .setReactionTime(config.getEvacueeReactionTime())
                 .setPathfinder(pathfinder)
+                .setVisionRadius(config.getEvacueeVisionRadius())
                 .build();
     }
 
@@ -72,6 +73,7 @@ public class AgentFactory {
                 .setPathfinder(pathfinder)
                 // TODO: otrzymuje średni: MeanSocialFactor - potencjalnie poprawić
                 .setSocialFactor(config.getMeanSocialFactor())
+                .setVisionRadius(config.getEvacueeVisionRadius())
                 .build();
     }
 
@@ -86,6 +88,7 @@ public class AgentFactory {
                 // TODO: otrzymuje średni: MeanPanicThreshold - potencjalnie poprawić
                 .setPanicThreshold(config.getMeanPanicThreshold())
                 .setPathfinder(pathfinder)
+                .setVisionRadius(config.getEvacueeVisionRadius())
                 .build();
 
     }

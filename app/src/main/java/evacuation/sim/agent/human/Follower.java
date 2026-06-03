@@ -5,9 +5,10 @@ import evacuation.sim.routing.PathfindingStrategy;
 public class Follower extends Evacuee {
     private float socialFactor;
 
-    private Follower(int id, int logicalX, int logicalY, float health, float baseSpeed,
-                    PathfindingStrategy pathfinder, float panicLevel, float reactionTime, float socialFactor) {
-        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicLevel, reactionTime);
+    private Follower(int id, int logicalX, int logicalY, float health,
+                     float baseSpeed, PathfindingStrategy pathfinder,
+                     float panicLevel, float reactionTime, float socialFactor, int visionRadius) {
+        super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicLevel, reactionTime, visionRadius);
         this.socialFactor = socialFactor;
     }
 
@@ -40,6 +41,7 @@ public class Follower extends Evacuee {
         private float panicThreshold;
         private PathfindingStrategy pathfinder;
         private float socialFactor;
+        private int visionRadius;
 
         public Builder setId(int id) {
             this.id = id;
@@ -82,9 +84,14 @@ public class Follower extends Evacuee {
             return this;
         }
 
+        public Builder setVisionRadius(int visionRadius) {
+            this.visionRadius = visionRadius;
+            return this;
+        }
+
         public Follower build(){
             return new Follower(id, logicalX, logicalY, health,
-                    baseSpeed, pathfinder, panicThreshold, reactionTime, socialFactor);
+                    baseSpeed, pathfinder, panicThreshold, reactionTime, socialFactor, visionRadius);
         }
     }
 

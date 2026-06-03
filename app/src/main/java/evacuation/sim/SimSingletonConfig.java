@@ -16,6 +16,7 @@ public class SimSingletonConfig {
     private float speedVariance;
     private float evacueeHealth;
     private float evacueeReactionTime;
+    private int evacueeVisionRadius;
     // evacuee panic
     private float meanPanicThreshold;
     private float panicVariance;
@@ -48,6 +49,7 @@ public class SimSingletonConfig {
         this.speedVariance = 0.2f;           // the speed will vary from approx. 1.0 to 1.8 m/s
         this.evacueeHealth = 100.0f;         // initial evacuee health
         this.evacueeReactionTime = 3.0f;     // evacuee first reaction to hazard time = 3 sec
+        this.evacueeVisionRadius = 2;        // sets evacuee vision radius to two cells
 
         this.meanPanicThreshold = 50.0f;     // panic threshold (e.g. on a skale of 100)
         this.panicVariance = 10.0f;          // panic threshold will vary from approx. 50.0 to 60.0
@@ -172,5 +174,9 @@ public class SimSingletonConfig {
 
     public float getEvacueeReactionTime() {
         return evacueeReactionTime;
+    }
+
+    public int getEvacueeVisionRadius() {
+        return evacueeVisionRadius;
     }
 }
