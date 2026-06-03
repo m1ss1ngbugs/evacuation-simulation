@@ -148,7 +148,22 @@ public class Simulation implements SimObserver {
             currentTime += dt;
             currentStep++;
             // proof of action to console
-            System.out.println("Liczba aktywnych agentów na planszy: " + agents.size());
+            long ludzieCount = 0;
+            long ogienCount = 0;
+            long dymCount = 0;
+
+            for (Agent a : agents) {
+                 if (a instanceof evacuation.sim.agent.human.Evacuee) {
+                     ludzieCount++;
+                } else if (a instanceof evacuation.sim.agent.hazard.Smoke) {
+                    dymCount++;
+                } else if (a instanceof evacuation.sim.agent.hazard.Fire) {
+                    ogienCount++;
+                }
+}
+
+            System.out.println("-> Ludzie w budynku: " + ludzieCount);
+            System.out.println("-> Zagrożenia: [Ogień: " + ogienCount + " | Dym: " + dymCount + "]");
             System.out.println("Uratowani: " + stats.getSavedCount());
 
             // put the loop to sleep for 500 millis

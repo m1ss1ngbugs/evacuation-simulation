@@ -33,9 +33,7 @@ public class Statistics {
     public void incrementCasualtiesSmoke(){casualtiesSmoke++;}
 
     public void generateHeatmap(Board board){
-        // Odczytuje z komórek planszy ich liczniki visitCount
-        //  i tworzy mapę cieplną najbardziej uczęszczanych dróg
-        // Można zrobić z wykorzystaniem GUI
+        
     }
 
     public float calculateSurvivalRate(){
@@ -43,8 +41,6 @@ public class Statistics {
     }
 
     public String determineFinalScenario(){
-        //  Zwraca gotowy, czytelny raport tekstowy
-        //  (np. "Sukces: 100% uciekło", "Porażka: Osiągnięto limit czasu")
         return "Hello World!";
     }
 

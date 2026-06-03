@@ -45,6 +45,6 @@ public class Desk extends Agent implements Damageable {
             // logic for when the desk is still intact, e.g., it can provide some cover for agents or it can be a point of interest for agents to move towards
         }
         // desk operation logic, e.g., if the desk is on fire, it can spread fire to adjacent cells, or if it's damaged, it can affect the movement of agents around it.
-        // logika działania biurka w kroku symulacji dt
+        
     }
 }
