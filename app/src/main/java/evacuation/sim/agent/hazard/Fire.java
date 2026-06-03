@@ -47,19 +47,7 @@ public class Fire extends Hazard{
             }
 
             // damage causing
-
-            // downloading the list of agents
-            List<Agent> agentsAtCell = board.getAgentsAt(this.getLogicalX(), this.getLogicalY());
-            // review all agents in the field
-            for (Agent agent : agentsAtCell) {
-                // check if agents implements Damageable interface
-                if (agent instanceof Damageable) {
-                    // calculate damage for this frame
-                    float damageForThisTick = this.getDamagePerSecond() * dt;
-                    // agent type casting to Damageable interface and cause damage
-                    ((Damageable) agent).takeDamage(damageForThisTick);
-                }
-            }
+            hit(board, dt);
         }
     }
 

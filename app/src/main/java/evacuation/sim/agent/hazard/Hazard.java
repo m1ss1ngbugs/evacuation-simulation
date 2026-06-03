@@ -1,7 +1,10 @@
 package evacuation.sim.agent.hazard;
 
 import evacuation.sim.agent.Agent;
+import evacuation.sim.agent.Damageable;
 import evacuation.sim.model.Board;
+
+import java.util.List;
 
 public abstract class Hazard extends Agent {
     private float damagePerSecond;
@@ -26,6 +29,21 @@ public abstract class Hazard extends Agent {
             return true; // gives signal that it is time to spread
         }
         return false; // "no, it is not ready to spread !!!"
+    }
+
+    protected void hit(Board board, float dt){
+        // downloading the list of agents
+        List<Agent> agentsAtCell = board.getAgentsAt(this.getLogicalX(), this.getLogicalY());
+        // review all agents in the field
+        for (Agent agent : agentsAtCell) {
+            // check if agents implements Damageable interface
+            if (agent instanceof Damageable) {
+                // calculate damage for this frame
+                float damageForThisTick = this.getDamagePerSecond() * dt;
+                // agent type casting to Damageable interface and cause damage
+                ((Damageable) agent).takeDamage(damageForThisTick);
+            }
+        }
     }
 
     // getters/setters

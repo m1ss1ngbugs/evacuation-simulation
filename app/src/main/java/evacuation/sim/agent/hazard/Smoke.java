@@ -28,6 +28,10 @@ public class Smoke extends Hazard{
         if (isReadyToSpread(dt) && this.density > this.duplicationThreshold) {
             duplicate(board); 
         }
+
+
+        // damage causing
+        hit(board, dt);
     }
 
     private void duplicate(Board board){
