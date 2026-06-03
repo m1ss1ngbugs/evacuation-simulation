@@ -1,5 +1,7 @@
 package evacuation.sim.agent.hazard;
 
+import evacuation.sim.SimSingletonConfig;
+import evacuation.sim.event.SimEvent;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Cell;
@@ -50,24 +52,13 @@ public class Smoke extends Hazard{
                 }
             }
 
-            if (existingSmoke != null) {
+            if (existingSmoke != null) { // on this sell is already existing Smoke agent
 
-                float newDensity = existingSmoke.getDensity() + this.density * 0.4f;
+                float newDensity = existingSmoke.getDensity() + this.density * 0.6f;
                 existingSmoke.density = Math.min(newDensity, 1.0f); // Cap density at 1.0f
-            } else {
-                int newId = (int) (Math.random() * 1000000);
-
-                Smoke newSmoke = new Smoke.Builder()
-                        .setId(newId)
-                        .setPosition(nx, ny)
-                        .setDensity(this.density * 0.4f) // New smoke starts with a fraction of the original density
-                        .setFadeRatePerSecond(this.fadeRatePerSecond)
-                        .setSpreadInterval(this.getSpreadInterval())
-                        .setDuplicationThreshold(this.duplicationThreshold)
-                        .setDamagePerSecond(this.getDamagePerSecond())
-                        .build();
-
-                //TODO: dodać newSmoke do Simulation, żeby to działało
+            } else { // there is no Smoke on this sell - need to make a new one
+                notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_SMOKE, nx,
+                        ny, this.density*0.6f));
             }
         }
     }
