@@ -81,7 +81,7 @@ public abstract class Evacuee extends Agent implements Damageable {
         float targetX = targetCell.getLogicalX();
         float targetY = targetCell.getLogicalY();
 
-        float dirX = targetX - getRenderX();
+        float dirX = targetX - this.getRenderX();
         float dirY = targetY - this.getRenderY();
         float distance = (float) Math.sqrt(dirX * dirX + dirY * dirY);
 
@@ -98,7 +98,6 @@ public abstract class Evacuee extends Agent implements Damageable {
             setRenderX(getRenderX() + (dirX / distance) * distanceToMove);
             setRenderY(getRenderY() + (dirY / distance) * distanceToMove);
         }
-        // (algorytm calculatePath znalazł by kierunek, jeżeliby zgadzały parametry pathfinder.findPath z diagramem)
     }
 
     protected void psychoReaction(boolean sawHazard, float dt){
