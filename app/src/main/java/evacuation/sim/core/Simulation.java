@@ -4,11 +4,8 @@ import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.agent.Agent;
 import evacuation.sim.agent.hazard.Smoke;
 import evacuation.sim.agent.human.Evacuee;
-import evacuation.sim.agent.human.Follower;
-import evacuation.sim.agent.human.Leader;
 import evacuation.sim.event.SimEvent;
 import evacuation.sim.event.SimObserver;
-import evacuation.sim.event.SimSubject;
 import evacuation.sim.factory.AgentFactory;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
@@ -18,6 +15,7 @@ import evacuation.sim.routing.AStarPathfinder;
 import evacuation.sim.routing.PathfindingStrategy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static evacuation.sim.factory.AgentFactory.createRandomEvacuee;
@@ -40,8 +38,10 @@ public class Simulation implements SimObserver {
         this.config = SimSingletonConfig.getInstance();
         // gets the path to the map from the configuration
         String mapPath = this.config.getMapFilePath();
+
         // creates a board that will automatically adjust to this file
         this.board = new Board(mapPath);
+        // this.board = board;
 
         // initializing the rest of the structures:
         this.agents = new ArrayList<>();
@@ -267,5 +267,16 @@ public class Simulation implements SimObserver {
         Agent newSmoke = AgentFactory.createSmoke(cell.getLogicalX(), cell.getLogicalY(), density);
         // add smoke agent to the buffer
         addAgent(newSmoke);
+    }
+
+    // getters/setters
+
+    public Board getBoard() {
+        return this.board;
+    }
+
+    // safe getter (encapsulation security: returns no changeable list)
+    public List<Agent> getAgents() {
+        return Collections.unmodifiableList(this.agents);
     }
 }

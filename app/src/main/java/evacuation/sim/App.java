@@ -1,12 +1,11 @@
-
 package evacuation.sim;
 
-import evacuation.sim.core.Simulation;
+import evacuation.sim.gui.GuiApplication;
+import javafx.application.Application;
 
 public class App {
-
     public static void main(String[] args) {
-        Simulation simulation = new Simulation();
-        simulation.run();
+        // launches javaFX engine
+        Application.launch(GuiApplication.class, args);
     }
 }

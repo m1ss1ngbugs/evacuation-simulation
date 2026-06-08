@@ -29,6 +29,12 @@ public class Board {
         this.height = grid[0].length;
     }
 
+    public Board(int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.grid = new Cell[width][height];
+    }
+
     // Method which updates spatial index (makes map: agent - position on the board)
     public void updateSpatialIndex(List<Agent> agentsFromSimulation) {
         spatialIndex.clear();
