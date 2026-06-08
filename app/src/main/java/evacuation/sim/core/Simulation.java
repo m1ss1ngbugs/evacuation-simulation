@@ -53,6 +53,18 @@ public class Simulation implements SimObserver {
         initialize();
     }
 
+    public void restartSimulation() {
+        this.agents.clear();
+        this.agentsToAdd.clear();
+        this.agentsToRemove.clear();
+        this.currentTime = 0.0f;
+
+        String mapPath = this.config.getMapFilePath();
+        this.board = new Board(mapPath);
+
+        initialize(); 
+    }
+
     @Override
     public void onNotify(SimEvent event) {
         Cell targetCell = board.getCell(event.getX(), event.getY());

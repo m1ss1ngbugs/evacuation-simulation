@@ -134,6 +134,7 @@ public class Board {
 
                     // assigning tile type
                     BaseType type = switch (c) {
+                        case 'O' -> BaseType.OBSTACLE;
                         case '#' -> BaseType.WALL;
                         case 'E' -> BaseType.EXIT;
                         default -> BaseType.FLOOR;

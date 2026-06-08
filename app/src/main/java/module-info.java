@@ -5,4 +5,5 @@ module evacuation.sim {
 
     exports evacuation.sim;
     exports evacuation.sim.gui;
+    exports evacuation.sim.core;
 }

@@ -26,6 +26,8 @@ public class Statistics {
         if(savedCount == 1){
             this.firstEvacuationTime = time;
         }
+
+        this.totalEvacuationTime = time;
     }
 
     public void incrementCasualtiesFire(){casualtiesFire++;}
@@ -33,18 +35,40 @@ public class Statistics {
     public void incrementCasualtiesSmoke(){casualtiesSmoke++;}
 
     public void generateHeatmap(Board board){
-        
+        //TODO: Heatmap
     }
 
     public float calculateSurvivalRate(){
-        return (float) (casualtiesFire + casualtiesSmoke) / totalPeople;
+        return (float) savedCount / totalPeople;
     }
 
     public String determineFinalScenario(){
-        return "Hello World!";
+        if (savedCount == totalPeople) {
+            return "Best Scenario: All Evacuees Escaped";
+        } else if (calculateSurvivalRate() >= 0.66f) {
+            return "Neutral Scenario: Majority of Evacuees Escaped";
+        } else {
+            return "Worst Scenario: Many Evacuees Lost";
+        }
     }
 
     public int getSavedCount() {
         return savedCount;
+    }
+
+    public int getCasualtiesFire() {
+        return casualtiesFire;
+    }
+
+    public int getCasualtiesSmoke() {
+        return casualtiesSmoke;
+    }
+
+    public float getFirstEvacuationTime() {
+        return firstEvacuationTime;
+    }
+
+    public float getTotalEvacuationTime() {
+        return totalEvacuationTime;
     }
 }

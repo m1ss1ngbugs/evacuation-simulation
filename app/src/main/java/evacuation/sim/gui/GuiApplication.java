@@ -12,15 +12,27 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GuiApplication extends Application {
 
     private Simulation simulation;
+    private AnimationTimer timer;
 
-    private static final int TILE_SIZE = 20; // size of a single Cell
+    private Canvas canvas;
+    private GraphicsContext gc;
+    
+
+    private static int TILE_SIZE = 20; // size of a single Cell
     /* TODO: potrzebne jest rozwiązanie: albo mapa będzie statyczna, albo musi później być możliwość rysowania
      TODO: jej za pomocą GUI */
 
@@ -34,25 +46,58 @@ public class GuiApplication extends Application {
         int dynamicWidth = simulation.getBoard().getWidth();
         int dynamicHeight = simulation.getBoard().getHeight();
 
+        double availableWidth = 900.0;
+        double availableHeight = 500.0;
+
+        double tileWidth = availableWidth / dynamicWidth;
+        double tileHeight = availableHeight / dynamicHeight;
+
+        int calculatedTileSize = (int) Math.min(tileHeight, tileWidth);
+
+        TILE_SIZE = Math.max(10, Math.min(40, calculatedTileSize));
+
         // creates canvas to draw the simulation
-        Canvas canvas = new Canvas(dynamicWidth * TILE_SIZE, dynamicHeight * TILE_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D(); // virtual brush for canvas configuration
+        this.canvas = new Canvas(dynamicWidth * TILE_SIZE, dynamicHeight * TILE_SIZE);
+        this.gc = this.canvas.getGraphicsContext2D(); // virtual brush for canvas configuration
 
         // draws the board
         render(gc);
 
         // packs canvas to layout and creates the scene
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(canvas);
-        Scene scene = new Scene(stackPane);
+        //TODO: Usunac to, zrobic osobne pliki do tego
+        // StackPane stackPane = new StackPane();
+        // stackPane.getChildren().add(canvas);
+        // Scene scene = new Scene(stackPane);
+
+        BorderPane mainLayout = new BorderPane();
+        mainLayout.setStyle("-fx-background-color: linear-gradient(to bottom, #6c0ab7, #4214ad);");
+
+        ControlPanel controlPanel = new ControlPanel(this, simulation);
+        mainLayout.setLeft(controlPanel);
+
+        VBox rightLayout = new VBox(20);
+        rightLayout.setStyle("-fx-padding: 20px;");
+
+        StackPane mapBox = new StackPane(canvas);
+        VBox.setVgrow(mapBox, Priority.ALWAYS);
+        mapBox.setStyle("-fx-background-radius: 12px; -fx-padding: 10px; -fx-background-color: #cd03ff2f");
+
+        StatsPanel statsPanel = new StatsPanel();
+
+        rightLayout.getChildren().addAll(mapBox, statsPanel);
+
+        mainLayout.setCenter(rightLayout);
+
+        Scene scene = new Scene(mainLayout);
 
         // the main window configuration
         primaryStage.setTitle("Symulacja Ewakuacji");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true); // start in full screen
         primaryStage.setResizable(false); // blocks window resizing for ease of use
 
         // creates a time engine
-        AnimationTimer timer = new AnimationTimer() {
+        this.timer = new AnimationTimer() {
             private long lastUpdate = 0;
 
             @Override
@@ -75,7 +120,7 @@ public class GuiApplication extends Application {
             }
         };
 
-        timer.start(); // Uruchamiamy zegar!
+        // timer.start(); // Uruchamiamy zegar!
 
         // captures the window closing event
         primaryStage.setOnCloseRequest(event -> {
@@ -96,6 +141,25 @@ public class GuiApplication extends Application {
         gc.fillRect(5 * TILE_SIZE, 5 * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
+    public void handleReset() {
+    this.simulation.restartSimulation();
+
+    int newW = simulation.getBoard().getWidth();
+    int newH = simulation.getBoard().getHeight();
+
+    double availableWidth = 900.0;
+    double availableHeight = 500.0;
+    int calculatedTileSize = (int) Math.min(availableWidth / newW, availableHeight / newH);
+    TILE_SIZE = Math.max(10, Math.min(40, calculatedTileSize));
+
+    this.gc.clearRect(0, 0, 3000, 3000);
+
+    this.canvas.setWidth(newW * TILE_SIZE);
+    this.canvas.setHeight(newH * TILE_SIZE);
+
+    render(this.gc);
+}
+
     private void render(GraphicsContext gc) {
         Board board = simulation.getBoard(); // take the board out of the simulation
 
@@ -112,6 +176,8 @@ public class GuiApplication extends Application {
                     gc.setFill(Color.BLACK);
                 } else if (cell.getBaseType() == BaseType.EXIT) {
                     gc.setFill(Color.GREEN);
+                } else if (cell.getBaseType() == BaseType.OBSTACLE) {
+                    gc.setFill(Color.BURLYWOOD);
                 } else {
                     gc.setFill(Color.LIGHTGRAY); // Domyślna podłoga
                 }
@@ -127,8 +193,8 @@ public class GuiApplication extends Application {
                 gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
                 // chooses the color for the frame of the cell and draws it
-                gc.setStroke(Color.GRAY);
-                gc.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                // gc.setStroke(Color.GRAY);
+                // gc.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
 
@@ -137,12 +203,20 @@ public class GuiApplication extends Application {
         for (Agent agent : simulation.getAgents()) {
             if(agent instanceof evacuation.sim.agent.human.Evacuee) {
                 // convert logical position to pixels position
-                double px = agent.getLogicalX() * TILE_SIZE;
-                double py = agent.getLogicalY() * TILE_SIZE;
+                double px = agent.getRenderX() * TILE_SIZE;
+                double py = agent.getRenderY() * TILE_SIZE;
 
                 // draw the agent (circle)
                 gc.fillOval(px, py, TILE_SIZE, TILE_SIZE);
             }
         }
+    }
+
+    public AnimationTimer getTimer() {
+        return this.timer;
+    }
+
+    public Simulation getSimulation() {
+        return this.simulation;
     }
 }

@@ -46,7 +46,7 @@ public class SimSingletonConfig {
         this.panickedRatio = 0.20f;          // 20% of panicked people
 
         this.meanBaseSpeed = 1.4f;           // the average human speed is approx. 1.4 m/s
-        this.speedVariance = 0.2f;           // the speed will vary from approx. 1.0 to 1.8 m/s
+        this.speedVariance = 0.2f;           // the speed will vary from approx. 1.2 to 1.6 m/s
         this.evacueeHealth = 100.0f;         // initial evacuee health
         this.evacueeReactionTime = 3.0f;     // evacuee first reaction to hazard time = 3 sec
         this.evacueeVisionRadius = 2;        // sets evacuee vision radius to two cells
@@ -178,5 +178,13 @@ public class SimSingletonConfig {
 
     public int getEvacueeVisionRadius() {
         return evacueeVisionRadius;
+    }
+
+    public void setInitialEvacueesCount(int initialEvacueesCount) {
+        this.initialEvacueesCount = initialEvacueesCount;
+    }
+
+    public void setMapFilePath(String mapFilePath) {
+        this.mapFilePath = mapFilePath;
     }
 }
