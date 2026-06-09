@@ -3,7 +3,6 @@ package evacuation.sim.core;
 import evacuation.sim.model.Board;
 
 public class Statistics {
-    private Statistics stats;
     private int totalPeople;
 
     private int savedCount;
@@ -37,7 +36,7 @@ public class Statistics {
     }
 
     public float calculateSurvivalRate(){
-        return (float) (casualtiesFire + casualtiesSmoke) / totalPeople;
+        return (float) savedCount / totalPeople;
     }
 
     public String determineFinalScenario(){

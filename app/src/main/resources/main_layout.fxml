@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="evacuation.sim.gui.SimulationController">
+   <left>
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
+         <content>
+            <VBox prefWidth="250.0" style="-fx-background-color: #A020F0;">
+               <children>
+                  <Slider fx:id="peopleSlider" />
+                  <Button mnemonicParsing="false" onAction="#onStartClicked" text="Start" />
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </left>
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Canvas fx:id="simulationCanvas" height="200.0" layoutX="75.0" layoutY="25.0" width="200.0" />
+               </children>
+            </Pane>
+         </center>
+         <bottom>
+            <HBox prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #E027F5;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="savedLabel" text="Label" />
+               </children>
+            </HBox>
+         </bottom>
+      </BorderPane>
+   </center>
+</BorderPane>

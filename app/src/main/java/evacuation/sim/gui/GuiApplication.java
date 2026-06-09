@@ -1,81 +1,87 @@
 package evacuation.sim.gui;
 
-import evacuation.sim.agent.Agent;
-import evacuation.sim.core.Simulation;
-import evacuation.sim.model.Board;
-import evacuation.sim.model.Cell;
-import evacuation.sim.model.DynamicState;
-import evacuation.sim.model.BaseType;
 
-import javafx.animation.AnimationTimer;
+import evacuation.sim.core.Simulation;
+
+
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class GuiApplication extends Application {
 
-    private Simulation simulation;
 
-    private static final int TILE_SIZE = 20; // size of a single Cell
     /* TODO: potrzebne jest rozwiązanie: albo mapa będzie statyczna, albo musi później być możliwość rysowania
      TODO: jej za pomocą GUI */
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
 
-        // logic initialization before window creation
-        simulation = new Simulation();
+//        // logic initialization before window creation
+//        simulation = new Simulation();
+//
+//        int dynamicWidth = simulation.getBoard().getWidth();
+//        int dynamicHeight = simulation.getBoard().getHeight();
+//
+//        // creates canvas to draw the simulation
+//        Canvas canvas = new Canvas(dynamicWidth * TILE_SIZE, dynamicHeight * TILE_SIZE);
+//        GraphicsContext gc = canvas.getGraphicsContext2D(); // virtual brush for canvas configuration
+//
+//        // draws the board
+//        render(gc);
+//
+//        // packs canvas to layout and creates the scene
+//        StackPane stackPane = new StackPane();
+//        stackPane.getChildren().add(canvas);
+//        Scene scene = new Scene(stackPane);
+//
+//        // the main window configuration
+//        primaryStage.setTitle("Symulacja Ewakuacji");
+//        primaryStage.setScene(scene);
+//        primaryStage.setResizable(false); // blocks window resizing for ease of use
+//
+//        // creates a time engine
+//        AnimationTimer timer = new AnimationTimer() {
+//            private long lastUpdate = 0;
+//
+//            @Override
+//            public void handle(long now) {
+//                // For the first time
+//                if (lastUpdate == 0) {
+//                    lastUpdate = now;
+//                    return;
+//                }
+//
+//                // count time in seconds
+//                float dt = (now - lastUpdate) / 1_000_000_000.0f;
+//                lastUpdate = now;
+//
+//                // pushing simulation logic forward
+//                simulation.updateTick(dt);
+//
+//                // draws new state on the screen
+//                render(gc);
+//            }
+//        };
+//        timer.start(); // Uruchamiamy zegar!
 
-        // 2. POBIERANIE DYNAMICZNYCH WYMIARÓW Z LOGIKI
-        int dynamicWidth = simulation.getBoard().getWidth();
-        int dynamicHeight = simulation.getBoard().getHeight();
 
-        // creates canvas to draw the simulation
-        Canvas canvas = new Canvas(dynamicWidth * TILE_SIZE, dynamicHeight * TILE_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D(); // virtual brush for canvas configuration
+        // 1. Ładowarka plików FXML (szuka pliku w folderze resources)
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main_layout.fxml"));
 
-        // draws the board
-        render(gc);
+        // 2. Wczytujemy całą strukturę widoku (nasz główny BorderPane)
+        Parent root = loader.load();
 
-        // packs canvas to layout and creates the scene
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(canvas);
-        Scene scene = new Scene(stackPane);
+        // 3. Tworzymy scenę
+        Scene scene = new Scene(root);
 
-        // the main window configuration
         primaryStage.setTitle("Symulacja Ewakuacji");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false); // blocks window resizing for ease of use
 
-        // creates a time engine
-        AnimationTimer timer = new AnimationTimer() {
-            private long lastUpdate = 0;
-
-            @Override
-            public void handle(long now) {
-                // For the first time
-                if (lastUpdate == 0) {
-                    lastUpdate = now;
-                    return;
-                }
-
-                // count time in seconds
-                float dt = (now - lastUpdate) / 1_000_000_000.0f;
-                lastUpdate = now;
-
-                // pushing simulation logic forward
-                simulation.updateTick(dt);
-
-                // draws new state on the screen
-                render(gc);
-            }
-        };
-
-        timer.start(); // Uruchamiamy zegar!
 
         // captures the window closing event
         primaryStage.setOnCloseRequest(event -> {
@@ -84,65 +90,5 @@ public class GuiApplication extends Application {
         });
 
         primaryStage.show(); // show the window
-    }
-
-    private void drawTestScreen(GraphicsContext gc) {
-        // blurs the entire background in gray
-        gc.setFill(Color.LIGHTGRAY); // chooses a paint color
-        gc.fillRect(0, 0, 10 * TILE_SIZE, 10 * TILE_SIZE);
-
-        // draws test red square
-        gc.setFill(Color.RED);
-        gc.fillRect(5 * TILE_SIZE, 5 * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-    }
-
-    private void render(GraphicsContext gc) {
-        Board board = simulation.getBoard(); // take the board out of the simulation
-
-        // clears the entire canvas
-        gc.clearRect(0, 0, board.getWidth() * TILE_SIZE, board.getHeight() * TILE_SIZE);
-
-        // drawing the board (cells)
-        for (int x = 0; x < board.getWidth(); x++) {
-            for (int y = 0; y < board.getHeight(); y++) {
-                Cell cell = board.getCell(x, y);
-
-                // chooses the color
-                if (cell.getBaseType() == BaseType.WALL) {
-                    gc.setFill(Color.BLACK);
-                } else if (cell.getBaseType() == BaseType.EXIT) {
-                    gc.setFill(Color.GREEN);
-                } else {
-                    gc.setFill(Color.LIGHTGRAY); // Domyślna podłoga
-                }
-
-                // changes the color if there is hazard on the cell
-                if (cell.getDynamicState() == DynamicState.FIRE) {
-                    gc.setFill(Color.RED);
-                } else if (cell.getDynamicState() == DynamicState.SMOKE) {
-                    gc.setFill(Color.DARKGRAY);
-                }
-
-                // draw rectangle for this cell
-                gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-
-                // chooses the color for the frame of the cell and draws it
-                gc.setStroke(Color.GRAY);
-                gc.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            }
-        }
-
-        // draws the agents
-        gc.setFill(Color.BLUE); // evacuees - blue circles
-        for (Agent agent : simulation.getAgents()) {
-            if(agent instanceof evacuation.sim.agent.human.Evacuee) {
-                // convert logical position to pixels position
-                double px = agent.getLogicalX() * TILE_SIZE;
-                double py = agent.getLogicalY() * TILE_SIZE;
-
-                // draw the agent (circle)
-                gc.fillOval(px, py, TILE_SIZE, TILE_SIZE);
-            }
-        }
     }
 }
