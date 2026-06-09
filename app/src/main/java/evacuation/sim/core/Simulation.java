@@ -119,12 +119,12 @@ public class Simulation implements SimObserver {
             board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
         }
 
-        if (!agentsToAdd.isEmpty()) {
-            agents.addAll(agentsToAdd);
-            agentsToAdd.clear();        
-        }
+        //if (!agentsToAdd.isEmpty()) {
+         //   agents.addAll(agentsToAdd);
+         //   agentsToAdd.clear();        
+        //}
 
-        board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
+       // board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
 
         // fire spacing
         for (int i = 0; i < firesToSpawn; i++) {

@@ -111,7 +111,10 @@ public abstract class Evacuee extends Agent implements Damageable {
             }
         }
 
-        if (isCellOccupied) {return;}
+        if (isCellOccupied) {
+            plannedPath.clear();
+            return;
+        }
 
         float targetX = targetCell.getLogicalX();
         float targetY = targetCell.getLogicalY();

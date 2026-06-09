@@ -98,8 +98,9 @@ public class Board {
             if (cell != null && cell.getBaseType() == BaseType.FLOOR
                     && cell.getDynamicState() == DynamicState.NONE) {
 
+                    List<Agent> agentsAtCell = getAgentsAt(random_x, random_y);
                 // check if the Cell is Empty from other Agents
-                if (getAgentsAt(random_x, random_y).isEmpty()) {
+                if (agentsAtCell.isEmpty() || agentsAtCell == null) {
                      return cell; // place to spawn was found
 
                  }
