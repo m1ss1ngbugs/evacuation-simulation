@@ -49,11 +49,14 @@ public class AgentFactory {
 
     public static Agent createLeader(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
+
+        float finalSpeed = AgentRandomizer.calculateValue(config.getMeanBaseSpeed(), config.getSpeedVariance());
+
         return new Leader.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
                 .setHealth(config.getEvacueeHealth())
-                .setBaseSpeed(config.getMeanBaseSpeed())
+                .setBaseSpeed(finalSpeed)
                 .setReactionTime(config.getEvacueeReactionTime())
                 .setPathfinder(pathfinder)
                 .setVisionRadius(config.getEvacueeVisionRadius())
@@ -62,31 +65,37 @@ public class AgentFactory {
 
     public static Agent createFollower(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
+
+        float finalSpeed = AgentRandomizer.calculateValue(config.getMeanBaseSpeed(), config.getSpeedVariance());
+        float finalPanic = AgentRandomizer.calculateValue(config.getMeanPanicThreshold(), config.getPanicVariance());
+        float finalSocial = AgentRandomizer.calculateValue(config.getMeanSocialFactor(), config.getSocialVariance());
+
         return new Follower.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
                 .setHealth(config.getEvacueeHealth())
-                .setBaseSpeed(config.getMeanBaseSpeed())
+                .setBaseSpeed(finalSpeed)
                 .setReactionTime(config.getEvacueeReactionTime())
-                // TODO: otrzymuje średni: MeanPanicThreshold - potencjalnie poprawić
-                .setPanicThreshold(config.getMeanPanicThreshold())
+                .setPanicThreshold(finalPanic)
                 .setPathfinder(pathfinder)
-                // TODO: otrzymuje średni: MeanSocialFactor - potencjalnie poprawić
-                .setSocialFactor(config.getMeanSocialFactor())
+                .setSocialFactor(finalSocial)
                 .setVisionRadius(config.getEvacueeVisionRadius())
                 .build();
     }
 
     public static Agent createPanicked(int logicalX, int logicalY, PathfindingStrategy pathfinder) {
         int id = getNextId();
+
+        float finalSpeed = AgentRandomizer.calculateValue(config.getMeanBaseSpeed(), config.getSpeedVariance());
+        float finalPanic = AgentRandomizer.calculateValue(config.getMeanPanicThreshold(), config.getPanicVariance());
+
         return new Panicked.Builder()
                 .setId(id)
                 .setPosition(logicalX, logicalY)
                 .setHealth(config.getEvacueeHealth())
-                .setBaseSpeed(config.getMeanBaseSpeed())
+                .setBaseSpeed(finalSpeed)
                 .setReactionTime(config.getEvacueeReactionTime())
-                // TODO: otrzymuje średni: MeanPanicThreshold - potencjalnie poprawić
-                .setPanicThreshold(config.getMeanPanicThreshold())
+                .setPanicThreshold(finalPanic)
                 .setPathfinder(pathfinder)
                 .setVisionRadius(config.getEvacueeVisionRadius())
                 .build();

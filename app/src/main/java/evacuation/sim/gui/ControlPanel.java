@@ -24,7 +24,7 @@ public class ControlPanel extends VBox {
 
         // MAP
         Label labelMap = new Label("Map file:");
-        labelMap.setStyle("-fx-text-fill: white;");
+        //labelMap.setStyle("-fx-text-fill: white;");
         TextField inputMap = new TextField(SimSingletonConfig.getInstance().getMapFilePath());
         HBox.setHgrow(inputMap, Priority.ALWAYS);
 
@@ -48,13 +48,12 @@ public class ControlPanel extends VBox {
         mapInputBox.getChildren().addAll(inputMap, browseMapButton);
 
         // MAX EVACUATION TIME //TODO: Poprawki
-       /*  Label maxEvacTime = new Label("Max evacuation time:");
+        Label maxEvacTime = new Label("Max evacuation time:");
         TextField inputMaxEvacTime = new TextField(String.valueOf(SimSingletonConfig.getInstance().getMaxEvacuationTime()));
-        */
 
         // EVACUEES
         Label evacueeCount = new Label("Number of evacuees:");
-        evacueeCount.setStyle("-fx-text-fill: white;");
+        //evacueeCount.setStyle("-fx-text-fill: white;");
         TextField inputEvacueeCount = new TextField(String.valueOf(SimSingletonConfig.getInstance().getInitialEvacueesCount()));
 
         //Label ratioLabel = new Label("Ratio of:");
@@ -98,7 +97,10 @@ public class ControlPanel extends VBox {
         Label title = new Label("Evacuation Simulation");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;");
 
-        this.getChildren().addAll(title, labelMap, mapInputBox, evacueeCount, inputEvacueeCount, /*ratioBox,*/ buttonBox);
+        this.getChildren().addAll(title, labelMap, 
+            mapInputBox, evacueeCount, 
+            inputEvacueeCount, /*ratioBox,*/ 
+            buttonBox);
 
     }
 }

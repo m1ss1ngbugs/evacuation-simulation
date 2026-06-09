@@ -90,6 +90,8 @@ public class GuiApplication extends Application {
 
         Scene scene = new Scene(mainLayout);
 
+        scene.getStylesheets().add("data:text/css, .label { -fx-text-fill: white; }");
+
         // the main window configuration
         primaryStage.setTitle("Symulacja Ewakuacji");
         primaryStage.setScene(scene);

@@ -24,6 +24,7 @@ public abstract class Evacuee extends Agent implements Damageable {
     private PathfindingStrategy pathfinder;
     private int visionRadius;
     boolean sawHazard;
+    private boolean isAwareOfHazard = false;
 
     public Evacuee(int id, int logicalX, int logicalY, float health, float baseSpeed,
                    PathfindingStrategy pathfinder, float panicThreshold, float reactionTime, int visionRadius) {
@@ -45,22 +46,34 @@ public abstract class Evacuee extends Agent implements Damageable {
 
     @Override
     public void update(Board board, float dt){
+        this.internalTimer += dt;
+
         // if mental map doesn't exist
         if(this.mentalMap == null) {
             initializeMentalMap(board, dt);
         }
 
+        perceive(board);
+
+        if (this.sawHazard){
+            this.isAwareOfHazard = true;
+        }
+
+        if (!this.isAwareOfHazard) {return;}
+
+        if (this.internalTimer < this.reactionTime) {return;}
+
         if (this.plannedPath == null || this.plannedPath.isEmpty()) {
             calculatePath(); 
         }
 
-        perceive(board);
+        //perceive(board);
         psychoReaction(sawHazard, dt);
         verifyPath();
-        move(dt);
+        move(dt, board);
     }
 
-    protected void move(float dt){
+    protected void move(float dt, Board board){
 
         if (plannedPath == null || plannedPath.isEmpty()) {
             return;
@@ -77,6 +90,28 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
 
         Cell targetCell = plannedPath.get(0);
+
+        boolean isCellOccupied = false;
+        List<Agent> agentsOnTarget = board.getAgentsAt(targetCell.getLogicalX(), targetCell.getLogicalY());
+
+        if (agentsOnTarget != null) {
+            for (Agent a : agentsOnTarget) {
+                if (a instanceof Evacuee && a.getId() != this.getId()) {
+                    isCellOccupied = true;
+                    
+                    Evacuee blockedEvacuee = (Evacuee) a;
+                    if (!blockedEvacuee.isAwareOfHazard) {
+                        blockedEvacuee.isAwareOfHazard = true;
+
+                        blockedEvacuee.internalTimer = 0.0f;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (isCellOccupied) {return;}
 
         float targetX = targetCell.getLogicalX();
         float targetY = targetCell.getLogicalY();
