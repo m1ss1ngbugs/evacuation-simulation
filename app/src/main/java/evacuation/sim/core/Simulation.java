@@ -119,13 +119,6 @@ public class Simulation implements SimObserver {
             board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
         }
 
-        //if (!agentsToAdd.isEmpty()) {
-         //   agents.addAll(agentsToAdd);
-         //   agentsToAdd.clear();        
-        //}
-
-       // board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
-
         // fire spacing
         for (int i = 0; i < firesToSpawn; i++) {
             // looking for a new free space
@@ -170,23 +163,23 @@ public class Simulation implements SimObserver {
             // global clock and counter update
             currentTime += dt;
             currentStep++;
-            // proof of action to console
-            long ludzieCount = 0;
-            long ogienCount = 0;
-            long dymCount = 0;
+
+            long evacueeCount = 0;
+            long fireCount = 0;
+            long smokeCount = 0;
 
             for (Agent a : agents) {
                  if (a instanceof evacuation.sim.agent.human.Evacuee) {
-                     ludzieCount++;
+                    evacueeCount++;
                 } else if (a instanceof evacuation.sim.agent.hazard.Smoke) {
-                    dymCount++;
+                    smokeCount++;
                 } else if (a instanceof evacuation.sim.agent.hazard.Fire) {
-                    ogienCount++;
+                    fireCount++;
                 }
 }
 
-            System.out.println("-> Ludzie w budynku: " + ludzieCount);
-            System.out.println("-> Zagrożenia: [Ogień: " + ogienCount + " | Dym: " + dymCount + "]");
+            System.out.println("-> Ludzi w budynku: " + evacueeCount);
+            System.out.println("-> Zagrożenia: [Ogień: " + fireCount + " | Dym: " + smokeCount + "]");
             System.out.println("Uratowani: " + stats.getSavedCount());
 
             // put the loop to sleep for 500 millis
@@ -210,6 +203,11 @@ public class Simulation implements SimObserver {
 
             if (agent instanceof Evacuee evacueeAgent) {
                 Cell cell = board.getCell(evacueeAgent.getLogicalX(), evacueeAgent.getLogicalY());
+
+                if (cell != null) {
+                    cell.addVisit();
+                }
+
                 // agent death check
                 if(!agent.isActive()){
                     if (cell != null) {
@@ -223,9 +221,13 @@ public class Simulation implements SimObserver {
                 }
                 // agents successfully evacuated
                 else if (cell != null && cell.getBaseType() == BaseType.EXIT) {
-                    stats.incrementSaved(this.currentTime);
-                    removeAgent(evacueeAgent);
+                    if (evacueeAgent.getRenderX() == evacueeAgent.getLogicalX() &&
+                            evacueeAgent.getRenderY() == evacueeAgent.getLogicalY()) {
+                        stats.incrementSaved(this.currentTime);
+                        removeAgent(evacueeAgent);
+                    }
                 }
+
             }
 
             if (agent instanceof Smoke smokeAgent) { 
@@ -239,7 +241,7 @@ public class Simulation implements SimObserver {
                 }
             }
         }
-        
+
         // introduce agents from the waiting room to the main list of agents
         if (!agentsToAdd.isEmpty()) {
             agents.addAll(agentsToAdd);
@@ -283,7 +285,7 @@ public class Simulation implements SimObserver {
         // change the state of the board to FIRE, so that no one else can spawn on this Cell
         cell.setDynamicState(DynamicState.FIRE);
 
-        // use AgentFabric to create new instance of Fire
+        // use AgentFactory to create new instance of Fire
         Agent newFire = AgentFactory.createFire(cell.getLogicalX(), cell.getLogicalY());
         // add fire agent to the buffer
         addAgent(newFire);

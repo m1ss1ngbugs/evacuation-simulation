@@ -70,7 +70,7 @@ public class Fire extends Hazard{
 
         for (Cell neighbor : neighbors) {
             if (neighbor.getBaseType() == BaseType.FLOOR && neighbor.getDynamicState() != DynamicState.FIRE) {
-                if (Math.random() < 0.3) { // example condition for fire spread
+                if (Math.random() < 0.3) { // condition for fire spread
                     // makes and send the package with request about new instance of Fire spawning
                     notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_FIRE, neighbor.getLogicalX(),
                             neighbor.getLogicalY(), 0.0f));

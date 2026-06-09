@@ -2,6 +2,7 @@ package evacuation.sim.agent.human;
 
 import evacuation.sim.model.Cell;
 import evacuation.sim.routing.PathfindingStrategy;
+import evacuation.sim.model.Board;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class Leader extends Evacuee{
     }
 
     @Override
-    protected void handlePanic(float dt){
+    protected void handlePanic(float dt, Board board){
 
         setPanicLevel(0.0f);
         // doesn't need this logic, because he never panics

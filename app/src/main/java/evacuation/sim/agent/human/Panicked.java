@@ -2,6 +2,12 @@ package evacuation.sim.agent.human;
 
 import evacuation.sim.routing.PathfindingStrategy;
 
+import java.util.List;
+
+import evacuation.sim.model.BaseType;
+import evacuation.sim.model.Board;
+import evacuation.sim.model.Cell;
+
 public class Panicked extends Evacuee{
 
     private Panicked(int id, int logicalX, int logicalY, float health, float baseSpeed,
@@ -10,13 +16,32 @@ public class Panicked extends Evacuee{
     }
 
     @Override
-    protected void handlePanic(float dt){
+    protected void handlePanic(float dt, Board board){
         
         if (shouldPanic()) {
             setCurrentSpeed(getBaseSpeed() * 1.6f);
 
             if (getPlannedPath() != null && !getPlannedPath().isEmpty()) {
                 getPlannedPath().clear();
+
+                List<Cell> neighbors = board.getNeighbors((int)getLogicalX(), (int)getLogicalY());
+                    List<Cell> validChoices = new java.util.ArrayList<>();
+
+                    for (Cell neighbor : neighbors) {
+                        if (neighbor.getBaseType() != BaseType.WALL && neighbor.getBaseType() != BaseType.OBSTACLE) {
+                            if (board.getAgentsAt(neighbor.getLogicalX(), neighbor.getLogicalY()).isEmpty()) {
+                                validChoices.add(neighbor);
+                            }
+                        }
+                    }
+
+                    // If found, random direction
+                    if (!validChoices.isEmpty()) {
+                        int randomIndex = (int)(Math.random() * validChoices.size());
+                        Cell randomDestination = validChoices.get(randomIndex);
+            
+                        getPlannedPath().add(randomDestination);
+                    }
             }
         } else {
             setCurrentSpeed(getBaseSpeed());

@@ -1,6 +1,11 @@
 package evacuation.sim.agent.human;
 
+import java.util.List;
+
+import evacuation.sim.model.BaseType;
 import evacuation.sim.routing.PathfindingStrategy;
+import evacuation.sim.model.Board;
+import evacuation.sim.model.Cell;
 
 public class Follower extends Evacuee {
     private float socialFactor;
@@ -13,13 +18,34 @@ public class Follower extends Evacuee {
     }
 
     @Override
-    protected void handlePanic(float dt){
+    protected void handlePanic(float dt, Board board){
 
         if (shouldPanic()) {
             setCurrentSpeed(getBaseSpeed() * 1.2f);
 
             if (getPanicLevel() > getPanicThreshold() * 1.5f && getPlannedPath() != null) {
-                getPlannedPath().clear();
+                if (getRenderX() == getLogicalX() && getRenderY() == getLogicalY()) { // if he is on tile
+                    getPlannedPath().clear(); // oopsie whoopsie, too panicked
+                
+                    List<Cell> neighbors = board.getNeighbors((int)getLogicalX(), (int)getLogicalY());
+                    List<Cell> validChoices = new java.util.ArrayList<>();
+
+                    for (Cell neighbor : neighbors) {
+                        if (neighbor.getBaseType() != BaseType.WALL && neighbor.getBaseType() != BaseType.OBSTACLE) {
+                            if (board.getAgentsAt(neighbor.getLogicalX(), neighbor.getLogicalY()).isEmpty()) {
+                                validChoices.add(neighbor);
+                            }
+                        }
+                    }
+
+                    // If found, random direction
+                    if (!validChoices.isEmpty()) {
+                        int randomIndex = (int)(Math.random() * validChoices.size());
+                        Cell randomDestination = validChoices.get(randomIndex);
+            
+                        getPlannedPath().add(randomDestination);
+                    }
+                }
             }
         } else {
 

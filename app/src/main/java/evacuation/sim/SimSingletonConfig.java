@@ -68,7 +68,7 @@ public class SimSingletonConfig {
         this.smokeFadeRatePerSecond = 10.0f;  // smoke fades 10% per second
         this.smokeDuplicationThreshold = 15.0f; // smoke duplicates only if it has density > threshold
 
-        this.mapFilePath = "mapa.txt";
+        this.mapFilePath = "Mapa1.txt";
     }
 
     public static SimSingletonConfig getInstance(){
