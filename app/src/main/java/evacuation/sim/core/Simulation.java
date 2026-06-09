@@ -111,15 +111,17 @@ public class Simulation implements SimObserver {
             Agent newEvacuee = createRandomEvacuee(spawnPoint.getLogicalX(),
                     spawnPoint.getLogicalY(), defaultPathfinder);
             // add agent to the buffer
-            addAgent(newEvacuee);
+            // addAgent(newEvacuee);
+            agents.add(newEvacuee); 
+            board.updateSpatialIndex(agents);
         }
 
-        if (!agentsToAdd.isEmpty()) {
-            agents.addAll(agentsToAdd);
-            agentsToAdd.clear();        
-        }
+        //if (!agentsToAdd.isEmpty()) {
+         //   agents.addAll(agentsToAdd);
+         //   agentsToAdd.clear();        
+        //}
 
-        board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
+       // board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
 
         // fire spacing
         for (int i = 0; i < firesToSpawn; i++) {
