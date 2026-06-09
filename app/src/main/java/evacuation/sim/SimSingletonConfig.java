@@ -58,7 +58,7 @@ public class SimSingletonConfig {
         this.socialVariance = 0.1f;          // variation of social factor
 
         this.initialFireHazardsCount = 1;    // 1 fire hazard source
-        this.fireDamagePerSecond = 20.f;     // fire damage per second
+        this.fireDamagePerSecond = 20.0f;     // fire damage per second
         this.fireSpreadInterval = 3.0f;      // fire spreads every 3 seconds
         this.fireIncubationDelay = 3.0f;     // fire has 3 seconds incubation delay
 

@@ -32,8 +32,6 @@ public class SimulationController {
     // population sliders and builders
     @FXML private Slider initialEvacueesCountSlider;
     @FXML private Label initialEvacueesCountLabel;
-    @FXML private Slider initialFireHazardsCountSlider;
-    @FXML private Label initialFireHazardsCountLabel;
     // roles sliders and labels
     @FXML private Slider leaderRatioSlider;
     @FXML private Label leaderRatioLabel;
@@ -63,6 +61,26 @@ public class SimulationController {
     @FXML private Label meanSocialFactorLabel;
     @FXML private Slider socialVarianceSlider;
     @FXML private Label socialVarianceLabel;
+    // fire sliders and labels
+    @FXML private Slider initialFireHazardsCountSlider;
+    @FXML private Label initialFireHazardsCountLabel;
+    @FXML private Slider fireDamagePerSecondSlider;
+    @FXML private Label fireDamagePerSecondLabel;
+    @FXML private Slider fireSpreadIntervalSlider;
+    @FXML private Label fireSpreadIntervalLabel;
+    @FXML private Slider fireIncubationDelaySlider;
+    @FXML private Label fireIncubationDelayLabel;
+    // smoke sliders and labels
+    @FXML private Slider smokeDamagePerSecondSlider;
+    @FXML private Label smokeDamagePerSecondLabel;
+    @FXML private Slider smokeSpreadIntervalSlider;
+    @FXML private Label smokeSpreadIntervalLabel;
+    @FXML private Slider smokeInitialDensitySlider;
+    @FXML private Label smokeInitialDensityLabel;
+    @FXML private Slider smokeFadeRatePerSecondSlider;
+    @FXML private Label smokeFadeRatePerSecondLabel;
+    @FXML private Slider smokeDuplicationThresholdSlider;
+    @FXML private Label smokeDuplicationThresholdLabel;
 
     private Simulation simulation;
     private GraphicsContext gc;
@@ -104,10 +122,34 @@ public class SimulationController {
                 0, 30, config.getPanicVariance(), "%.0f");
         // Initial meanSocialFactor slider and label
         setupSlider(meanSocialFactorSlider, meanSocialFactorLabel,
-                0, 100, config.getMeanSocialFactor(), "%.0f%%");
+                0, 100, config.getMeanSocialFactor()*100, "%.0f%%");
         // Initial socialVariance slider and label
         setupSlider(socialVarianceSlider, socialVarianceLabel,
-                0, 40, config.getSocialVariance(), "%.0f%%");
+                0, 40, config.getSocialVariance()*100, "%.0f%%");
+        // Initial fireDamagePerSecond slider and label
+        setupSlider(fireDamagePerSecondSlider, fireDamagePerSecondLabel,
+                20, 100, config.getFireDamagePerSecond(), "%.0f");
+        // Initial fireSpreadInterval slider and label
+        setupSlider(fireSpreadIntervalSlider, fireSpreadIntervalLabel,
+                0.5f, 10.0f, config.getFireSpreadInterval(), "%.1f");
+        // Initial fireIncubationDelay slider and label
+        setupSlider(fireIncubationDelaySlider, fireIncubationDelayLabel,
+                0.0f, 10.0f, config.getFireIncubationDelay(), "%.1f");
+        // Initial smokeDamagePerSecond slider and label
+        setupSlider(smokeDamagePerSecondSlider, smokeDamagePerSecondLabel,
+                1, 15, config.getSmokeDamagePerSecond(), "%.1f");
+        // Initial smokeSpreadInterval slider and label
+        setupSlider(smokeSpreadIntervalSlider, smokeSpreadIntervalLabel,
+                0.0, 5.0, config.getSmokeSpreadInterval(), "%.1f");
+        // Initial smokeInitialDensity slider and label
+        setupSlider(smokeInitialDensitySlider, smokeInitialDensityLabel,
+                20, 140, config.getSmokeInitialDensity(), "%.0f");
+        // Initial smokeFadeRatePerSecond slider and label
+        setupSlider(smokeFadeRatePerSecondSlider, smokeFadeRatePerSecondLabel,
+                5, 25, config.getSmokeFadeRatePerSecond(), "%.0f");
+        // Initial smokeDuplicationThreshold slider and label
+        setupSlider(smokeDuplicationThresholdSlider, smokeDuplicationThresholdLabel,
+                5, 30, config.getSmokeDuplicationThreshold(), "%.0f");
 
         // text fields
         inputMap.setText(config.getMapFilePath());
@@ -147,22 +189,40 @@ public class SimulationController {
             float newPanicVariance = (float) panicVarianceSlider.getValue();
             float newMeanSocialFactor = (float) (meanSocialFactorSlider.getValue() / 100);
             float newSocialVariance = (float) (socialVarianceSlider.getValue() / 100);
+            float newFireDamagePerSecond = (float) fireDamagePerSecondSlider.getValue();
+            float newFireSpreadInterval = (float) fireSpreadIntervalSlider.getValue();
+            float newFireIncubationDelay = (float) fireIncubationDelaySlider.getValue();
+            float newSmokeDamagePerSecond = (float) smokeDamagePerSecondSlider.getValue();
+            float newSmokeSpreadInterval = (float) smokeSpreadIntervalSlider.getValue();
+            float newSmokeInitialDensity = (float) smokeInitialDensitySlider.getValue();
+            float newSmokeFadeRatePerSecond = (float) smokeFadeRatePerSecondSlider.getValue();
+            float newSmokeDuplicationThreshold = (float) smokeDuplicationThresholdSlider.getValue();
 
-            SimSingletonConfig.getInstance().setInitialEvacueesCount(newCount);
-            SimSingletonConfig.getInstance().setInitialFireHazardsCount(newFireCount); // ZAPISUJEMY POŻARY
-            SimSingletonConfig.getInstance().setMapFilePath(inputMap.getText());
-            SimSingletonConfig.getInstance().setLeaderRatio(newLeaderRatio);
-            SimSingletonConfig.getInstance().setFollowerRatio(newFollowerRatio);
-            SimSingletonConfig.getInstance().setPanickedRatio(newPanickedRatio);
-            SimSingletonConfig.getInstance().setMeanBaseSpeed(newMeanBaseSpeed);
-            SimSingletonConfig.getInstance().setSpeedVariance(newSpeedVariance);
-            SimSingletonConfig.getInstance().setEvacueeHealth(newEvacueeHealth);
-            SimSingletonConfig.getInstance().setEvacueeReactionTime(newEvacueeReactionTime);
-            SimSingletonConfig.getInstance().setEvacueeVisionRadius(newEvacueeVisionRadius);
-            SimSingletonConfig.getInstance().setMeanPanicThreshold(newMeanPanicThreshold);
-            SimSingletonConfig.getInstance().setPanicVariance(newPanicVariance);
-            SimSingletonConfig.getInstance().setMeanSocialFactor(newMeanSocialFactor);
-            SimSingletonConfig.getInstance().setSocialVariance(newSocialVariance);
+            SimSingletonConfig config = SimSingletonConfig.getInstance();
+
+            config.setInitialEvacueesCount(newCount);
+            config.setInitialFireHazardsCount(newFireCount);
+            config.setMapFilePath(inputMap.getText());
+            config.setLeaderRatio(newLeaderRatio);
+            config.setFollowerRatio(newFollowerRatio);
+            config.setPanickedRatio(newPanickedRatio);
+            config.setMeanBaseSpeed(newMeanBaseSpeed);
+            config.setSpeedVariance(newSpeedVariance);
+            config.setEvacueeHealth(newEvacueeHealth);
+            config.setEvacueeReactionTime(newEvacueeReactionTime);
+            config.setEvacueeVisionRadius(newEvacueeVisionRadius);
+            config.setMeanPanicThreshold(newMeanPanicThreshold);
+            config.setPanicVariance(newPanicVariance);
+            config.setMeanSocialFactor(newMeanSocialFactor);
+            config.setSocialVariance(newSocialVariance);
+            config.setFireDamagePerSecond(newFireDamagePerSecond);
+            config.setFireSpreadInterval(newFireSpreadInterval);
+            config.setFireIncubationDelay(newFireIncubationDelay);
+            config.setSmokeDamagePerSecond(newSmokeDamagePerSecond);
+            config.setSmokeSpreadInterval(newSmokeSpreadInterval);
+            config.setSmokeInitialDensity(newSmokeInitialDensity);
+            config.setSmokeFadeRatePerSecond(newSmokeFadeRatePerSecond);
+            config.setSmokeDuplicationThreshold(newSmokeDuplicationThreshold);
 
         } catch (Exception ex) {
             System.err.println("Błąd wczytywania danych z panelu!");
