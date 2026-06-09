@@ -8,4 +8,5 @@ module evacuation.sim {
     exports evacuation.sim.gui;
 
     opens evacuation.sim.gui to javafx.fxml;
+    exports evacuation.sim.core;
 }
