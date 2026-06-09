@@ -240,7 +240,7 @@ public class SimSingletonConfig {
         this.initialFireHazardsCount = initialFireHazardsCount;
     }
 
-    public void setEvacueeHealth(int evacueeHealth) {
+    public void setEvacueeHealth(float evacueeHealth) {
         this.evacueeHealth = evacueeHealth;
     }
 
@@ -274,5 +274,9 @@ public class SimSingletonConfig {
 
     public void setEvacueeVisionRadius(int evacueeVisionRadius) {
         this.evacueeVisionRadius = evacueeVisionRadius;
+    }
+
+    public void setMeanPanicThreshold(float meanPanicThreshold) {
+        this.meanPanicThreshold = meanPanicThreshold;
     }
 }

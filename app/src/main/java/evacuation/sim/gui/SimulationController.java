@@ -29,11 +29,12 @@ public class SimulationController {
     @FXML private TextField inputMap;
     @FXML private Label savedLabel;
     // initial parameters sliders and labels
+    // population sliders and builders
     @FXML private Slider initialEvacueesCountSlider;
     @FXML private Label initialEvacueesCountLabel;
     @FXML private Slider initialFireHazardsCountSlider;
     @FXML private Label initialFireHazardsCountLabel;
-    // Roles sliders and labels
+    // roles sliders and labels
     @FXML private Slider leaderRatioSlider;
     @FXML private Label leaderRatioLabel;
     @FXML private Slider followerRatioSlider;
@@ -42,8 +43,26 @@ public class SimulationController {
     @FXML private Label panickedRatioLabel;
     // blocks StackOverFlowError when slider moving
     private boolean isUpdatingRatios = false;
+    // physics sliders and labels
     @FXML private Slider meanBaseSpeedSlider;
     @FXML private Label meanBaseSpeedLabel;
+    @FXML private Slider speedVarianceSlider;
+    @FXML private Label speedVarianceLabel;
+    @FXML private Slider evacueeHealthSlider;
+    @FXML private Label evacueeHealthLabel;
+    @FXML private Slider evacueeReactionTimeSlider;
+    @FXML private Label evacueeReactionTimeLabel;
+    @FXML private Slider evacueeVisionRadiusSlider;
+    @FXML private Label evacueeVisionRadiusLabel;
+    // psychological sliders and labels
+    @FXML private Slider meanPanicThresholdSlider;
+    @FXML private Label meanPanicThresholdLabel;
+    @FXML private Slider panicVarianceSlider;
+    @FXML private Label panicVarianceLabel;
+    @FXML private Slider meanSocialFactorSlider;
+    @FXML private Label meanSocialFactorLabel;
+    @FXML private Slider socialVarianceSlider;
+    @FXML private Label socialVarianceLabel;
 
     private Simulation simulation;
     private GraphicsContext gc;
@@ -54,23 +73,47 @@ public class SimulationController {
         gc = simulationCanvas.getGraphicsContext2D();
         SimSingletonConfig config = SimSingletonConfig.getInstance();
 
-        // Initial evacuee count slider
+        // Initial evacuee count slider and label
         setupSlider(initialEvacueesCountSlider, initialEvacueesCountLabel,
                 1, 100, config.getInitialEvacueesCount(), "%.0f");
-        // Initial fire hazards count slider
+        // Initial fire hazards count slider and label
         setupSlider(initialFireHazardsCountSlider, initialFireHazardsCountLabel,
                 0, 10, config.getInitialFireHazardsCount(), "%.0f");
-        // Setups ratio logic for ratio sliders
+        // Setups ratio logic for ratio sliders and labels
         setupRatioLogic();
-        // Initial meanBaseSpeed slider
+        // Initial meanBaseSpeed slider and label
         setupSlider(meanBaseSpeedSlider, meanBaseSpeedLabel,
-                0.5, 3, config.getMeanBaseSpeed(), "%.1f");
+                0.5f, 3.0f, config.getMeanBaseSpeed(), "%.1f");
+        // Initial speedVariance slider and label
+        setupSlider(speedVarianceSlider, speedVarianceLabel,
+                0.0f, 1.0f, config.getSpeedVariance(), "%.1f");
+        // Initial evacueeHealth slider and label
+        setupSlider(evacueeHealthSlider, evacueeHealthLabel,
+                50, 200, config.getEvacueeHealth(), "%.0f");
+        // Initial evacueeReactionTime slider and label
+        setupSlider(evacueeReactionTimeSlider, evacueeReactionTimeLabel,
+                0.0f, 10.0f, config.getEvacueeReactionTime(),"%.1f");
+        // Initial evacueeVisionRadius slider and label
+        setupSlider(evacueeVisionRadiusSlider, evacueeVisionRadiusLabel,
+                1, 15, config.getEvacueeVisionRadius(), "%.0f");
+        // Initial meanPanicThreshold slider and label
+        setupSlider(meanPanicThresholdSlider, meanPanicThresholdLabel,
+                10, 100, config.getMeanPanicThreshold(), "%.0f");
+        // Initial panicVariance slider and label
+        setupSlider(panicVarianceSlider, panicVarianceLabel,
+                0, 30, config.getPanicVariance(), "%.0f");
+        // Initial meanSocialFactor slider and label
+        setupSlider(meanSocialFactorSlider, meanSocialFactorLabel,
+                0, 100, config.getMeanSocialFactor(), "%.0f%%");
+        // Initial socialVariance slider and label
+        setupSlider(socialVarianceSlider, socialVarianceLabel,
+                0, 40, config.getSocialVariance(), "%.0f%%");
 
-        // Pola tekstowe
+        // text fields
         inputMap.setText(config.getMapFilePath());
     }
 
-    // --- WYBIERANIE PLIKU ---
+    // file selecting
     @FXML
     public void onBrowseMapClicked() {
         FileChooser fileChooser = new FileChooser();
@@ -83,19 +126,27 @@ public class SimulationController {
         }
     }
 
-    // --- URUCHAMIANIE I SKALOWANIE ---
+    // simulation launching and scaling
     @FXML
     public void onStartClicked() {
         if (timer != null) timer.stop();
 
         try {
-            // Aktualizacja Singletona danymi z okienka przed startem
+            // Updating the Singleton with data from sliders
             int newCount = (int) initialEvacueesCountSlider.getValue();
             int newFireCount = (int) initialFireHazardsCountSlider.getValue();
-            int newLeaderRatio = (int) (leaderRatioSlider.getValue() / 100);
-            int newFollowerRatio = (int) (followerRatioSlider.getValue() / 100);
-            int newPanickedRatio = (int) (panickedRatioSlider.getValue() / 100);
-            int newMeanBaseSpeed = (int) meanBaseSpeedSlider.getValue();
+            float newLeaderRatio = (float) (leaderRatioSlider.getValue() / 100);
+            float newFollowerRatio = (float) (followerRatioSlider.getValue() / 100);
+            float newPanickedRatio = (float) (panickedRatioSlider.getValue() / 100);
+            float newMeanBaseSpeed = (float) meanBaseSpeedSlider.getValue();
+            float newSpeedVariance = (float) speedVarianceSlider.getValue();
+            float newEvacueeHealth = (float) evacueeHealthSlider.getValue();
+            float newEvacueeReactionTime = (float) evacueeReactionTimeSlider.getValue();
+            int newEvacueeVisionRadius = (int) evacueeVisionRadiusSlider.getValue();
+            float newMeanPanicThreshold = (float) meanPanicThresholdSlider.getValue();
+            float newPanicVariance = (float) panicVarianceSlider.getValue();
+            float newMeanSocialFactor = (float) (meanSocialFactorSlider.getValue() / 100);
+            float newSocialVariance = (float) (socialVarianceSlider.getValue() / 100);
 
             SimSingletonConfig.getInstance().setInitialEvacueesCount(newCount);
             SimSingletonConfig.getInstance().setInitialFireHazardsCount(newFireCount); // ZAPISUJEMY POŻARY
@@ -104,16 +155,25 @@ public class SimulationController {
             SimSingletonConfig.getInstance().setFollowerRatio(newFollowerRatio);
             SimSingletonConfig.getInstance().setPanickedRatio(newPanickedRatio);
             SimSingletonConfig.getInstance().setMeanBaseSpeed(newMeanBaseSpeed);
+            SimSingletonConfig.getInstance().setSpeedVariance(newSpeedVariance);
+            SimSingletonConfig.getInstance().setEvacueeHealth(newEvacueeHealth);
+            SimSingletonConfig.getInstance().setEvacueeReactionTime(newEvacueeReactionTime);
+            SimSingletonConfig.getInstance().setEvacueeVisionRadius(newEvacueeVisionRadius);
+            SimSingletonConfig.getInstance().setMeanPanicThreshold(newMeanPanicThreshold);
+            SimSingletonConfig.getInstance().setPanicVariance(newPanicVariance);
+            SimSingletonConfig.getInstance().setMeanSocialFactor(newMeanSocialFactor);
+            SimSingletonConfig.getInstance().setSocialVariance(newSocialVariance);
+
         } catch (Exception ex) {
             System.err.println("Błąd wczytywania danych z panelu!");
             return;
         }
 
-        // Tworzymy nową symulację z nowymi danymi
+        // creates new simulation with new data
         simulation = new Simulation();
         Board board = simulation.getBoard();
 
-        // Skalowanie kafelków do dostępnego miejsca
+        // Scaling tiles to fit available space
         double availableWidth = 900.0;
         double availableHeight = 500.0;
         int dynamicWidth = board.getWidth();
@@ -125,8 +185,7 @@ public class SimulationController {
         simulationCanvas.setWidth(dynamicWidth * tileSize);
         simulationCanvas.setHeight(dynamicHeight * tileSize);
 
-        // Oczyszczenie płótna przed startem
-        gc.clearRect(0, 0, 3000, 3000);
+        gc.clearRect(0, 0, 3000, 3000); // Cleaning the canvas before start
 
         timer = new AnimationTimer() {
             private long lastUpdate = 0;
@@ -146,7 +205,7 @@ public class SimulationController {
         timer.start();
     }
 
-    // --- LOGIKA KOLEGI: PAUZA I RESET ---
+    // pause and reset
     @FXML
     public void onPauseClicked() {
         if (timer != null) {
@@ -159,8 +218,7 @@ public class SimulationController {
         if (timer != null) {
             timer.stop();
         }
-        // Wywołujemy Start, który ponownie czyta dane z okienka i tworzy symulację na nowo
-        onStartClicked();
+        onStartClicked();   // calls the restart
     }
 
     private void render(GraphicsContext gc) {
@@ -201,33 +259,33 @@ public class SimulationController {
         }
     }
 
-    // Uniwersalny konfigurator suwaków
+    // universal slider configuration
     private void setupSlider(Slider slider, Label label, double min, double max, double startValue, String format) {
         slider.setMin(min);
         slider.setMax(max);
         slider.setValue(startValue);
 
-        // Ustawienie tekstu startowego
+        // sets starting text to the label
         label.setText(String.format(format, startValue));
 
-        // Dodanie nasłuchiwacza zmian na żywo
+        // adds label listener to slider
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             label.setText(String.format(format, newValue.doubleValue()));
         });
     }
 
-    // Metoda startowa do wywołania w initialize()
+    // startup method for evacuees ratio parameters
     private void setupRatioLogic() {
         SimSingletonConfig config = SimSingletonConfig.getInstance();
 
-        // Mnożymy * 100, bo w configu masz ułamki (np. 0.15), a na ekranie chcemy 15%
+        // converts ratios to percents
         leaderRatioSlider.setValue(config.getLeaderRatio() * 100);
         followerRatioSlider.setValue(config.getFollowerRatio() * 100);
         panickedRatioSlider.setValue(config.getPanickedRatio() * 100);
 
         updateRatioLabels();
 
-        // Podpinamy listenery. Kiedy ruszasz jednym, wywołuje się nasza metoda matematyczna
+        // listener connecting with ratio adjusting
         leaderRatioSlider.valueProperty().addListener((obs,
                                                        oldVal, newVal) ->
                                                         adjustRatios(leaderRatioSlider, newVal.doubleValue()));
@@ -239,13 +297,13 @@ public class SimulationController {
                                                         adjustRatios(panickedRatioSlider, newVal.doubleValue()));
     }
 
-    // Algorytm balansu suwaków
+    //  slider balance algorithm
     private void adjustRatios(Slider changedSlider, double newValue) {
         if (isUpdatingRatios) return; // Zabezpieczenie przed pętlą!
         isUpdatingRatios = true;      // Blokujemy drzwi
 
         Slider s1, s2;
-        // Rozpoznajemy, który suwak użytkownik właśnie ciągnie
+        // actual slider pulling recognizing
         if (changedSlider == leaderRatioSlider) {
             s1 = followerRatioSlider; s2 = panickedRatioSlider;
         } else if (changedSlider == followerRatioSlider) {
@@ -257,22 +315,21 @@ public class SimulationController {
         double remainingSpace = 100.0 - newValue;
         double oldSum = s1.getValue() + s2.getValue();
 
-        // Bezpieczny podział reszty
+        // safe value setter for sliders
         if (oldSum == 0) {
-            // Jeśli oba były na zerze, dzielimy po równo
             s1.setValue(remainingSpace / 2.0);
             s2.setValue(remainingSpace / 2.0);
         } else {
-            // Skalujemy proporcjonalnie do ich dotychczasowych wartości
+            // scale proportionally to their current values
             s1.setValue((s1.getValue() / oldSum) * remainingSpace);
             s2.setValue((s2.getValue() / oldSum) * remainingSpace);
         }
 
         updateRatioLabels();
-        isUpdatingRatios = false; // Odblokowujemy drzwi
+        isUpdatingRatios = false; // unlock other sliders modifying
     }
 
-    // Aktualizuje teksty obok suwaków (dodając znak procenta)
+    // updates labels
     private void updateRatioLabels() {
         leaderRatioLabel.setText(String.format("%.0f%%", leaderRatioSlider.getValue()));
         followerRatioLabel.setText(String.format("%.0f%%", followerRatioSlider.getValue()));
