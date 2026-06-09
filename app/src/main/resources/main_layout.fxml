@@ -400,7 +400,7 @@
                                     <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                        <children>
                                           <Slider fx:id="smokeDuplicationThresholdSlider" majorTickUnit="5.0" max="30.0" min="5.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
-                                          <Label fx:id="smokeDuplicationThresholdLabel" text="0" />
+                                          <Label fx:id="smokeDuplicationThreasholdLabel" text="0" />
                                        </children>
                                        <opaqueInsets>
                                           <Insets />
@@ -421,20 +421,135 @@
    </left>
    <center>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <bottom>
+            <ScrollPane fitToHeight="true" style="-fx-background-color: transparent;" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+               <content>
+                  <HBox prefHeight="150.0" prefWidth="1346.0" spacing="40.0" style="-fx-background-color: linear-gradient(to bottom, #6645dc, #6200ff); -fx-padding: 20px;">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label prefWidth="100.0" text="Czas symulacji:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="timeLabel" text="Label" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label text="Uratowani:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="savedCountLabel" text="Label" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label text="Ofiary ognia:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="fireCasualtiesLabel" text="Label" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label text="Ofiary dymu:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="smokeCasualtiesLabel" text="Label" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label text="Przeżycia [%]:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="survivalRateLabel" text="Label" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label text="Wniosek:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="scenarioLabel" text="Label" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label text="Czas pierwszej ewakuacji:" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="FirstEvacuationTimeLabel" text="Label" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                           <children>
+                              <Label text="Czas całej ewakuacji:" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="TotalEvacuationTimeLabel" text="Label" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </content>
+            </ScrollPane>
+         </bottom>
          <center>
-            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <Pane fx:id="canvasContainer" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Canvas fx:id="simulationCanvas" height="380.0" layoutX="44.0" layoutY="31.0" width="551.0" />
+                  <Canvas fx:id="simulationCanvas" height="380.0" width="551.0" />
                </children>
             </Pane>
          </center>
-         <bottom>
-            <HBox prefHeight="150.0" prefWidth="1346.0" style="-fx-background-color: linear-gradient(to bottom, #6645dc, #6200ff); -fx-padding: 20px;" BorderPane.alignment="CENTER">
-               <children>
-                  <Label fx:id="savedLabel" text="Label" />
-               </children>
-            </HBox>
-         </bottom>
       </BorderPane>
    </center>
 </BorderPane>

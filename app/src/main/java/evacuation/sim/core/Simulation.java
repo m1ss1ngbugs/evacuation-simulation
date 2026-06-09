@@ -201,6 +201,7 @@ public class Simulation implements SimObserver {
     }
 
     public void updateTick(float dt) {
+        this.currentTime += dt;
 
         board.updateSpatialIndex(agents); // update of indexes before agents move
         // active agents make their moves
@@ -209,13 +210,20 @@ public class Simulation implements SimObserver {
 
             if (agent instanceof Evacuee evacueeAgent) {
                 Cell cell = board.getCell(evacueeAgent.getLogicalX(), evacueeAgent.getLogicalY());
-
+                // agent death check
                 if(!agent.isActive()){
+                    if (cell != null) {
+                        if (cell.getDynamicState() == DynamicState.FIRE) {
+                            stats.incrementCasualtiesFire();
+                        } else if (cell.getDynamicState() == DynamicState.SMOKE) {
+                            stats.incrementCasualtiesSmoke();
+                        }
+                    }
                     removeAgent(agent);
                 }
-
-                if (cell != null && cell.getBaseType() == BaseType.EXIT) {
-                    stats.incrementSaved(dt);
+                // agents successfully evacuated
+                else if (cell != null && cell.getBaseType() == BaseType.EXIT) {
+                    stats.incrementSaved(this.currentTime);
                     removeAgent(evacueeAgent);
                 }
             }
@@ -231,8 +239,6 @@ public class Simulation implements SimObserver {
                 }
             }
         }
-        
-
         
         // introduce agents from the waiting room to the main list of agents
         if (!agentsToAdd.isEmpty()) {
@@ -304,5 +310,13 @@ public class Simulation implements SimObserver {
     // safe getter (encapsulation security: returns no changeable list)
     public List<Agent> getAgents() {
         return Collections.unmodifiableList(this.agents);
+    }
+
+    public Statistics getStats() {
+        return stats;
+    }
+
+    public float getCurrentTime() {
+        return currentTime;
     }
 }

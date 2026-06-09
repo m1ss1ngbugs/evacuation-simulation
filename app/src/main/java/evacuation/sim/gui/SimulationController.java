@@ -4,6 +4,7 @@ import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.agent.Agent;
 import evacuation.sim.agent.human.Evacuee;
 import evacuation.sim.core.Simulation;
+import evacuation.sim.core.Statistics;
 import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
@@ -16,6 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import java.io.File;
@@ -27,7 +29,7 @@ public class SimulationController {
 
     @FXML private Canvas simulationCanvas;
     @FXML private TextField inputMap;
-    @FXML private Label savedLabel;
+    @FXML private Pane canvasContainer;
     // initial parameters sliders and labels
     // population sliders and builders
     @FXML private Slider initialEvacueesCountSlider;
@@ -80,7 +82,16 @@ public class SimulationController {
     @FXML private Slider smokeFadeRatePerSecondSlider;
     @FXML private Label smokeFadeRatePerSecondLabel;
     @FXML private Slider smokeDuplicationThresholdSlider;
-    @FXML private Label smokeDuplicationThresholdLabel;
+    @FXML private Label smokeDuplicationThreasholdLabel;
+    // bottom panel statistics
+    @FXML private Label timeLabel;
+    @FXML private Label savedCountLabel;
+    @FXML private Label fireCasualtiesLabel;
+    @FXML private Label smokeCasualtiesLabel;
+    @FXML private Label survivalRateLabel;
+    @FXML private Label scenarioLabel;
+    @FXML private Label FirstEvacuationTimeLabel;
+    @FXML private Label TotalEvacuationTimeLabel;
 
     private Simulation simulation;
     private GraphicsContext gc;
@@ -148,7 +159,7 @@ public class SimulationController {
         setupSlider(smokeFadeRatePerSecondSlider, smokeFadeRatePerSecondLabel,
                 5, 25, config.getSmokeFadeRatePerSecond(), "%.0f");
         // Initial smokeDuplicationThreshold slider and label
-        setupSlider(smokeDuplicationThresholdSlider, smokeDuplicationThresholdLabel,
+        setupSlider(smokeDuplicationThresholdSlider, smokeDuplicationThreasholdLabel,
                 5, 30, config.getSmokeDuplicationThreshold(), "%.0f");
 
         // text fields
@@ -173,69 +184,21 @@ public class SimulationController {
     public void onStartClicked() {
         if (timer != null) timer.stop();
 
-        try {
-            // Updating the Singleton with data from sliders
-            int newCount = (int) initialEvacueesCountSlider.getValue();
-            int newFireCount = (int) initialFireHazardsCountSlider.getValue();
-            float newLeaderRatio = (float) (leaderRatioSlider.getValue() / 100);
-            float newFollowerRatio = (float) (followerRatioSlider.getValue() / 100);
-            float newPanickedRatio = (float) (panickedRatioSlider.getValue() / 100);
-            float newMeanBaseSpeed = (float) meanBaseSpeedSlider.getValue();
-            float newSpeedVariance = (float) speedVarianceSlider.getValue();
-            float newEvacueeHealth = (float) evacueeHealthSlider.getValue();
-            float newEvacueeReactionTime = (float) evacueeReactionTimeSlider.getValue();
-            int newEvacueeVisionRadius = (int) evacueeVisionRadiusSlider.getValue();
-            float newMeanPanicThreshold = (float) meanPanicThresholdSlider.getValue();
-            float newPanicVariance = (float) panicVarianceSlider.getValue();
-            float newMeanSocialFactor = (float) (meanSocialFactorSlider.getValue() / 100);
-            float newSocialVariance = (float) (socialVarianceSlider.getValue() / 100);
-            float newFireDamagePerSecond = (float) fireDamagePerSecondSlider.getValue();
-            float newFireSpreadInterval = (float) fireSpreadIntervalSlider.getValue();
-            float newFireIncubationDelay = (float) fireIncubationDelaySlider.getValue();
-            float newSmokeDamagePerSecond = (float) smokeDamagePerSecondSlider.getValue();
-            float newSmokeSpreadInterval = (float) smokeSpreadIntervalSlider.getValue();
-            float newSmokeInitialDensity = (float) smokeInitialDensitySlider.getValue();
-            float newSmokeFadeRatePerSecond = (float) smokeFadeRatePerSecondSlider.getValue();
-            float newSmokeDuplicationThreshold = (float) smokeDuplicationThresholdSlider.getValue();
-
-            SimSingletonConfig config = SimSingletonConfig.getInstance();
-
-            config.setInitialEvacueesCount(newCount);
-            config.setInitialFireHazardsCount(newFireCount);
-            config.setMapFilePath(inputMap.getText());
-            config.setLeaderRatio(newLeaderRatio);
-            config.setFollowerRatio(newFollowerRatio);
-            config.setPanickedRatio(newPanickedRatio);
-            config.setMeanBaseSpeed(newMeanBaseSpeed);
-            config.setSpeedVariance(newSpeedVariance);
-            config.setEvacueeHealth(newEvacueeHealth);
-            config.setEvacueeReactionTime(newEvacueeReactionTime);
-            config.setEvacueeVisionRadius(newEvacueeVisionRadius);
-            config.setMeanPanicThreshold(newMeanPanicThreshold);
-            config.setPanicVariance(newPanicVariance);
-            config.setMeanSocialFactor(newMeanSocialFactor);
-            config.setSocialVariance(newSocialVariance);
-            config.setFireDamagePerSecond(newFireDamagePerSecond);
-            config.setFireSpreadInterval(newFireSpreadInterval);
-            config.setFireIncubationDelay(newFireIncubationDelay);
-            config.setSmokeDamagePerSecond(newSmokeDamagePerSecond);
-            config.setSmokeSpreadInterval(newSmokeSpreadInterval);
-            config.setSmokeInitialDensity(newSmokeInitialDensity);
-            config.setSmokeFadeRatePerSecond(newSmokeFadeRatePerSecond);
-            config.setSmokeDuplicationThreshold(newSmokeDuplicationThreshold);
-
-        } catch (Exception ex) {
-            System.err.println("Błąd wczytywania danych z panelu!");
-            return;
-        }
+        if (updateConfigFromUI()) return;
 
         // creates new simulation with new data
         simulation = new Simulation();
         Board board = simulation.getBoard();
 
         // Scaling tiles to fit available space
-        double availableWidth = 900.0;
-        double availableHeight = 500.0;
+        // get the ACTUAL size of the middle pane on the screen
+
+        double availableWidth = canvasContainer.getWidth();
+        double availableHeight = canvasContainer.getHeight();
+        // if window is not yet rendered
+        if (availableWidth == 0) availableWidth = 900.0;
+        if (availableHeight == 0) availableHeight = 500.0;
+
         int dynamicWidth = board.getWidth();
         int dynamicHeight = board.getHeight();
 
@@ -260,6 +223,8 @@ public class SimulationController {
 
                 simulation.updateTick(dt);
                 render(gc);
+
+                updateStatisticsUI();
             }
         };
         timer.start();
@@ -317,6 +282,22 @@ public class SimulationController {
                 gc.fillOval(px, py, tileSize, tileSize);
             }
         }
+    }
+
+    // Bottom statistics bar update
+    private void updateStatisticsUI() {
+        if (simulation == null || simulation.getStats() == null) return;
+
+        Statistics stats = simulation.getStats();
+
+        timeLabel.setText(String.format("%.1f s", simulation.getCurrentTime()));
+        savedCountLabel.setText("" + stats.getSavedCount());
+        fireCasualtiesLabel.setText("" + stats.getCasualtiesFire());
+        smokeCasualtiesLabel.setText("" + stats.getCasualtiesSmoke());
+        survivalRateLabel.setText(String.format("%.1f%%", stats.calculateSurvivalRate() * 100));
+        scenarioLabel.setText(stats.determineFinalScenario());
+        FirstEvacuationTimeLabel.setText(String.format("%.1f s", stats.getFirstEvacuationTime()));
+        TotalEvacuationTimeLabel.setText(String.format("%.1f s", stats.getTotalEvacuationTime()));
     }
 
     // universal slider configuration
@@ -394,5 +375,68 @@ public class SimulationController {
         leaderRatioLabel.setText(String.format("%.0f%%", leaderRatioSlider.getValue()));
         followerRatioLabel.setText(String.format("%.0f%%", followerRatioSlider.getValue()));
         panickedRatioLabel.setText(String.format("%.0f%%", panickedRatioSlider.getValue()));
+    }
+
+    private boolean updateConfigFromUI() {
+        try {
+            // Updating the Singleton with data from sliders
+            int newCount = (int) initialEvacueesCountSlider.getValue();
+            int newFireCount = (int) initialFireHazardsCountSlider.getValue();
+            float newLeaderRatio = (float) (leaderRatioSlider.getValue() / 100);
+            float newFollowerRatio = (float) (followerRatioSlider.getValue() / 100);
+            float newPanickedRatio = (float) (panickedRatioSlider.getValue() / 100);
+            float newMeanBaseSpeed = (float) meanBaseSpeedSlider.getValue();
+            float newSpeedVariance = (float) speedVarianceSlider.getValue();
+            float newEvacueeHealth = (float) evacueeHealthSlider.getValue();
+            float newEvacueeReactionTime = (float) evacueeReactionTimeSlider.getValue();
+            int newEvacueeVisionRadius = (int) evacueeVisionRadiusSlider.getValue();
+            float newMeanPanicThreshold = (float) meanPanicThresholdSlider.getValue();
+            float newPanicVariance = (float) panicVarianceSlider.getValue();
+            float newMeanSocialFactor = (float) (meanSocialFactorSlider.getValue() / 100);
+            float newSocialVariance = (float) (socialVarianceSlider.getValue() / 100);
+            float newFireDamagePerSecond = (float) fireDamagePerSecondSlider.getValue();
+            float newFireSpreadInterval = (float) fireSpreadIntervalSlider.getValue();
+            float newFireIncubationDelay = (float) fireIncubationDelaySlider.getValue();
+            float newSmokeDamagePerSecond = (float) smokeDamagePerSecondSlider.getValue();
+            float newSmokeSpreadInterval = (float) smokeSpreadIntervalSlider.getValue();
+            float newSmokeInitialDensity = (float) smokeInitialDensitySlider.getValue();
+            float newSmokeFadeRatePerSecond = (float) smokeFadeRatePerSecondSlider.getValue();
+            float newSmokeDuplicationThreshold = (float) smokeDuplicationThresholdSlider.getValue();
+
+            SimSingletonConfig config = SimSingletonConfig.getInstance();
+
+            config.setInitialEvacueesCount(newCount);
+            config.setInitialFireHazardsCount(newFireCount);
+            config.setMapFilePath(inputMap.getText());
+            config.setLeaderRatio(newLeaderRatio);
+            config.setFollowerRatio(newFollowerRatio);
+            config.setPanickedRatio(newPanickedRatio);
+            config.setMeanBaseSpeed(newMeanBaseSpeed);
+            config.setSpeedVariance(newSpeedVariance);
+            config.setEvacueeHealth(newEvacueeHealth);
+            config.setEvacueeReactionTime(newEvacueeReactionTime);
+            config.setEvacueeVisionRadius(newEvacueeVisionRadius);
+            config.setMeanPanicThreshold(newMeanPanicThreshold);
+            config.setPanicVariance(newPanicVariance);
+            config.setMeanSocialFactor(newMeanSocialFactor);
+            config.setSocialVariance(newSocialVariance);
+            config.setFireDamagePerSecond(newFireDamagePerSecond);
+            config.setFireSpreadInterval(newFireSpreadInterval);
+            config.setFireIncubationDelay(newFireIncubationDelay);
+            config.setSmokeDamagePerSecond(newSmokeDamagePerSecond);
+            config.setSmokeSpreadInterval(newSmokeSpreadInterval);
+            config.setSmokeInitialDensity(newSmokeInitialDensity);
+            config.setSmokeFadeRatePerSecond(newSmokeFadeRatePerSecond);
+            config.setSmokeDuplicationThreshold(newSmokeDuplicationThreshold);
+
+        } catch (Exception ex) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Błąd konfiguracji");
+            alert.setHeaderText("Nie można uruchomić symulacji");
+            alert.setContentText("Sprawdź poprawność danych w panelu bocznym.");
+            alert.showAndWait();
+            return true;
+        }
+        return false;
     }
 }

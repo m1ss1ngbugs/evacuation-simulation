@@ -4,7 +4,6 @@ import evacuation.sim.model.Board;
 
 public class Statistics {
     private int totalPeople;
-
     private int savedCount;
     private int casualtiesFire;
     private int casualtiesSmoke;

@@ -38,7 +38,7 @@ public class SimSingletonConfig {
 
     private SimSingletonConfig() {
 
-        this.maxEvacuationTime = 600.0f;     // max 10 minutes simulation
+        this.maxEvacuationTime = 200.0f;     // max 10 minutes simulation
         this.initialEvacueesCount = 20;       // 50 people to escape
 
         this.leaderRatio = 0.15f;            // 15% of leaders
