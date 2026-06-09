@@ -17,7 +17,7 @@ public class GuiApplication extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Symulacja Ewakuacji");
+        primaryStage.setTitle("Evacuation Simulation");
         primaryStage.setScene(scene);
 
         // run in full screen

@@ -67,76 +67,82 @@ public abstract class Evacuee extends Agent implements Damageable {
             calculatePath(); 
         }
 
-        //perceive(board);
         psychoReaction(sawHazard, dt);
         verifyPath();
         move(dt, board);
     }
 
-    protected void move(float dt, Board board){
+    protected void move(float dt, Board board) {
+    if (plannedPath == null || plannedPath.isEmpty()) {
+        return;
+    }
 
-        if (plannedPath == null || plannedPath.isEmpty()) {
-            return;
-        }
+    // the target is a cell we plan to go
+    Cell targetCell = plannedPath.get(0);
 
-        if (!plannedPath.isEmpty() &&
-            plannedPath.get(0).getLogicalX() == this.getLogicalX() &&
-            plannedPath.get(0).getLogicalY() == this.getLogicalY()) {
-            plannedPath.remove(0);
-        }
-
-        if (plannedPath.isEmpty()) {
-            return;
-        }
-
-        Cell targetCell = plannedPath.get(0);
-
-        boolean isCellOccupied = false;
-        List<Agent> agentsOnTarget = board.getAgentsAt(targetCell.getLogicalX(), targetCell.getLogicalY());
-
-        if (agentsOnTarget != null) {
-            for (Agent a : agentsOnTarget) {
-                if (a instanceof Evacuee && a.getId() != this.getId()) {
-                    isCellOccupied = true;
-                    
-                    Evacuee blockedEvacuee = (Evacuee) a;
-                    if (!blockedEvacuee.isAwareOfHazard) {
-                        blockedEvacuee.isAwareOfHazard = true;
-
-                        blockedEvacuee.internalTimer = 0.0f;
+    if (this.getLogicalX() == targetCell.getLogicalX() && this.getLogicalY() == targetCell.getLogicalY() 
+        && this.getRenderX() == targetCell.getLogicalX() && this.getRenderY() == targetCell.getLogicalY()) {
+        
+        if (plannedPath.size() > 1) {
+            Cell nextCell = plannedPath.get(1);
+            
+            // checking if next tile is free
+            boolean isNextOccupied = false;
+            List<Agent> agentsOnTarget = board.getAgentsAt(nextCell.getLogicalX(), nextCell.getLogicalY());
+            if (agentsOnTarget != null) {
+                for (Agent a : agentsOnTarget) {
+                    if (a instanceof Evacuee && a.getId() != this.getId()) {
+                        isNextOccupied = true;
+                        
+                        // letting know of a danger
+                        Evacuee blockedEvacuee = (Evacuee) a;
+                        if (!blockedEvacuee.isAwareOfHazard) {
+                            blockedEvacuee.isAwareOfHazard = true;
+                            blockedEvacuee.internalTimer = 0.0f;
+                        }
+                        break;
                     }
-
-                    break;
                 }
             }
-        }
 
-        if (isCellOccupied) {
-            plannedPath.clear();
-            return;
-        }
+            if (isNextOccupied) {
+                // waiting
+                return; 
+            }
 
-        float targetX = targetCell.getLogicalX();
-        float targetY = targetCell.getLogicalY();
-
-        float dirX = targetX - this.getRenderX();
-        float dirY = targetY - this.getRenderY();
-        float distance = (float) Math.sqrt(dirX * dirX + dirY * dirY);
-
-        float distanceToMove = currentSpeed * dt;
-
-        if (distanceToMove>= distance) {
-            setRenderX(targetX);
-            setRenderY(targetY);
+            // deleting old tile, reserving planned one
+            plannedPath.remove(0);
+            targetCell = plannedPath.get(0);
+            
+            // REZERWACJA: Przypisujemy pozycję logiczną ZANIM render tam dotrze!
             setLogicalX(targetCell.getLogicalX());
             setLogicalY(targetCell.getLogicalY());
-
-            plannedPath.remove(0);
         } else {
-            setRenderX(getRenderX() + (dirX / distance) * distanceToMove);
-            setRenderY(getRenderY() + (dirY / distance) * distanceToMove);
+            plannedPath.remove(0);
+            return;
         }
     }
+
+    // useful for rendering (so evacuee can smoothly go)
+    float targetX = targetCell.getLogicalX();
+    float targetY = targetCell.getLogicalY();
+
+    float dirX = targetX - this.getRenderX();
+    float dirY = targetY - this.getRenderY();
+    float distance = (float) Math.sqrt(dirX * dirX + dirY * dirY);
+
+    float distanceToMove = currentSpeed * dt;
+
+    if (distanceToMove >= distance) {
+        // we came to the reserved tile
+        setRenderX(targetX);
+        setRenderY(targetY);
+    } else {
+        // we go to reserved tile
+        setRenderX(getRenderX() + (dirX / distance) * distanceToMove);
+        setRenderY(getRenderY() + (dirY / distance) * distanceToMove);
+    }
+}
 
     protected void psychoReaction(boolean sawHazard, float dt){
         // evacuee panic increases in case he sees the hazard
@@ -266,7 +272,7 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
-    protected abstract void handlePanic(float dt);
+    protected abstract void handlePanic(float dt, Board board);
     protected abstract boolean shouldPanic();
 
     // getters and setters below
