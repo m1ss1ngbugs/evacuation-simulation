@@ -111,18 +111,12 @@ public class Simulation implements SimObserver {
             Agent newEvacuee = createRandomEvacuee(spawnPoint.getLogicalX(),
                     spawnPoint.getLogicalY(), defaultPathfinder);
             // add agent to the buffer
-<<<<<<< HEAD
-            // addAgent(newEvacuee);
-            agents.add(newEvacuee); 
-            board.updateSpatialIndex(agents);
-=======
             addAgent(newEvacuee);
             if (!agentsToAdd.isEmpty()) {
                 agents.addAll(agentsToAdd);
                 agentsToAdd.clear();
             }
             board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
->>>>>>> bf0a6e4ba5b34fd23ca02a4a3ddf9e64a13810c6
         }
 
         //if (!agentsToAdd.isEmpty()) {
