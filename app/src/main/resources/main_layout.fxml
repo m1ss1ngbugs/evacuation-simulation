@@ -7,16 +7,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="1120.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="evacuation.sim.gui.SimulationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="765.0" prefWidth="1146.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="evacuation.sim.gui.SimulationController">
    <left>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
          <content>
@@ -27,100 +28,253 @@
                   <Button mnemonicParsing="false" onAction="#onResetClicked" text="Reset" />
                   <TextField fx:id="inputMap" />
                   <Button mnemonicParsing="false" onAction="#onBrowseMapClicked" text="Choose..." />
-                  <TextField fx:id="inputEvacueeCount" />
-                  <Accordion>
+                  <Accordion style="-fx-background-color: #C9BBFC;" VBox.vgrow="ALWAYS">
                     <panes>
-                      <TitledPane animated="false" text="Ewakuanci">
+                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Ewakuanci">
                            <content>
-                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                                 <children>
-                                    <Label text="Liczba ewakuantów">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Slider fx:id="initialEvacueesCountSlider" minorTickCount="24" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />
-                                          <Label fx:id="initialEvacueesCountLabel" text="0" />
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                    </HBox>
-                                    <Label text="\% liderów">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Slider fx:id="leaderRatioSlider" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
-                                          <Label fx:id="leaderRatioLabel" text="0" />
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                    </HBox>
-                                    <Label text="\% followerów">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Slider fx:id="followerRatioSlider" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
-                                          <Label fx:id="followerRatioLabel" text="0" />
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                    </HBox>
-                                    <Label text="\% spanikowanych">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Slider fx:id="panickedRatioSlider" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
-                                          <Label fx:id="panickedRatioLabel" text="0" />
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                    </HBox>
-                                    <Label text="Średnia prędkość">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Slider fx:id="meanBaseSpeedSlider" majorTickUnit="0.5" minorTickCount="5" HBox.hgrow="ALWAYS" />
-                                          <Label fx:id="meanBaseSpeedLabel" text="0" />
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                    </HBox>
-                                 </children>
-                              </VBox>
+                              <TabPane prefWidth="200.0" style="-fx-background-color: #CF7CDF;" tabClosingPolicy="UNAVAILABLE">
+                                <tabs>
+                                  <Tab closable="false" text="Populacja">
+                                       <content>
+                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #F3EAFA;">
+                                                   <padding>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <Label text="Liczba ewakuantów">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="initialEvacueesCountSlider" minorTickCount="24" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="initialEvacueesCountLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="\% liderów">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="leaderRatioSlider" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="leaderRatioLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="\% followerów">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="followerRatioSlider" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="followerRatioLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="\% spanikowanych">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="panickedRatioSlider" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="panickedRatioLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </ScrollPane>
+                                       </content>
+                                  </Tab>
+                                  <Tab closable="false" text="Fizyka">
+                                       <content>
+                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #F1D4C6;">
+                                                   <padding>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <Label text="Średnia prędkość">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="meanBaseSpeedSlider" majorTickUnit="0.5" max="3.0" min="0.5" minorTickCount="5" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="meanBaseSpeedLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="Zróżnicowanie prędkości">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="speedVarianceSlider" majorTickUnit="0.2" max="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="speedVarianceLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="Początkowe zdrowie">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="evacueeHealthSlider" max="200.0" min="50.0" minorTickCount="24" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="evacueeHealthLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="Czas reakcji na alarm">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="evacueeReactionTimeSlider" majorTickUnit="2.0" max="10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="evacueeReactionTimeLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="Promień widzenia">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="evacueeVisionRadiusSlider" majorTickUnit="3.0" max="15.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="evacueeVisionRadiusLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </ScrollPane>
+                                       </content>
+                                  </Tab>
+                                    <Tab closable="false" text="Psychologia">
+                                       <content>
+                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+                                             <content>
+                                                <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #C6D1F1;">
+                                                   <padding>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </padding>
+                                                   <children>
+                                                      <Label text="Średni próg paniki">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="meanPanicThresholdSlider" majorTickUnit="15.0" min="10.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="meanPanicThresholdLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="Wariancja progu paniki">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="panicVarianceSlider" majorTickUnit="5.0" max="30.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="panicVarianceLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="Współczynnik społeczny (stadny)">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="meanSocialFactorSlider" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="meanSocialFactorLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                      <Label text="Wariancja współczynnika społecznego">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                                         <children>
+                                                            <Slider fx:id="socialVarianceSlider" majorTickUnit="8.0" max="40.0" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="socialVarianceLabel" text="0" />
+                                                         </children>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </ScrollPane>
+                                       </content>
+                                    </Tab>
+                                </tabs>
+                              </TabPane>
                            </content>
                       </TitledPane>
-                      <TitledPane animated="false" text="Ogień">
+                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Ogień">
                            <content>
-                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                              <VBox prefWidth="100.0" spacing="10.0">
                                  <children>
                                     <Label text="Początkowe źródła pożaru">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                    <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                        <children>
                                           <Slider fx:id="initialFireHazardsCountSlider" majorTickUnit="2.0" max="10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />
                                           <Label fx:id="initialFireHazardsCountLabel" text="0" />
@@ -134,7 +288,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                    <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                        <children>
                                           <Slider fx:id="initialEvacueesCountSlider11" HBox.hgrow="ALWAYS" />
                                           <Label fx:id="initialEvacueesCountLabel11" text="0" />
@@ -148,7 +302,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                    <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                        <children>
                                           <Slider fx:id="initialEvacueesCountSlider12" HBox.hgrow="ALWAYS" />
                                           <Label fx:id="initialEvacueesCountLabel12" text="0" />
@@ -162,7 +316,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                    <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                        <children>
                                           <Slider fx:id="initialEvacueesCountSlider13" HBox.hgrow="ALWAYS" />
                                           <Label fx:id="initialEvacueesCountLabel13" text="0" />
@@ -178,10 +332,26 @@
                               </VBox>
                            </content>
                       </TitledPane>
-                      <TitledPane animated="false" text="Dym">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                        </content>
+                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Dym">
+                           <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Początkowe źródła pożaru">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                       <children>
+                                          <Slider fx:id="initialFireHazardsCountSlider1" majorTickUnit="2.0" max="10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />
+                                          <Label fx:id="initialFireHazardsCountLabel1" text="0" />
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </HBox>
+                                 </children></VBox>
+                           </content>
                       </TitledPane>
                     </panes>
                   </Accordion>
@@ -198,12 +368,12 @@
          <center>
             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Canvas fx:id="simulationCanvas" height="200.0" layoutX="75.0" layoutY="25.0" width="200.0" />
+                  <Canvas fx:id="simulationCanvas" height="380.0" layoutX="44.0" layoutY="31.0" width="551.0" />
                </children>
             </Pane>
          </center>
          <bottom>
-            <HBox prefHeight="150.0" prefWidth="1053.0" style="-fx-background-color: linear-gradient(to bottom, #6645dc, #6200ff); -fx-padding: 20px;" BorderPane.alignment="CENTER">
+            <HBox prefHeight="150.0" prefWidth="1346.0" style="-fx-background-color: linear-gradient(to bottom, #6645dc, #6200ff); -fx-padding: 20px;" BorderPane.alignment="CENTER">
                <children>
                   <Label fx:id="savedLabel" text="Label" />
                </children>

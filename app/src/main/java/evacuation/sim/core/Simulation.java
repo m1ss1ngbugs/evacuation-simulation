@@ -112,6 +112,11 @@ public class Simulation implements SimObserver {
                     spawnPoint.getLogicalY(), defaultPathfinder);
             // add agent to the buffer
             addAgent(newEvacuee);
+            if (!agentsToAdd.isEmpty()) {
+                agents.addAll(agentsToAdd);
+                agentsToAdd.clear();
+            }
+            board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
         }
 
         if (!agentsToAdd.isEmpty()) {
@@ -130,6 +135,12 @@ public class Simulation implements SimObserver {
                 break;
             }
             spawnFireAt(spawnPoint);
+            if (!agentsToAdd.isEmpty()) {
+                agents.addAll(agentsToAdd);
+                agentsToAdd.clear();
+            }
+
+            board.updateSpatialIndex(agents); // so board can see added agents (evacuees)
         }
 
         if (!agentsToAdd.isEmpty()) {

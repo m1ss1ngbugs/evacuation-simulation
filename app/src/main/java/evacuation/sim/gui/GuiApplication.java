@@ -12,7 +12,7 @@ public class GuiApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        // Ładowanie wyklikanego widoku FXML
+        // Loading FXML view
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/main_layout.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -20,7 +20,7 @@ public class GuiApplication extends Application {
         primaryStage.setTitle("Symulacja Ewakuacji");
         primaryStage.setScene(scene);
 
-        // uruchamianie na pełnym ekranie
+        // run in full screen
         primaryStage.setMaximized(true);
 
         primaryStage.setOnCloseRequest(event -> {
