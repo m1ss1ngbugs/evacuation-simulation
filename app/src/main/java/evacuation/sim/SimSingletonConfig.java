@@ -58,7 +58,7 @@ public class SimSingletonConfig {
         this.socialVariance = 0.1f;          // variation of social factor
 
         this.initialFireHazardsCount = 1;    // 1 fire hazard source
-        this.fireDamagePerSecond = 100.0f;     // fire damage per second
+        this.fireDamagePerSecond = 20.f;     // fire damage per second
         this.fireSpreadInterval = 3.0f;      // fire spreads every 3 seconds
         this.fireIncubationDelay = 3.0f;     // fire has 3 seconds incubation delay
 
@@ -68,7 +68,7 @@ public class SimSingletonConfig {
         this.smokeFadeRatePerSecond = 10.0f;  // smoke fades 10% per second
         this.smokeDuplicationThreshold = 15.0f; // smoke duplicates only if it has density > threshold
 
-        this.mapFilePath = "mapa4.txt";
+        this.mapFilePath = "mapa.txt";
     }
 
     public static SimSingletonConfig getInstance(){
@@ -77,6 +77,11 @@ public class SimSingletonConfig {
         }
         return instance;
     }
+
+    public void loadFromGUI(){
+        // TODO: metoda potrzebuje implementacji w przyszłości, kiedy dojdziemy do interfejsu graficznego użytkownika
+    }
+
 
     // standard getters
     public float getMaxEvacuationTime() {
@@ -183,12 +188,8 @@ public class SimSingletonConfig {
         this.mapFilePath = mapFilePath;
     }
 
-    public void setMaxEvacuationTime(float maxEvacuationTime) {
+    public void setMaxEvacuationTime(int maxEvacuationTime) {
         this.maxEvacuationTime = maxEvacuationTime;
-    }
-
-    public void setInitialFireHazardsCount(int initialFireHazardsCount) {
-        this.initialFireHazardsCount = initialFireHazardsCount;
     }
 
     public void setLeaderRatio(float leaderRatio) {
@@ -211,28 +212,40 @@ public class SimSingletonConfig {
         this.speedVariance = speedVariance;
     }
 
-    public void setEvacueeReactionTime(float evacueeReactionTime) {
-        this.evacueeReactionTime = evacueeReactionTime;
+    public void getMeanPanicThreshold(float meanPanicThreshold) {
+        this.meanPanicThreshold = meanPanicThreshold;
     }
 
-    public void setEvacueeHealth(float evacueeHealth) {
-        this.evacueeHealth = evacueeHealth;
+    public void setPanicVariance(float panicVariance) {
+        this.panicVariance = panicVariance;
     }
 
-    public void setSmokeDuplicationThreshold(float smokeDuplicationThreshold) {
-        this.smokeDuplicationThreshold = smokeDuplicationThreshold;
+    public void setMeanSocialFactor(float meanSocialFactor) {
+        this.meanSocialFactor = meanSocialFactor;
     }
 
-    public void setSmokeFadeRatePerSecond(float smokeFadeRatePerSecond) {
-        this.smokeFadeRatePerSecond = smokeFadeRatePerSecond;
+    public void setSocialVariance(float socialVariance) {
+        this.socialVariance = socialVariance;
     }
 
-    public void setSmokeInitialDensity(float smokeInitialDensity) {
-        this.smokeInitialDensity = smokeInitialDensity;
+    public void setFireSpreadInterval(float fireSpreadInterval) {
+        this.fireSpreadInterval = fireSpreadInterval;
     }
 
     public void setSmokeSpreadInterval(float smokeSpreadInterval) {
         this.smokeSpreadInterval = smokeSpreadInterval;
+    }
+
+    public void setInitialFireHazardsCount(int initialFireHazardsCount) {
+        this.initialFireHazardsCount = initialFireHazardsCount;
+    }
+
+    public void setEvacueeHealth(int evacueeHealth) {
+        this.evacueeHealth = evacueeHealth;
+    }
+
+    public void setFireDamagePerSecond(float fireDamagePerSecond) {
+        this.fireDamagePerSecond = fireDamagePerSecond;
     }
 
     public void setSmokeDamagePerSecond(float smokeDamagePerSecond) {
@@ -243,28 +256,20 @@ public class SimSingletonConfig {
         this.fireIncubationDelay = fireIncubationDelay;
     }
 
-    public void setFireSpreadInterval(float fireSpreadInterval) {
-        this.fireSpreadInterval = fireSpreadInterval;
+    public void setSmokeInitialDensity(float smokeInitialDensity) {
+        this.smokeInitialDensity = smokeInitialDensity;
     }
 
-    public void setFireDamagePerSecond(float fireDamagePerSecond) {
-        this.fireDamagePerSecond = fireDamagePerSecond;
+    public void setSmokeFadeRatePerSecond(float smokeFadeRatePerSecond) {
+        this.smokeFadeRatePerSecond = smokeFadeRatePerSecond;
     }
 
-    public void setSocialVariance(float socialVariance) {
-        this.socialVariance = socialVariance;
+    public void setSmokeDuplicationThreshold(float smokeDuplicationThreshold) {
+        this.smokeDuplicationThreshold = smokeDuplicationThreshold;
     }
 
-    public void setMeanSocialFactor(float meanSocialFactor) {
-        this.meanSocialFactor = meanSocialFactor;
-    }
-
-    public void setPanicVariance(float panicVariance) {
-        this.panicVariance = panicVariance;
-    }
-
-    public void setMeanPanicThreshold(float meanPanicThreshold) {
-        this.meanPanicThreshold = meanPanicThreshold;
+    public void setEvacueeReactionTime(float evacueeReactionTime) {
+        this.evacueeReactionTime = evacueeReactionTime;
     }
 
     public void setEvacueeVisionRadius(int evacueeVisionRadius) {
