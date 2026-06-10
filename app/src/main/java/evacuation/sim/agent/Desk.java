@@ -31,6 +31,18 @@ public class Desk extends Agent implements Damageable {
             return;
         }
 
+        if (!(currentCell.getDynamicState() == DynamicState.FIRE)) {
+            List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+            for (Cell neighbor : neighbors) {
+                if (neighbor.getDynamicState() == DynamicState.FIRE) {
+                    if (Math.random() < 0.4) {
+                        currentCell.setDynamicState(DynamicState.FIRE);
+                        break;
+                    }
+                }
+            }
+        }
+
         if (currentCell.getDynamicState() == DynamicState.FIRE) {
             this.takeDamage(15.0f * dt);
 
