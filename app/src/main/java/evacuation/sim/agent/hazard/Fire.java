@@ -56,7 +56,7 @@ public class Fire extends Hazard{
         List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
 
         for (Cell cell : neighbors) {
-            if (cell.getBaseType() == BaseType.FLOOR && 
+            if ((cell.getBaseType() == BaseType.FLOOR || cell.getBaseType() == BaseType.OBSTACLE) &&
             (cell.getDynamicState() == DynamicState.NONE || cell.getDynamicState() == DynamicState.SMOKE)) {
                 // makes and send the package with request about new instance of Smoke spawning
                 notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_SMOKE, cell.getLogicalX(),
@@ -69,7 +69,8 @@ public class Fire extends Hazard{
         List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
 
         for (Cell neighbor : neighbors) {
-            if (neighbor.getBaseType() == BaseType.FLOOR && neighbor.getDynamicState() != DynamicState.FIRE) {
+            if ((neighbor.getBaseType() == BaseType.FLOOR || neighbor.getBaseType() == BaseType.OBSTACLE)
+                 && neighbor.getDynamicState() != DynamicState.FIRE) {
                 if (Math.random() < 0.3) { // condition for fire spread
                     // makes and send the package with request about new instance of Fire spawning
                     notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_FIRE, neighbor.getLogicalX(),
