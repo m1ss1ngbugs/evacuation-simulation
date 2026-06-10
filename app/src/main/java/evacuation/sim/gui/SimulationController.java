@@ -206,6 +206,18 @@ public class SimulationController {
                 render(gc);
 
                 updateStatisticsUI();
+
+                // simulations end check
+                Statistics stats = simulation.getStats();
+                int initialCount = SimSingletonConfig.getInstance().getInitialEvacueesCount();
+                int currentResolved = stats.getSavedCount() + stats.getCasualtiesFire() + stats.getCasualtiesSmoke();
+
+                if (currentResolved >= initialCount) {
+                    this.stop(); // stops timer
+                    System.out.println("Ewakuacja zakończona! Wszyscy agenci opuścili planszę lub zginęli.");
+
+                    onShowHeatmapClicked();
+                }
             }
         };
         timer.start();
@@ -229,6 +241,39 @@ public class SimulationController {
         if (updateConfigFromUI()) return;
 
         setupSimulationWorld();
+    }
+
+    @FXML
+    public void onShowHeatmapClicked() {
+        // stops the simulation (in case we click this button during simulation going on)
+        if (timer != null) {
+            timer.stop();
+        }
+
+        if (simulation == null || simulation.getStats() == null) {
+            return; // no data for heatmap generation
+        }
+
+        // gets the color matrix from the Statistics
+        Color[][] heatmapColors = simulation.getStats().generateHeatmap(simulation.getBoard());
+        int height = heatmapColors.length;
+        int width = heatmapColors[0].length;
+
+        // cleans up the canvas before putting there a heatmap
+        gc.clearRect(0, 0, simulationCanvas.getWidth(), simulationCanvas.getHeight());
+
+        // draws heatmap cells
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color cellColor = heatmapColors[y][x];
+                if (cellColor != null) {
+                    gc.setFill(cellColor);
+                    gc.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+
+        System.out.println("Wygenerowano i wyświetlono Heatmapę!");
     }
 
     private void setupSimulationWorld() {
