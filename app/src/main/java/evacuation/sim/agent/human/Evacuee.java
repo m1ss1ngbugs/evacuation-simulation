@@ -70,6 +70,7 @@ public abstract class Evacuee extends Agent implements Damageable {
         psychoReaction(sawHazard, dt);
         handlePanic(dt, board);
         verifyPath();
+        
         move(dt, board);
     }
 

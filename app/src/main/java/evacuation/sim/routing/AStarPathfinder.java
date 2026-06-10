@@ -28,6 +28,19 @@ public class AStarPathfinder implements PathfindingStrategy{
         public int compareTo(Node other) {
             return Double.compare(this.fCost, other.fCost);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return Objects.equals(cell, node.cell);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(cell);
+        }
     }
 
     @Override
@@ -60,7 +73,7 @@ public class AStarPathfinder implements PathfindingStrategy{
                     continue; // Ignore the neighbor which is already evaluated
                 }
 
-                if (neighbor.getBaseType() == BaseType.OBSTACLE) {
+                if (neighbor.getBaseType() == BaseType.OBSTACLE && !neighbor.equals(End)) {
                     continue; // Ignore obstacles
                 }
 
