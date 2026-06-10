@@ -180,16 +180,18 @@ public abstract class Evacuee extends Agent implements Damageable {
                 // Checks if evacuee looking outside the board boundaries
                 if (targetX >= 0 && targetX < board.getWidth() && targetY >= 0 && targetY < board.getHeight()) {
 
-                    // evacuee see the Cell
-                    Cell observedCell = board.getCell(targetX, targetY);
+                    if (board.hasLineOfSight(myX, myY, targetX, targetY)) {
+                        // evacuee see the Cell
+                        Cell observedCell = board.getCell(targetX, targetY);
 
-                    // saves it in his memory (updates his mental database)
-                    this.mentalMap[targetX][targetY] = observedCell;
+                        // saves it in his memory (updates his mental database)
+                        this.mentalMap[targetX][targetY] = observedCell;
 
-                    // checks if there are any hazards in the field of view
-                    if (observedCell.getDynamicState() == DynamicState.FIRE ||
+                        // checks if there are any hazards in the field of view
+                        if (observedCell.getDynamicState() == DynamicState.FIRE ||
                             observedCell.getDynamicState() == DynamicState.SMOKE) {
-                        sawHazard = true;
+                            sawHazard = true;
+                        }
                     }
                 }
             }

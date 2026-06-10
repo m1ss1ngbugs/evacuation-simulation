@@ -171,6 +171,45 @@ public class Board {
         grid[2][height-1] = new Cell(2, height-1, BaseType.EXIT); // Add another exit
     }
 
+    public boolean hasLineOfSight(int x1, int y1, int x2, int y2) { // Bresenham algorythm
+        int dx = Math.abs(x2 - x1); // distance in X
+        int dy = Math.abs(y2 - y1); // distance in Y
+    
+        int sx = (x1 < x2) ? 1 : -1; // sign of X
+        int sy = (y1 < y2) ? 1 : -1; // sign of Y
+    
+        int err = dx - dy; // error/deviation
+
+        int currentX = x1;
+        int currentY = y1;
+
+        while (true) {
+            // if we got to the goal, line is clear
+            if (currentX == x2 && currentY == y2) {
+                return true;
+            }
+
+            // checking every next tile on radius
+            if (currentX != x1 || currentY != y1) {
+                Cell checkCell = getCell(currentX, currentY);
+                // if wall, evacuee doesn't see what's behind
+                if (checkCell != null && checkCell.getBaseType() == BaseType.WALL) {
+                    return false;
+                }
+            }
+
+            int e2 = 2 * err;
+            if (e2 > -dy) { 
+                err -= dy;
+                currentX += sx;
+            }
+            if (e2 < dx) {
+                err += dx;
+                currentY += sy;
+            }
+        }
+    }
+
     // standard getters
 
     public int getWidth() {

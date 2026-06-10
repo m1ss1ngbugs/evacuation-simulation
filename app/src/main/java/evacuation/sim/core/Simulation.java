@@ -201,6 +201,8 @@ public class Simulation implements SimObserver {
         for (Agent agent : agents) {
             agent.update(board, dt);
 
+            board.updateSpatialIndex(agents);
+
             if (agent instanceof Evacuee evacueeAgent) {
                 Cell cell = board.getCell(evacueeAgent.getLogicalX(), evacueeAgent.getLogicalY());
 

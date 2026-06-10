@@ -16,34 +16,56 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.StackPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="765.0" prefWidth="1146.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="evacuation.sim.gui.SimulationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="765.0" prefWidth="1146.0" style="-fx-background-color: linear-gradient(to bottom, #6c0ab7, #4214ad);" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="evacuation.sim.gui.SimulationController">
    <left>
-      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" 
+      style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;" BorderPane.alignment="CENTER">
          <content>
-            <VBox prefWidth="250.0" spacing="15.0" style="-fx-background-color: #A020F0;">
+            <VBox prefWidth="300.0" spacing="15.0" style="-fx-background-color: #cd03ff2f">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onStartClicked" text="Start" />
-                  <Button mnemonicParsing="false" onAction="#onPauseClicked" text="Pause" />
-                  <Button mnemonicParsing="false" onAction="#onResetClicked" text="Reset" />
-                  <TextField fx:id="inputMap" />
-                  <Button mnemonicParsing="false" onAction="#onBrowseMapClicked" text="Choose..." />
-                  <Accordion style="-fx-background-color: #C9BBFC;" VBox.vgrow="ALWAYS">
+                  <Label text="Evacuation Simuation" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox spacing="10.0" alignment="CENTER">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#onStartClicked" text="Start" prefHeight="40.0" prefWidth="85.0"
+                        style="-fx-background-color: linear-gradient(to bottom, #00ff66, #0ba800); -fx-text-fill: #1a1a1a; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;" />
+                        <Button mnemonicParsing="false" onAction="#onPauseClicked" text="Pause" prefHeight="40.0" prefWidth="85.0"
+                         style="-fx-background-color: linear-gradient(to bottom, #c50202, #9d0000); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;" />
+                        <Button mnemonicParsing="false" onAction="#onResetClicked" text="Reset" prefHeight="40.0" prefWidth="85.0"
+                        style="-fx-background-color: linear-gradient(to bottom, #008cff, #034fff); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;" />
+                     </children>
+                  </HBox>
+                  <Label text="Map file:" textFill="#bbbbbb" />
+                  <HBox spacing="10.0" alignment="CENTER_LEFT">
+                     <children>
+                        <TextField fx:id="inputMap" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#onBrowseMapClicked" style="-fx-cursor: hand;" text="Choose..." />
+                     </children>
+                  </HBox>
+                  <Accordion style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                     <panes>
-                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Ewakuanci">
+                      <TitledPane animated="false" style="-fx-background-color: transparent; -fx-padding: 0" text="Evacuees">
                            <content>
-                              <TabPane prefWidth="200.0" style="-fx-background-color: #CF7CDF;" tabClosingPolicy="UNAVAILABLE">
+                              <TabPane prefWidth="200.0" style="-fx-background-color: transparent; -fx-padding: 0; -fx-tab-header-area-background: transparent; -fx-background-insets: 0;" tabClosingPolicy="UNAVAILABLE">
                                 <tabs>
-                                  <Tab closable="false" text="Populacja">
+                                  <Tab closable="false" text="Population">
                                        <content>
-                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+                                          <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
                                              <content>
-                                                <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #F3EAFA;">
+                                                <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #9f82b4;">
                                                    <padding>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                    <children>
-                                                      <Label text="Liczba ewakuantów">
+                                                      <Label text="Number of Evacuees">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -57,7 +79,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="\% liderów">
+                                                      <Label text="\% of Leaders">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -71,7 +93,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="\% followerów">
+                                                      <Label text="\% of Followers">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -85,7 +107,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="\% spanikowanych">
+                                                      <Label text="\% of Panicked">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -105,16 +127,16 @@
                                           </ScrollPane>
                                        </content>
                                   </Tab>
-                                  <Tab closable="false" text="Fizyka">
+                                  <Tab closable="false" text="Physics">
                                        <content>
-                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+                                          <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
                                              <content>
                                                 <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #FFB8DA;">
                                                    <padding>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                    <children>
-                                                      <Label text="Średnia prędkość">
+                                                      <Label text="Mean Speed">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -128,7 +150,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="Zróżnicowanie prędkości">
+                                                      <Label text="Speed Variance">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -142,7 +164,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="Początkowe zdrowie">
+                                                      <Label text="Base Health">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -156,7 +178,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="Czas reakcji na alarm">
+                                                      <Label text="Reaction Time">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -170,7 +192,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="Promień widzenia">
+                                                      <Label text="Vision Radius">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -190,16 +212,16 @@
                                           </ScrollPane>
                                        </content>
                                   </Tab>
-                                    <Tab closable="false" text="Psychologia">
+                                    <Tab closable="false" text="Psychology">
                                        <content>
-                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+                                          <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
                                              <content>
                                                 <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #C6D1F1;">
                                                    <padding>
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                    <children>
-                                                      <Label text="Średni próg paniki">
+                                                      <Label text="Mean Panic Threshold">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -213,7 +235,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="Wariancja progu paniki">
+                                                      <Label text="Panic Variance">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -227,7 +249,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="Współczynnik społeczny (stadny)">
+                                                      <Label text="Mean Social Factor">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -241,7 +263,7 @@
                                                             <Insets />
                                                          </opaqueInsets>
                                                       </HBox>
-                                                      <Label text="Wariancja współczynnika społecznego">
+                                                      <Label text="Social Variance">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -265,11 +287,11 @@
                               </TabPane>
                            </content>
                       </TitledPane>
-                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Ogień">
+                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Fire">
                            <content>
-                              <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #FFE1B8;">
+                              <VBox prefWidth="100.0" spacing="10.0" style="-fx-background-color: #cd903b;">
                                  <children>
-                                    <Label text="Początkowe źródła pożaru">
+                                    <Label text="Number of Initial Fire Hazards">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -283,7 +305,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <Label text="Obrażenia od ognia">
+                                    <Label text="Fire Damage">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -297,7 +319,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <Label text="Interwał propagacji ognia">
+                                    <Label text="Fire Spread Interval">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -311,7 +333,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <Label text="Czas inkubacyjny ognia">
+                                    <Label text="Incubation Delay">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -332,11 +354,11 @@
                               </VBox>
                            </content>
                       </TitledPane>
-                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Dym">
+                      <TitledPane animated="false" style="-fx-background-color: #C9BBFC;" text="Smoke">
                            <content>
-                              <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #DBDBDB;">
+                              <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #828282;">
                                  <children>
-                                    <Label text="Uszkodzenia od dymu">
+                                    <Label text="Smoke Damage">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -350,7 +372,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <Label text="Interwal propagacji dymu">
+                                    <Label text="Spread Interval">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -364,7 +386,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <Label text="Początkowa gęstość dymu">
+                                    <Label text="Initial Density">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -378,7 +400,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <Label text="Szybkość zanikania dymu">
+                                    <Label text="Fade Rate">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -392,7 +414,7 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
-                                    <Label text="Próg duplikacji dymu">
+                                    <Label text="Duplication Threshold">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -420,118 +442,118 @@
       </ScrollPane>
    </left>
    <center>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" style="-fx-background-color: transparent; -fx-background: transparent;">
          <bottom>
             <ScrollPane fitToHeight="true" style="-fx-background-color: transparent;" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
                <content>
-                  <HBox prefHeight="150.0" prefWidth="1346.0" spacing="40.0" style="-fx-background-color: linear-gradient(to bottom, #6645dc, #6200ff); -fx-padding: 20px;">
+                  <HBox prefHeight="150.0" prefWidth="1346.0" spacing="40.0" style="-fx-padding: 20px; -fx-background-color: #cd03ff2f; -fx-background-radius: 15 15 0 0;">
                      <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label prefWidth="100.0" text="Czas symulacji:" textFill="WHITE">
+                              <Label prefWidth="100.0" text="Simulation Time:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="timeLabel" text="Label" textFill="WHITE">
+                              <Label fx:id="timeLabel" text="0.0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label text="Uratowani:" textFill="WHITE">
+                              <Label text="Saved:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="savedCountLabel" text="Label" textFill="WHITE">
+                              <Label fx:id="savedCountLabel" text="0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label text="Ofiary ognia:" textFill="WHITE">
+                              <Label text="Fire Casualties:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="fireCasualtiesLabel" text="Label" textFill="WHITE">
+                              <Label fx:id="fireCasualtiesLabel" text="0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label text="Ofiary dymu:" textFill="WHITE">
+                              <Label text="Smoke Casualties:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="smokeCasualtiesLabel" text="Label" textFill="WHITE">
+                              <Label fx:id="smokeCasualtiesLabel" text="0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label text="Przeżycia [%]:" textFill="WHITE">
+                              <Label text="Survival Rate [%]:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="survivalRateLabel" text="Label" textFill="WHITE">
+                              <Label fx:id="survivalRateLabel" text="0.0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label text="Wniosek:" textFill="WHITE">
+                              <Label text="Scenario:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="scenarioLabel" text="Label" textFill="WHITE" wrapText="true">
+                              <Label fx:id="scenarioLabel" text="Unavailable" textFill="WHITE" wrapText="true">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label text="Czas pierwszej ewakuacji:" textFill="WHITE" wrapText="true">
+                              <Label text="Time of first evacuation:" textFill="WHITE" wrapText="true">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="FirstEvacuationTimeLabel" text="Label" textFill="WHITE">
+                              <Label fx:id="FirstEvacuationTimeLabel" text="0.0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF;">
+                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #822EFF; -fx-background-radius: 4">
                            <children>
-                              <Label text="Czas całej ewakuacji:" textFill="WHITE" wrapText="true">
+                              <Label text="Total evacuation time:" textFill="WHITE" wrapText="true">
                                  <font>
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="TotalEvacuationTimeLabel" text="Label" textFill="WHITE">
+                              <Label fx:id="TotalEvacuationTimeLabel" text="0.0" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
@@ -544,11 +566,11 @@
             </ScrollPane>
          </bottom>
          <center>
-            <Pane fx:id="canvasContainer" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <StackPane fx:id="canvasContainer" BorderPane.alignment="CENTER" style="-fx-background-color: #cd03ff2f; -fx-background-radius: 15">
                <children>
-                  <Canvas fx:id="simulationCanvas" height="380.0" width="551.0" />
+                  <Canvas fx:id="simulationCanvas" height="380.0" width="551.0" StackPane.alignment="CENTER" />
                </children>
-            </Pane>
+            </StackPane>
          </center>
       </BorderPane>
    </center>

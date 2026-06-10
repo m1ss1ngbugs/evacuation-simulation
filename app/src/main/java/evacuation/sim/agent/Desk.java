@@ -22,28 +22,28 @@ public class Desk extends Agent implements Damageable {
 
     @Override
     public void update(Board board, float dt){
-        
-        if (this.health <= 0) {
-           
-           Cell currentCell = board.getCell(this.getLogicalX(), this.getLogicalY());
-           
-           if (currentCell.getBaseType() == BaseType.FLOOR) {
+         Cell currentCell = board.getCell(this.getLogicalX(), this.getLogicalY());
+        if (currentCell == null) {return;}
 
-              currentCell.setBaseType(BaseType.OBSTACLE);
-              currentCell.setDynamicState(DynamicState.FIRE); // logic for when the desk is destroyed, e.g., it can become an obstacle for agents or it can be removed from the board
-           }
-        } else {
+        if (this.health <= 0) {
+            currentCell.setBaseType(BaseType.FLOOR);
+            currentCell.setDynamicState(DynamicState.FIRE);
+            return;
+        }
+
+        if (currentCell.getDynamicState() == DynamicState.FIRE) {
+            this.takeDamage(15.0f * dt);
+
             fireSpreadTimer += dt;
 
-            if(fireSpreadTimer >= 1.5f) {
-
+            if (fireSpreadTimer >= 1.5f) {
                 fireSpreadTimer = 0.0f;
-            
+
                 List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
 
                 for (Cell neighbor : neighbors) {
                     if (neighbor.getBaseType() == BaseType.FLOOR && neighbor.getDynamicState() != DynamicState.FIRE) {
-                        if (Math.random() < 0.3) { 
+                        if (Math.random() < 0.4) { 
                             notifyObservers(new SimEvent(
                                 SimEvent.EventType.SPAWN_FIRE,
                                 neighbor.getLogicalX(),
@@ -53,7 +53,9 @@ public class Desk extends Agent implements Damageable {
                         }
                     }
                 }
-            }        
+            }
+        } else {
+            fireSpreadTimer = 0.0f;
         }
     }
 }

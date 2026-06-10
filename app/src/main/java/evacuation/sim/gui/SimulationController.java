@@ -187,28 +187,9 @@ public class SimulationController {
         if (updateConfigFromUI()) return;
 
         // creates new simulation with new data
-        simulation = new Simulation();
-        Board board = simulation.getBoard();
-
-        // Scaling tiles to fit available space
-        // get the ACTUAL size of the middle pane on the screen
-
-        double availableWidth = canvasContainer.getWidth();
-        double availableHeight = canvasContainer.getHeight();
-        // if window is not yet rendered
-        if (availableWidth == 0) availableWidth = 900.0;
-        if (availableHeight == 0) availableHeight = 500.0;
-
-        int dynamicWidth = board.getWidth();
-        int dynamicHeight = board.getHeight();
-
-        int calculatedTileSize = (int) Math.min(availableWidth / dynamicWidth, availableHeight / dynamicHeight);
-        this.tileSize = Math.max(10, Math.min(40, calculatedTileSize));
-
-        simulationCanvas.setWidth(dynamicWidth * tileSize);
-        simulationCanvas.setHeight(dynamicHeight * tileSize);
-
-        gc.clearRect(0, 0, 3000, 3000); // Cleaning the canvas before start
+        if (simulation == null) {
+            setupSimulationWorld();
+        }
 
         timer = new AnimationTimer() {
             private long lastUpdate = 0;
@@ -242,8 +223,38 @@ public class SimulationController {
     public void onResetClicked() {
         if (timer != null) {
             timer.stop();
+            timer = null;
         }
-        onStartClicked();   // calls the restart
+        
+        if (updateConfigFromUI()) return;
+
+        setupSimulationWorld();
+    }
+
+    private void setupSimulationWorld() {
+        simulation = new Simulation();
+        Board board = simulation.getBoard();
+
+        double availableWidth = canvasContainer.getWidth();
+        double availableHeight = canvasContainer.getHeight();
+        
+        if (availableWidth == 0) availableWidth = 900.0;
+        if (availableHeight == 0) availableHeight = 500.0;
+
+        int dynamicWidth = board.getWidth();
+        int dynamicHeight = board.getHeight();
+
+        int calculatedTileSize = (int) Math.min(availableWidth / dynamicWidth, availableHeight / dynamicHeight);
+        this.tileSize = Math.max(10, Math.min(40, calculatedTileSize));
+
+        simulationCanvas.setWidth(dynamicWidth * tileSize);
+        simulationCanvas.setHeight(dynamicHeight * tileSize);
+
+        gc.clearRect(0, 0, 3000, 3000);
+
+        render(gc);
+
+        clearStatisticsUI();
     }
 
     private void render(GraphicsContext gc) {
@@ -300,6 +311,17 @@ public class SimulationController {
         TotalEvacuationTimeLabel.setText(String.format("%.1f s", stats.getTotalEvacuationTime()));
     }
 
+    private void clearStatisticsUI() {
+    if (timeLabel != null) timeLabel.setText("0.0 s");
+    if (savedCountLabel != null) savedCountLabel.setText("0");
+    if (fireCasualtiesLabel != null) fireCasualtiesLabel.setText("0");
+    if (smokeCasualtiesLabel != null) smokeCasualtiesLabel.setText("0");
+    if (survivalRateLabel != null) survivalRateLabel.setText("0.0%");
+    if (scenarioLabel != null) scenarioLabel.setText("Unavailable");
+    if (FirstEvacuationTimeLabel != null) FirstEvacuationTimeLabel.setText("0.0 s");
+    if (TotalEvacuationTimeLabel != null) TotalEvacuationTimeLabel.setText("0.0 s");
+}
+
     // universal slider configuration
     private void setupSlider(Slider slider, Label label, double min, double max, double startValue, String format) {
         slider.setMin(min);
@@ -340,8 +362,8 @@ public class SimulationController {
 
     //  slider balance algorithm
     private void adjustRatios(Slider changedSlider, double newValue) {
-        if (isUpdatingRatios) return; // Zabezpieczenie przed pętlą!
-        isUpdatingRatios = true;      // Blokujemy drzwi
+        if (isUpdatingRatios) return; 
+        isUpdatingRatios = true;      
 
         Slider s1, s2;
         // actual slider pulling recognizing
