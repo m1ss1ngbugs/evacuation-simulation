@@ -68,6 +68,7 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
 
         psychoReaction(sawHazard, dt);
+        handlePanic(dt, board);
         verifyPath();
         move(dt, board);
     }
@@ -114,7 +115,7 @@ public abstract class Evacuee extends Agent implements Damageable {
             plannedPath.remove(0);
             targetCell = plannedPath.get(0);
             
-            // REZERWACJA: Przypisujemy pozycję logiczną ZANIM render tam dotrze!
+            // assign the local position before the render gets there
             setLogicalX(targetCell.getLogicalX());
             setLogicalY(targetCell.getLogicalY());
         } else {
@@ -214,16 +215,14 @@ public abstract class Evacuee extends Agent implements Damageable {
     protected void verifyPath(){
         // 4. current mental map verification
         if (plannedPath != null && !plannedPath.isEmpty()) {
-
             // planned path review
-            for (Cell pathCell : plannedPath) {
+            for (int i = 1; i < plannedPath.size(); i++) {
+                Cell pathCell = plannedPath.get(i);
                 // reach to evacuee memory to check what it knows about the cell
                 Cell mentalCell = this.mentalMap[pathCell.getLogicalX()][pathCell.getLogicalY()];
 
                 // checks road safety
-                if (mentalCell != null &&
-                        (mentalCell.getDynamicState() == DynamicState.FIRE ||
-                                mentalCell.getBaseType() == BaseType.OBSTACLE)) {
+                if (mentalCell != null && mentalCell.getBaseType() == BaseType.OBSTACLE) {
                     // the route is useless --> forgot about it
                     plannedPath.clear();
                     // evacuee must find another way

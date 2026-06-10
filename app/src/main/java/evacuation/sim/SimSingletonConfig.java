@@ -78,12 +78,8 @@ public class SimSingletonConfig {
         return instance;
     }
 
-    public void loadFromGUI(){
-        // TODO: metoda potrzebuje implementacji w przyszłości, kiedy dojdziemy do interfejsu graficznego użytkownika
-    }
 
-
-    // standard getters
+    // standard getters and setters
     public float getMaxEvacuationTime() {
         return maxEvacuationTime;
     }

@@ -28,7 +28,7 @@ public abstract class Hazard extends Agent {
             this.internalTimer = 0.0f; // resets stoper
             return true; // gives signal that it is time to spread
         }
-        return false; // "no, it is not ready to spread !!!"
+        return false; // it is not ready to spread
     }
 
     protected void hit(Board board, float dt){

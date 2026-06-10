@@ -25,7 +25,7 @@ public class Follower extends Evacuee {
 
             if (getPanicLevel() > getPanicThreshold() * 1.5f && getPlannedPath() != null) {
                 if (getRenderX() == getLogicalX() && getRenderY() == getLogicalY()) { // if he is on tile
-                    getPlannedPath().clear(); // oopsie whoopsie, too panicked
+                    getPlannedPath().clear(); // too panicked
                 
                     List<Cell> neighbors = board.getNeighbors((int)getLogicalX(), (int)getLogicalY());
                     List<Cell> validChoices = new java.util.ArrayList<>();
@@ -42,7 +42,8 @@ public class Follower extends Evacuee {
                     if (!validChoices.isEmpty()) {
                         int randomIndex = (int)(Math.random() * validChoices.size());
                         Cell randomDestination = validChoices.get(randomIndex);
-            
+
+                        getPlannedPath().add(board.getCell((int)getLogicalX(), (int)getLogicalY()));
                         getPlannedPath().add(randomDestination);
                     }
                 }

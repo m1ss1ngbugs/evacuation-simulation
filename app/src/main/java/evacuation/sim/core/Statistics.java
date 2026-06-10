@@ -61,24 +61,24 @@ public class Statistics {
                     continue;
                 }
 
-            if (cell.getBaseType() == evacuation.sim.model.BaseType.WALL) {
+                if (cell.getBaseType() == evacuation.sim.model.BaseType.WALL) {
                 heatmapColors[y][x] = Color.BLACK;
                 continue;
-            }
+                }
 
-            int visits = cell.getVisitCount();
+                int visits = cell.getVisitCount();
 
-            if (visits == 0) {
-                heatmapColors[y][x] = Color.LIGHTGRAY; // no one stood here
-            } else if (maxVisits == 0) {
-                heatmapColors[y][x] = Color.GREEN;
-            } else {
-                // scale of intensity (0.0 - 1.0)
-                float intensity = (float) visits / maxVisits;
+                if (visits == 0) {
+                    heatmapColors[y][x] = Color.LIGHTGRAY; // no one stood here
+                } else if (maxVisits == 0) {
+                    heatmapColors[y][x] = Color.GREEN;
+                } else {
+                    // scale of intensity (0.0 - 1.0)
+                    float intensity = (float) visits / maxVisits;
 
-                // for coloring (using HSB)
-                double hue = 120.0 * (1.0 - intensity);
-                heatmapColors[y][x] = Color.hsb(hue, 1.0, 1.0, 0.85); 
+                    // for coloring (using HSB)
+                    double hue = 120.0 * (1.0 - intensity);
+                    heatmapColors[y][x] = Color.hsb(hue, 1.0, 1.0, 0.85);
                 }
             }
         }
