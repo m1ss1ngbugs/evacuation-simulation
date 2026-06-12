@@ -498,9 +498,9 @@ public class SimulationController {
 
         } catch (Exception ex) {
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("Błąd konfiguracji");
-            alert.setHeaderText("Nie można uruchomić symulacji");
-            alert.setContentText("Sprawdź poprawność danych w panelu bocznym.");
+            alert.setTitle("Configuration error");
+            alert.setHeaderText("Simulation cannot be started.");
+            alert.setContentText("Check whether the data in the side panel is correct.");
             alert.showAndWait();
             return true;
         }

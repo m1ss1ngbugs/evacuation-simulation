@@ -11,28 +11,28 @@
 * [More detailed information about modules](#more-detailed-information-about-modules)
 * [Application View](#application-view)
 * [Authors](#authors)
-* [Instructors](#instructors)
+* [Instructor](#instructor)
 
 ## General Information
 <details>
 <summary>Click here to see general information about the <b>Project</b>!</summary>
-<b>Advanced crowd evacuation simulator for confined spaces. </b>
+<b>A crowd evacuation simulator for indoor environments. </b>
 The application models people's behavior during evacuation from a building with dynamically evolving threats (fire, smoke)
   using artificial intelligence written for various agent types, state machines, and pathfinding algorithms.
-The project has an extensive graphical interface allowing for the configuration of dozens of parameters in real time.
+The project has an interactive graphical interface allowing for the configuration of dozens of parameters in real time.
 </details>
 
 ## Main Functionalities
 
 * **A* Navigation Strategy:** Agents use the A* algorithm to find the shortest route to the exit.
-  They dynamically assess the cost of traversing threatened zones if any threat or obstacle blocks the passage.
+  The cost of traversing cells dynamically increases if they are covered in smoke or fire, forcing agents to find safer detours.
 * **Three Agent Psychological Profiles:**
   * **Leaders:** Resistant to panic, they determine optimal escape paths.
   * **Followers:** Follow leaders and react to crowds (herd factor).
   * **Panicked:** They make irrational decisions and move erratically when their stress levels exceed a certain threshold.
 * **Dynamic Threats:** The fire and smoke propagation models are dynamic and realistic, dealing damage and limiting the field of view.
-* **GUI:** The user-friendly interface allows you to specify up to 22 initial simulation parameters,
-  from the number of initial agents of different types to their various characteristics. You can also load your own map from a text file.
+* **GUI:** Built with JavaFX, the interface lets you configure up to 22 initial simulation parameters,
+  from the number of agents of different types to their various characteristics. You can also load your own map from a text file.
   This allows you to simulate various evacuation scenarios from different buildings.
 * **Live Statistics:** The simulation continuously collects various statistics, allowing for analysis of the evacuation.
   It also allows you to generate a heatmap (created automatically after the simulation ends).
@@ -49,25 +49,25 @@ The project was built using the following technologies:
 To run the simulation on your local computer, follow these steps:
 
 1. **Clone the repository:**
-  ```commandline
-  git clone [https://github.com/YourName/evacuation-simulation.git](https://github.com/YourName/evacuation-simulation.git)
+  ```bash
+  git clone https://github.com/m1ss1ngbugs/evacuation-simulation.git
   ```
-2. **Name to the project folder:**
-  ```commandline
+2. **Go to the project folder:**
+  ```bash
   cd evacuation-simulation
   ```
 3. **Run the project using Gradle:**
   * On Windows:
-    ```commandline
+    ```cmd
     gradlew.bat run
     ```
   * On Linux/macOS:
-    ```commandline
+    ```bash
     ./gradlew run
     ```
 
 Note!
-You can load your map into the simulation as a plain text file. This file must be a symbol file, where '0' represents an obstacle, 
+You can load your map into the simulation as a plain text file. This file must be a symbol file, where 'O' represents an obstacle, 
 '#' represents a wall, 'E' represents an exit, and any other symbol is treated as a floor.
 (Sample maps added to the project: "mapa1.txt", "mapa2.txt", "mapa3.txt", "mapa4.txt", "map_test.txt")
 
@@ -76,7 +76,7 @@ You can load your map into the simulation as a plain text file. This file must b
   * agent. (a package of simulation agents)
     * hazard.
       * Fire (agent, primary threat that kills evacuees)
-      * Hazard (abstract class, extends Fire and Smoke)
+      * Hazard (abstract class, is extended by Fire and Smoke)
       * Smoke (agent, secondary threat that reduces visibility and deals little damage)
     * human.
       * Evacuee (an abstract class extended by the evacuees listed below in the package)
@@ -84,8 +84,8 @@ You can load your map into the simulation as a plain text file. This file must b
       * Leader (an agent, evacuee, immune to panic, leads the way)
       * Panicked (an agent, evacuee, panics more easily)
     * Agent (an abstract class extended by all classes representing agents in the simulation)
-    * Damageable (an interface implemented by agents that must take damage)
-    * Desk (an agent, creates an obstacle in the evacuees' path, can be destroyed by threats)
+    * Damageable (an interface implemented by agents that may take damage)
+    * Desk (an agent, creates an obstacle in the evacuees' path, can be destroyed by fire)
   * core (the main package, the heart of the simulation)
     * Simulation (the main class, connects the entire simulation)
     * Statistics (a class that collects data for analysis from the entire simulation)
@@ -95,7 +95,7 @@ You can load your map into the simulation as a plain text file. This file must b
     * SimSubject (interface implemented by transmitters)
   * factory (agent factory)
     * AgentFactory (factory class, responsible for creating new agents using their builders)
-    * AgentRandomizer (instrumentation class(randomizing parameters for created agents)
+    * AgentRandomizer (helper class (randomizing parameters for created agents))
   * gui (simulation graphical interface)
     * GuiApplication (launches the GUI, creates the main window)
     * SimulationController (class responsible for the logic for GUI elements (collecting input from sliders, displaying statistics, etc.))
@@ -107,7 +107,7 @@ You can load your map into the simulation as a plain text file. This file must b
     * Cell (cell class - the basic board element)
   * routing (part of the code responsible for movement strategies)
     * PathfindingStrategy (interface responsible for accessing various pathfinding strategies)
-    * AStarPathfinder (class responsible for the direct pathfinding algorithm)
+    * AStarPathfinder (class responsible for implementing the pathfinding algorithm)
 * src.main.java.resources
   * main_layout.fxml (JavaFX .xml file responsible for the GUI layout and styles)
 
@@ -125,7 +125,7 @@ This project was carried out as part of the Object-Oriented Programming laborato
 
     Heorhii Yartsev (293562)
     
-    Bartłomiej Krajewski (******)
+    Bartłomiej Krajewski (293439)
 
 ## Instructor
 

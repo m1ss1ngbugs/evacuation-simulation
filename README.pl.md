@@ -7,8 +7,8 @@
 * [Informacje ogólne](#informacje-ogólne)
 * [Główne funkcjonalności](#główne-funkcjonalności)
 * [Technologie](#technologie)
-* [Jak uruchomić?](#jak-uruchomić?)
-* [Bardziej szczegółowe informacje o modułach](#bardziej-szczegółowe-informacjep-o-modułach)
+* [Jak uruchomić?](#jak-uruchomić)
+* [Bardziej szczegółowe informacje o modułach](#bardziej-szczegółowe-informacje-o-modułach)
 * [Widok aplikacji](#widok-aplikacji)
 * [Autorzy](#autorzy)
 * [Prowadzący](#prowadzący)
@@ -34,7 +34,7 @@ Projekt posiada rozbudowany interfejs graficzny pozwalający na konfigurację ki
 * **GUI:** Interfejs jest przyjazny dla użytkownika, pozwala zadać aż 22 początkowe parametry symulacji,
   od ilości agentów początkowych różnych typów do ich różnych charakterystyk. Pozwala też na załadowanie swojej własnej mapy z pliku tekstowego.
   Pozwala to na symulowanie różnych scenariuszy ewakuacji z różnych budynków.
-* **Statystyki na żywo:** Symulacja na bieżąco zbiera różne statystyki, co pozwala na analizę przeprowadzonej ewakuacji. Pozwala też na zgienerowanie heatmapy
+* **Statystyki na żywo:** Symulacja na bieżąco zbiera różne statystyki, co pozwala na analizę przeprowadzonej ewakuacji. Pozwala też na zgenerowanie heatmapy
   (jest tworzona automatycznie po zakończeniu symulacji).
 
 ## Technologie
@@ -49,25 +49,25 @@ Projekt został zbudowany przy użyciu następujących technologii:
 Aby uruchomić symulację na swoim lokalnym komputerze, postępuj zgodnie z poniższymi krokami:
 
 1. **Sklonuj repozytorium:**
-   ```commandline
-   git clone [https://github.com/TwojaNazwa/evacuation-simulation.git](https://github.com/TwojaNazwa/evacuation-simulation.git)
+   ```bash
+   git clone https://github.com/m1ss1ngbugs/evacuation-simulation.git
    ```
 2. **Przejdź do folderu z projektem:**
-   ```commandline
+   ```bash
    cd evacuation-simulation
    ```
 3. **Uruchom projekt za pomocą Gradle:**
   * Na systemie Windows:
-  ```commandline
+  ```cmd
   gradlew.bat run
   ```
   * Na systemie Linux / macOS:
-  ```commandline
+  ```bash
   ./gradlew run
   ```
 
 Uwaga!
-Do symulacji można załadować swoją mapę w postaci zwykłego pliku tekstowego. Taki plik musi być w postaci pliku z symbolami, gdzie '0' - przeszkoda, 
+Do symulacji można załadować swoją mapę w postaci zwykłego pliku tekstowego. Taki plik musi być w postaci pliku z symbolami, gdzie 'O' - przeszkoda, 
 '#' - ściana, 'E' - wyjście, każdy inny symbol jest traktowany jako podłoga.
 (przykładowe mapy dodane do projektu: "mapa1.txt", "mapa2.txt", "mapa3.txt", "mapa4.txt", "map_test.txt")
 
@@ -81,11 +81,11 @@ Do symulacji można załadować swoją mapę w postaci zwykłego pliku tekstoweg
     * human.
       * Evacuee (klasa abstrakcyjna rozszerzana przez poniższych ewakuantów w pakiecie)
       * Follower (agent, ewakuant, ucieka razem z tłumem)
-      * Leader (agent, ewakuant, odporni na panikę, prowadzą za sobą)
-      * Panicked (agent, ewakuant, łatwiej wpadają w panikę)
+      * Leader (agent, ewakuant, odporny na panikę, prowadzi za sobą tłum)
+      * Panicked (agent, ewakuant, łatwiej wpada w panikę)
     * Agent (klasa abstrakcyjna, którą rozszerzają wszystkie klasy odpowiadające za agentów w symulacji)
-    * Damageable (interfejs, który implementują agenci, które muszą otrzymywać obrażenia)
-    * Desk (agent, tworzy przeszkodę na drodze ewakuantów, może być zniszczony przez zagrożenia)
+    * Damageable (interfejs, który implementują agenci, którzy mogą otrzymywać obrażenia)
+    * Desk (agent, tworzy przeszkodę na drodze ewakuantów, może być zniszczony przez ogień)
   * core. (główny pakiet, serce symulacji)
     * Simulation (główna klasa, łączy całą symulację)
     * Statistics (klasa zbierająca dane do analizy z całej symulacji)
@@ -95,19 +95,19 @@ Do symulacji można załadować swoją mapę w postaci zwykłego pliku tekstoweg
     * SimSubject (interfejs implementowany przez nadajniki)
   * factory. (fabryka agentów)
     * AgentFactory (klasa-fabryka, odpowiada za tworzenie nowych agentów za pomocą ich builderów)
-    * AgentRandomizer (klasa instrumentalna losującal parametry dla tworzonych agentów)
+    * AgentRandomizer (klasa pomocnicza losująca parametry dla tworzonych agentów)
   * gui. (interfejs graficzny symulacji)
     * GuiApplication (uruchamia GUI, tworzy główne okno)
     * SimulationController (klasa odpowiadająca za logikę dla elementów GUI (zbieranie danych wejściowych ze sliderów, wyświetlanie statystyk i podobne))
   * model. (model świata (MVC))
     * BaseType (enum, odpowiada za podstawowy typ komórki)
     * DynamicState (enum, odpowiada za typ komórki w zależności od zagrożenia)
-    * Direction (enum, odpowiada za przechowywania możliwych kierónków na komurki sąsiadujące)
-    * Board (klasa odpowiadająca za kompozycję komórek, główna plansza symulacji, przechowywuję mapę i współrzędne agentów)
+    * Direction (enum, odpowiada za przechowywanie możliwych kierunków na komórki sąsiadujące)
+    * Board (klasa odpowiadająca za kompozycję komórek, główna plansza symulacji, przechowuje mapę i współrzędne agentów)
     * Cell (klasa komórki - podstawowy element planszy)
   * routing. (część kodu odpowiedzialna za strategii poruszania się)
     * PathfindingStrategy (interfejs odpowiadający za dostęp do różnych strategii znalezienia drogi)
-    * AStarPathfinder (klasa odpowiadająca za bezpośredni algorytm znalezienia drogi)
+    * AStarPathfinder (klasa odpowiadająca za implementację algorytmu znajdowania drogi)
 * src.main.java.resources.
   * main_layout.fxml (plik typu .xml dla JavaFX odpowiadający za layout i style GUI)
 
@@ -125,7 +125,7 @@ Projekt realizowany w ramach zajęć laboratoryhnych z Programowania Obiektowego
     
     Heorhii Yartsev (293562)
 
-    Bartłomiej Krajewski (******)
+    Bartłomiej Krajewski (293439)
 
 ## Prowadzący
 
