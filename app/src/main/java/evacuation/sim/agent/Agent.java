@@ -8,7 +8,7 @@ import evacuation.sim.model.Board;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Agent implements SimSubject {
+public abstract class  Agent implements SimSubject {
     private final int id;
     private int logicalX;
     private int logicalY;

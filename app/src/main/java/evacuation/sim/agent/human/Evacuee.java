@@ -9,6 +9,7 @@ import evacuation.sim.model.DynamicState;
 import evacuation.sim.routing.AStarPathfinder;
 import evacuation.sim.routing.PathfindingStrategy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Evacuee extends Agent implements Damageable {
@@ -200,16 +201,17 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
+    // This method finds a path for the evacuee using a pathfinding strategy.
+    // It passes to the AStarPathfinder class its starting cell, exits list, and a copy of the mental map.
     protected void calculatePath(){
         Cell startCell = mentalMap[this.getLogicalX()][this.getLogicalY()];
-        Cell endCell = findClosestExit();
+        List<Cell> exitCells = findAllExits();
 
-        if (startCell != null && endCell != null) {
+        if (startCell != null && !exitCells.isEmpty()) {
             // creating virtual board, so pathfinder can work with it
             Board virtualBoard = new Board(this.mentalMap);
 
-            this.plannedPath = pathfinder.findPath(startCell, endCell, virtualBoard);
-         //   plannedPath = pathfinder.findPath(startCell, endCell, mentalMap);
+            this.plannedPath = pathfinder.findPath(startCell, exitCells, virtualBoard);
         }
     }
 
@@ -234,32 +236,19 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
-    private Cell findClosestExit() {
-        Cell closestExit = null;
-        double minDistance = Double.MAX_VALUE; // start from plus infinity
+    // gets a list of all outputs the agent has in memory
+    private List<Cell> findAllExits() {
+        List<Cell> exits = new ArrayList<>();
+        if (mentalMap == null) return exits;
 
-        // search the agents mental map
-        for (int x = 0; x < mentalMap.length; x++) {
-            for (int y = 0; y < mentalMap[x].length; y++) {
-                Cell cell = mentalMap[x][y];
-
-                // is the Cell the output Cell?
-                if (cell.getBaseType() == BaseType.EXIT) {
-
-                    // calculate the distance from the agent to the exit
-                    double dx = x - this.getLogicalX();
-                    double dy = y - this.getLogicalY();
-                    double distance = Math.sqrt(dx * dx + dy * dy);
-
-                    // saving the exit cell if it is closer than the last one found
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestExit = cell;
-                    }
+        for (Cell[] cells : mentalMap) {
+            for (Cell cell : cells) {
+                if (cell != null && cell.getBaseType() == BaseType.EXIT) {
+                    exits.add(cell);
                 }
             }
         }
-        return closestExit;
+        return exits;
     }
 
     @Override

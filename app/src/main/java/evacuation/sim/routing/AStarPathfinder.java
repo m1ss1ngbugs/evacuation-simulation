@@ -44,9 +44,9 @@ public class AStarPathfinder implements PathfindingStrategy{
     }
 
     @Override
-    public List<Cell> findPath(Cell Start, Cell End, Board board){
+    public List<Cell> findPath(Cell Start, List<Cell> ends, Board board){
 
-        if (Start == null || End == null || board == null) {
+        if (Start == null || ends == null || ends.isEmpty() || board == null) {
             return Collections.emptyList(); // Return empty path if start or end is null
         }
 
@@ -54,14 +54,14 @@ public class AStarPathfinder implements PathfindingStrategy{
         Map<Cell, Node> closedSet = new HashMap<>(); // Visited cells
         Map<Cell, Node> allNodes = new HashMap<>(); // For checking if a cell already has a Node
 
-        Node startNode = new Node(Start, null, 0.0, heuristic(Start, End));
+        Node startNode = new Node(Start, null, 0.0, heuristic(Start, ends));
         openSet.add(startNode);
         allNodes.put(Start, startNode);
 
         while (!openSet.isEmpty()) {
             Node currentNode = openSet.poll(); 
 
-            if (currentNode.cell.equals(End)) {
+            if (ends.contains(currentNode.cell)) {
                 return reconstructPath(currentNode);
             }
 
@@ -73,7 +73,7 @@ public class AStarPathfinder implements PathfindingStrategy{
                     continue; // Ignore the neighbor which is already evaluated
                 }
 
-                if (neighbor.getBaseType() == BaseType.OBSTACLE && !neighbor.equals(End)) {
+                if (neighbor.getBaseType() == BaseType.OBSTACLE && !ends.contains(neighbor)) {
                     continue; // Ignore obstacles
                 }
 
@@ -92,7 +92,7 @@ public class AStarPathfinder implements PathfindingStrategy{
                 Node neighborNode = allNodes.get(neighbor);
 
                 if(neighborNode == null) {
-                    neighborNode = new Node(neighbor, currentNode, tentativeGCost, heuristic(neighbor, End));
+                    neighborNode = new Node(neighbor, currentNode, tentativeGCost, heuristic(neighbor, ends));
                     allNodes.put(neighbor, neighborNode);
                     openSet.add(neighborNode); 
                 } else if (tentativeGCost < neighborNode.gCost) {
@@ -110,10 +110,17 @@ public class AStarPathfinder implements PathfindingStrategy{
         return Collections.emptyList(); // Return empty path if no path is found
     }
 
-    private double heuristic(Cell a, Cell b) {
-        // Using Manhattan distance as heuristic
-        return Math.abs(a.getLogicalX() - b.getLogicalX()) + Math.abs(a.getLogicalY() - b.getLogicalY());
-    }   
+    // Using Manhattan distance to the closest exit as heuristic
+    private double heuristic(Cell a, List<Cell> ends) {
+        double minDistance = Double.MAX_VALUE;
+        for (Cell end : ends) {
+            double dist = Math.abs(a.getLogicalX() - end.getLogicalX()) + Math.abs(a.getLogicalY() - end.getLogicalY());
+            if (dist < minDistance) {
+                minDistance = dist;
+            }
+        }
+        return minDistance;
+    }
 
     private List<Cell> reconstructPath(Node node) {
         List<Cell> path = new ArrayList<>();

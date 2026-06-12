@@ -7,5 +7,5 @@ import java.util.List;
 
 @FunctionalInterface
 public interface PathfindingStrategy {
-    List<Cell> findPath(Cell Start, Cell End, Board board);
+    List<Cell> findPath(Cell Start, List<Cell> ends, Board board);
 }

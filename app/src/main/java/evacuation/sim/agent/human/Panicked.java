@@ -40,7 +40,7 @@ public class Panicked extends Evacuee{
                         int randomIndex = (int)(Math.random() * validChoices.size());
                         Cell randomDestination = validChoices.get(randomIndex);
 
-                        getPlannedPath().add(board.getCell((int)getLogicalX(), (int)getLogicalY()));
+                        getPlannedPath().add(board.getCell(getLogicalX(), getLogicalY()));
                         getPlannedPath().add(randomDestination);
                     }
             }
