@@ -21,7 +21,7 @@
    <left>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;" BorderPane.alignment="CENTER">
          <content>
-            <VBox prefWidth="300.0" spacing="15.0" style="-fx-background-color: #cd03ff2f">
+            <VBox alignment="TOP_CENTER" prefWidth="300.0" spacing="15.0" style="-fx-background-color: #cd03ff2f">
                <children>
                   <Label text="Evacuation Simuation" textFill="WHITE">
                      <font>
@@ -47,6 +47,16 @@
                      </VBox.margin>
                      <children>
                         <Button mnemonicParsing="false" onAction="#onShowHeatmapClicked" style="-fx-background-color: linear-gradient(to bottom, #FFF52E, #FFF98A); -fx-text-fill: #1a1a1a; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;" text="Show Heatmap" />
+                     </children>
+                  </HBox>
+                  <Label text="Time Scale">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Label>
+                  <HBox>
+                     <children>
+                        <Slider fx:id="timeScaleSlider" majorTickUnit="1.0" max="5.0" min="0.1" minorTickCount="2" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="timeScaleLabel" text="0" />
                      </children>
                   </HBox>
                   <Label text="Map file:" textFill="#bbbbbb" />

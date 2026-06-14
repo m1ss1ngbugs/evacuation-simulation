@@ -92,6 +92,9 @@ public class SimulationController {
     @FXML private Label scenarioLabel;
     @FXML private Label FirstEvacuationTimeLabel;
     @FXML private Label TotalEvacuationTimeLabel;
+    // time scale slider and label
+    @FXML private Slider timeScaleSlider;
+    @FXML private Label timeScaleLabel;
 
     private Simulation simulation;
     private GraphicsContext gc;
@@ -161,6 +164,9 @@ public class SimulationController {
         // Initial smokeDuplicationThreshold slider and label
         setupSlider(smokeDuplicationThresholdSlider, smokeDuplicationThreasholdLabel,
                 5, 30, config.getSmokeDuplicationThreshold(), "%.0f");
+        // simulation time scale label and slider initialization
+        setupSlider(timeScaleSlider, timeScaleLabel,
+                0.1, 5.0, 1.0, "%.1fx");
 
         // text fields
         inputMap.setText(config.getMapFilePath());
@@ -201,6 +207,12 @@ public class SimulationController {
                 }
                 float dt = (now - lastUpdate) / 1_000_000_000.0f;
                 lastUpdate = now;
+
+                // time temp modification
+                float timeMultiplier = (float) timeScaleSlider.getValue();
+                dt = dt * timeMultiplier;
+                // max dt limit
+                if (dt > 0.1f) dt = 0.1f;
 
                 simulation.updateTick(dt);
                 render(gc);

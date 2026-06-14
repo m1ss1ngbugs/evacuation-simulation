@@ -1,6 +1,5 @@
 package evacuation.sim.agent.hazard;
 
-import evacuation.sim.SimSingletonConfig;
 import evacuation.sim.event.SimEvent;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.BaseType;

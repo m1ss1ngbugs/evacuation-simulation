@@ -2,15 +2,11 @@ package evacuation.sim.agent.hazard;
 
 
 import evacuation.sim.SimSingletonConfig;
-import evacuation.sim.agent.Agent;
-import evacuation.sim.agent.Damageable;
 import evacuation.sim.event.SimEvent;
 import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
 import evacuation.sim.model.DynamicState;
-import evacuation.sim.core.Simulation;
-
 
 import java.util.List;
 
