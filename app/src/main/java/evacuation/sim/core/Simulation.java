@@ -277,7 +277,7 @@ public class Simulation implements SimObserver {
             return; // if it's already a fire - do nothing
         }
 
-        List<Agent> agentsHere = board.getAgentsAt(cell.getLogicalX(), cell.getLogicalY());
+        List<Agent> agentsHere = board.getAgentsAt(cell);
         for (Agent a : agentsHere) {
             if (a instanceof Smoke) {
                 removeAgent(a);

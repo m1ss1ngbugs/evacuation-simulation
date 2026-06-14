@@ -12,6 +12,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 
+
+/**
+ * A class responsible for the board and the position of agents on it. It consists of Cells (composition).
+ * @author Heorhii Yartsev (293562)
+ * @author Bartłomiej Krajewski (293439)
+ */
 public class Board {
     private int width;
     private int height;
@@ -35,7 +41,10 @@ public class Board {
         this.grid = new Cell[width][height];
     }
 
-    // Method which updates spatial index (makes map: agent - position on the board)
+    /**
+     * Method which updates spatial index (makes map: agent - position on the board).
+     * @param agentsFromSimulation actual list of agents in the simulation.
+     */
     public void updateSpatialIndex(List<Agent> agentsFromSimulation) {
         spatialIndex.clear();
         // iterates through the list of agents
@@ -51,17 +60,32 @@ public class Board {
         }
     }
 
-    // helps to get an agent on the specific cell (using coordinates)
-    public List<Agent> getAgentsAt(int x, int y) {
-        String key = x + "," + y;
+    /**
+     * Helps to get agents on the specific cell (using coordinates).
+     * @param cell The cell we want to learn about.
+     * @return list of agents on this cell.
+     */
+    public List<Agent> getAgentsAt(Cell cell) {
+        String key = cell.getLogicalX() + "," + cell.getLogicalY();
         return spatialIndex.getOrDefault(key, Collections.emptyList());
     }
 
-    // check whether the cell is within the board's boundaries
+    /**
+     * Checks whether the cell is within the board's boundaries.
+     * @param x the x coordinate of the cell.
+     * @param y the y coordinate of the cell.
+     * @return true or false - in bounds or not.
+     */
     boolean inBounds(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
+    /**
+     * Safe cell getter.
+     * @param x the x coordinate of the cell.
+     * @param y the y coordinate of the cell.
+     * @return the Cell that has these coordinates.
+     */
     public Cell getCell(int x, int y) {
         if(!inBounds(x, y)){
             return null; // Return null if out of bounds
@@ -69,13 +93,17 @@ public class Board {
         return grid[x][y];
     }
 
-    // helps to get the neighbors of the cell
-    public List<Cell> getNeighbors(int x, int y) {
+    /**
+     * Helps to get the neighbors of the cell.
+     * @param cell The cell we want to learn about.
+     * @return List of cells - neighbors of the current cell.
+     */
+    public List<Cell> getNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
         // iterates through every direction
         for (Direction dir : Direction.values()) {
-            int nx = x + dir.getDx();
-            int ny = y + dir.getDy();
+            int nx = cell.getLogicalX() + dir.getDx();
+            int ny = cell.getLogicalY() + dir.getDy();
             // adds the neighbor cell if it's in bounds of the board
             if (inBounds(nx, ny)) {
                 neighbors.add(getCell(nx, ny));
@@ -84,7 +112,10 @@ public class Board {
         return neighbors;
     }
 
-    // Auxiliary method for finding a safe starting point
+    /**
+     * Auxiliary method for finding a safe starting point.
+     * @return empty floor cell for evacuee to be placed.
+     */
     public Cell getRandomEmptyFloor() {
         int maxAttempts = 1000;
         for (int i = 0; i < maxAttempts; i++) {
@@ -99,7 +130,7 @@ public class Board {
                     && cell.getDynamicState() == DynamicState.NONE) {
 
                 // check if the Cell is Empty from other Agents
-                if (getAgentsAt(random_x, random_y).isEmpty()) {
+                if (getAgentsAt(getCell(random_x, random_y)).isEmpty()) {
                      return cell; // place to spawn was found
 
                  }
@@ -108,7 +139,10 @@ public class Board {
         return null;  // place can't be found after 1000 attempts
     }
 
-    // method designed for loading a map from a text file
+    /**
+     * Method designed for loading a map from a text file.
+     * @param path Path to the .txt file with map to load.
+     */
     public void loadMapFromFile(String path){
         try {
             // converts String path to Path path to the file and then reads and save all lines from the file
@@ -150,7 +184,9 @@ public class Board {
         }
     }
 
-    // auxiliary method for loadMapFromFile method
+    /**
+     * Auxiliary method for loadMapFromFile method.
+     */
     private void generateDefaultFloor() {
         this.width = 10;
         this.height = 10;
@@ -171,10 +207,21 @@ public class Board {
         grid[2][height-1] = new Cell(2, height-1, BaseType.EXIT); // Add another exit
     }
 
-    public boolean hasLineOfSight(int x1, int y1, int x2, int y2) { // Bresenham algorythm
+    /**
+     * Checks the line of sight between two points on the board.
+     * Uses the Bresenham algorithm to map tiles along the sight path
+     * and verifies that none of them are walls blocking the view.
+     * @param x1 Logical x coordinate of the start cell, cell1.
+     * @param y1 Logical y coordinate of the start cell, cell1.
+     * @param x2 Logical x coordinate of the end cell, cell2.
+     * @param y2 Logical y coordinate of the end cell, cell2.
+     * @return Is the cell2 is visible from the cell1?
+     */
+    public boolean hasLineOfSight(int x1, int y1, int x2, int y2) { // Bresenham algorithm
+        // total vertical and horizontal distance between points:
         int dx = Math.abs(x2 - x1); // distance in X
         int dy = Math.abs(y2 - y1); // distance in Y
-    
+        // Direction Step - go right or left, up or down:
         int sx = (x1 < x2) ? 1 : -1; // sign of X
         int sy = (y1 < y2) ? 1 : -1; // sign of Y
     

@@ -90,7 +90,7 @@ public abstract class Evacuee extends Agent implements Damageable {
             
             // checking if next tile is free
             boolean isNextOccupied = false;
-            List<Agent> agentsOnTarget = board.getAgentsAt(nextCell.getLogicalX(), nextCell.getLogicalY());
+            List<Agent> agentsOnTarget = board.getAgentsAt(nextCell);
             if (agentsOnTarget != null) {
                 for (Agent a : agentsOnTarget) {
                     if (a instanceof Evacuee && a.getId() != this.getId()) {

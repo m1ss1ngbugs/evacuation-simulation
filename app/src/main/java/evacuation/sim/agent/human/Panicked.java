@@ -24,12 +24,12 @@ public class Panicked extends Evacuee{
             if (getPlannedPath() != null && !getPlannedPath().isEmpty()) {
                 getPlannedPath().clear();
 
-                List<Cell> neighbors = board.getNeighbors((int)getLogicalX(), (int)getLogicalY());
+                List<Cell> neighbors = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()));
                     List<Cell> validChoices = new java.util.ArrayList<>();
 
                     for (Cell neighbor : neighbors) {
                         if (neighbor.getBaseType() != BaseType.WALL && neighbor.getBaseType() != BaseType.OBSTACLE) {
-                            if (board.getAgentsAt(neighbor.getLogicalX(), neighbor.getLogicalY()).isEmpty()) {
+                            if (board.getAgentsAt(neighbor).isEmpty()) {
                                 validChoices.add(neighbor);
                             }
                         }

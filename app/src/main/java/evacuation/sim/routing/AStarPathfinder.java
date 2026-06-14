@@ -7,8 +7,15 @@ import evacuation.sim.model.Board;
 
 import java.util.*;
 
+/**
+ * Pathfinding strategy for simulation evacuees.
+ * @author Bartłomiej Krajewski (293439)
+ */
 public class AStarPathfinder implements PathfindingStrategy{
 
+    /**
+     * It is a wrapper for cells, the entire algorithm works with nodes.
+     */
     private static class Node implements Comparable<Node> {
         Cell cell;
         Node parent;
@@ -24,11 +31,22 @@ public class AStarPathfinder implements PathfindingStrategy{
             this.fCost = gCost + hCost;
         }
 
+        /**
+         * The method compares the value of this.fCost (the cost of the current node)
+         * with other.fCost (the cost of the second node).
+         * @param other specific object of the Node class with which we want to compare.
+         * @return int (-1, 0, or 1) comparison result.
+         */
         @Override
         public int compareTo(Node other) {
             return Double.compare(this.fCost, other.fCost);
         }
 
+        /**
+         * Checks whether the object on which the method was called is identical to the object passed as an argument.
+         * @param o the object with which to compare.
+         * @return boolean value (same tile or not).
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -37,12 +55,24 @@ public class AStarPathfinder implements PathfindingStrategy{
             return Objects.equals(cell, node.cell);
         }
 
+        /**
+         * The method takes the coordinates from the Cell tile and generates a unique number based on them.
+         * @return int Cell id.
+         */
         @Override
         public int hashCode() {
             return Objects.hash(cell);
         }
     }
 
+    /**
+     * It calculates the shortest and most cost-effective path to the nearest available exit.
+     * The algorithm dynamically takes into account penalties for passing through fire and smoke.
+     * @param Start The starting cell where the agent is located.
+     * @param ends A list of all exits detected and remembered by the agent.
+     * @param board A virtual board mockup (mental map) for analyzing the route.
+     * @return A list of cells leading to the destination, or an empty list if the route is blocked.
+     */
     @Override
     public List<Cell> findPath(Cell Start, List<Cell> ends, Board board){
 
@@ -66,7 +96,7 @@ public class AStarPathfinder implements PathfindingStrategy{
             }
 
             closedSet.put(currentNode.cell, currentNode);
-            List<Cell> neighbors = getNeighbors(currentNode.cell, board);
+            List<Cell> neighbors = board.getNeighbors(currentNode.cell);
 
             for (Cell neighbor : neighbors) {
                 if (closedSet.containsKey(neighbor)) {
@@ -100,7 +130,8 @@ public class AStarPathfinder implements PathfindingStrategy{
                     neighborNode.gCost = tentativeGCost;
                     neighborNode.fCost = tentativeGCost + neighborNode.hCost;
 
-                    // Since Java's PriorityQueue does not have a decrease-key operation, we need to remove and re-add the node to update its position in the queue
+                    // Since Java's PriorityQueue does not have a decrease-key operation,
+                    // we need to remove and re-add the node to update its position in the queue
                     openSet.remove(neighborNode);
                     openSet.add(neighborNode);
                 }
@@ -110,7 +141,13 @@ public class AStarPathfinder implements PathfindingStrategy{
         return Collections.emptyList(); // Return empty path if no path is found
     }
 
-    // Using Manhattan distance to the closest exit as heuristic
+    /**
+     * Using Manhattan distance to the closest exit as heuristic.
+     * @param a the Cell on which the algorithm is currently located.
+     * @param ends list of all exits.
+     * @return double minDistance - estimated, shortest distance (measured in tiles)
+     * from cell to the nearest of all available exits.
+     */
     private double heuristic(Cell a, List<Cell> ends) {
         double minDistance = Double.MAX_VALUE;
         for (Cell end : ends) {
@@ -122,6 +159,11 @@ public class AStarPathfinder implements PathfindingStrategy{
         return minDistance;
     }
 
+    /**
+     * Recreates the final evacuation path.
+     * @param node the end node, i.e. the one representing the exit from the building.
+     * @return List<Cell> - an ordered list of Cell tiles arranged chronologically.
+     */
     private List<Cell> reconstructPath(Node node) {
         List<Cell> path = new ArrayList<>();
         while (node != null) {
@@ -130,26 +172,5 @@ public class AStarPathfinder implements PathfindingStrategy{
         }
         Collections.reverse(path); // Reverse the path to get the correct order from start to end
         return path;
-    }
-
-    private List<Cell> getNeighbors(Cell cell, Board board) {
-        List<Cell> neighbors = new ArrayList<>();
-        int currentX = cell.getLogicalX();
-        int currentY = cell.getLogicalY();
-
-        // Define possible directions (up, down, left, right)
-        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-
-        for (int[] dir : directions) {
-            int newX = currentX + dir[0];
-            int newY = currentY + dir[1];
-
-            Cell neighbor = board.getCell(newX, newY);
-            if (neighbor != null) {
-                neighbors.add(neighbor);
-            }
-        }
-
-        return neighbors;
     }
 }

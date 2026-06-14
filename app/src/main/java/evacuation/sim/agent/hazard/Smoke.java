@@ -35,7 +35,7 @@ public class Smoke extends Hazard{
     }
 
     private void duplicate(Board board){
-        List<Cell> neighborCells = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+        List<Cell> neighborCells = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()));
 
         for (Cell cell : neighborCells) {
 
@@ -47,11 +47,8 @@ public class Smoke extends Hazard{
                 continue; // Skip cells on fire
             }
 
-            int nx = cell.getLogicalX();
-            int ny = cell.getLogicalY();
-
             Smoke existingSmoke = null;
-            List<Agent> agentsAtCell = board.getAgentsAt(nx, ny);
+            List<Agent> agentsAtCell = board.getAgentsAt(cell);
 
             for (Agent agent : agentsAtCell) {
                 if (agent instanceof Smoke) {

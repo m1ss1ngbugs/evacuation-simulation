@@ -33,7 +33,7 @@ public abstract class Hazard extends Agent {
 
     protected void hit(Board board, float dt){
         // downloading the list of agents
-        List<Agent> agentsAtCell = board.getAgentsAt(this.getLogicalX(), this.getLogicalY());
+        List<Agent> agentsAtCell = board.getAgentsAt(board.getCell(this.getLogicalX(), this.getLogicalY()));
         // review all agents in the field
         for (Agent agent : agentsAtCell) {
             if (agent == this) {

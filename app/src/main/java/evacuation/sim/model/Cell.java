@@ -1,5 +1,9 @@
 package evacuation.sim.model;
 
+/**
+ * A class responsible for cells. Storing their properties (coordinates, states, types and so on).
+ * @author Heorhii Yartsev (293562)
+ */
 public class Cell {
     private int logicalX;
     private int logicalY;
@@ -18,6 +22,8 @@ public class Cell {
     public int getLogicalX() {
         return logicalX;
     }
+
+    // standard getters and setters
 
     public int getLogicalY() {
         return logicalY;

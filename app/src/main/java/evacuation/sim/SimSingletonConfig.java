@@ -1,5 +1,10 @@
 package evacuation.sim;
 
+/**
+ * The SimSingletonConfig class is the class responsible for the simulation startup configuration.
+ * This class implements the singleton design pattern, as the name suggests.
+ * Therefore, only one instance of this class can be created.
+ */
 public class SimSingletonConfig {
     private static SimSingletonConfig instance;
     // simulation parameters
@@ -71,6 +76,10 @@ public class SimSingletonConfig {
         this.mapFilePath = "Mapa1.txt";
     }
 
+    /**
+     * Allows you to get (or create if it is absence) the only instance of a configuration class.
+     * @return the SimSingletonConfig instance
+     */
     public static SimSingletonConfig getInstance(){
         if (instance == null){
             instance = new SimSingletonConfig();
@@ -80,6 +89,7 @@ public class SimSingletonConfig {
 
 
     // standard getters and setters
+
     public float getMaxEvacuationTime() {
         return maxEvacuationTime;
     }

@@ -32,7 +32,7 @@ public class Desk extends Agent implements Damageable {
         }
 
         if (!(currentCell.getDynamicState() == DynamicState.FIRE)) {
-            List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+            List<Cell> neighbors = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()));
             for (Cell neighbor : neighbors) {
                 if (neighbor.getDynamicState() == DynamicState.FIRE) {
                     if (Math.random() < 0.4) {
@@ -51,7 +51,7 @@ public class Desk extends Agent implements Damageable {
             if (fireSpreadTimer >= 1.5f) {
                 fireSpreadTimer = 0.0f;
 
-                List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+                List<Cell> neighbors = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()));
 
                 for (Cell neighbor : neighbors) {
                     if (neighbor.getBaseType() == BaseType.FLOOR && neighbor.getDynamicState() != DynamicState.FIRE) {

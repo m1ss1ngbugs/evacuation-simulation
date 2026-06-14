@@ -49,7 +49,7 @@ public class Fire extends Hazard{
 
     private void emitSmoke(Board board) {
         // gets neighbors of this cell
-        List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+        List<Cell> neighbors = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()));
 
         for (Cell cell : neighbors) {
             if ((cell.getBaseType() == BaseType.FLOOR || cell.getBaseType() == BaseType.OBSTACLE) &&
@@ -62,7 +62,7 @@ public class Fire extends Hazard{
     }
 
     private void propagate(Board board){
-        List<Cell> neighbors = board.getNeighbors(this.getLogicalX(), this.getLogicalY());
+        List<Cell> neighbors = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()) );
 
         for (Cell neighbor : neighbors) {
             if ((neighbor.getBaseType() == BaseType.FLOOR || neighbor.getBaseType() == BaseType.OBSTACLE)
