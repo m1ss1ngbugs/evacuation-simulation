@@ -215,7 +215,7 @@ public abstract class Evacuee extends Agent implements Damageable {
     }
 
     protected void verifyPath(){
-        // 4. current mental map verification
+        // current mental map verification
         if (plannedPath != null && !plannedPath.isEmpty()) {
             // planned path review
             for (int i = 1; i < plannedPath.size(); i++) {

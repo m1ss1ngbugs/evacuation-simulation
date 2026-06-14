@@ -116,7 +116,7 @@ public class Board {
 
             // checks if the file is empty
             if (lines.isEmpty()) {
-                throw new IOException("Plik mapy jest pusty!");
+                throw new IOException("Map file is empty!");
             }
 
             // learn the sizes directly from the file
@@ -144,7 +144,7 @@ public class Board {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Błąd ładowania mapy"  + e.getMessage() + ", tworzę awaryjną planszę 10x10... ");
+            System.err.println("Map loading error:"  + e.getMessage() + ", creating a default 10x10 base... ");
             // generate default floor on error
             generateDefaultFloor();
         }
