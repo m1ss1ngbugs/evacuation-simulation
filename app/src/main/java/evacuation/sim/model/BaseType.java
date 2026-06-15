@@ -1,7 +1,7 @@
 package evacuation.sim.model;
 
 /**
- * Enum representing the fixed, base type of Cell.
+ * Enum representing the fixed, base type of cell (the object of class {@link Cell}).
  * @author Heorhii Yartsev (293562)
  */
 public enum BaseType {

@@ -4,6 +4,9 @@ package evacuation.sim;
  * The SimSingletonConfig class is the class responsible for the simulation startup configuration.
  * This class implements the singleton design pattern, as the name suggests.
  * Therefore, only one instance of this class can be created.
+ * Passes its data to the Simulation class when it runs.
+ *  @author Heorhii Yartsev (293562)
+ *  @author Bartłomiej Krajewski (293439)
  */
 public class SimSingletonConfig {
     private static SimSingletonConfig instance;

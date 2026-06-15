@@ -8,7 +8,13 @@ import evacuation.sim.model.Board;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class  Agent implements SimSubject {
+/**
+ * This is the class responsible for all agents in the simulation.
+ * All secondary classes responsible for different types of agents inherit from this class.
+ * It implements the SimSubject interface - agents are transmitters for the Simulation.
+ * @author Heorhii Yartsev (293562)
+ */
+public abstract class Agent implements SimSubject {
     private final int id;
     private int logicalX;
     private int logicalY;
@@ -30,8 +36,12 @@ public abstract class  Agent implements SimSubject {
         this.observers = new ArrayList<>();
     }
 
-    // adding methods from interface SimSubject
+    // implementation of methods from interface SimSubject
 
+    /**
+     * Adds a new observer to the list if it hasn't been added before.
+     * @param observer An object of class {@link SimObserver} that must listen for messages from the transmitter.
+     */
     @Override
     public void addObserver(SimObserver observer) {
         if (!observers.contains(observer)) {
@@ -39,11 +49,20 @@ public abstract class  Agent implements SimSubject {
         }
     }
 
+    /**
+     * Removes an agent from the list of observers.
+     * @param observer Object of class {@link SimObserver} that needs to be removed from the list.
+     */
     @Override
     public void removeObserver(SimObserver observer) {
         observers.remove(observer);
     }
 
+    /**
+     * Notifies all the observers about the event.
+     * For example, if we want the simulation to create a new agent.
+     * @param event An event (object of class {@link SimEvent}) that needs to be reported.
+     */
     @Override
     public void notifyObservers(SimEvent event) {
         for (SimObserver observer : observers) {
@@ -51,9 +70,21 @@ public abstract class  Agent implements SimSubject {
         }
     }
 
+    /**
+     * This is the agent's main lifecycle method, invoked periodically in each simulation frame.
+     * Updates the agent's logical and physical state by a specified time step.
+     * It is responsible for triggering environmental perception processes,
+     * deciding on the direction of escape, and physically moving objects on the board.
+     * @param board Current state of the board layout (object of class {@link Board} from the Simulation class),
+     *             allowing for checking the environment and collisions.
+     * @param dt Delta time (in seconds) gone since the last simulation frame.
+     *           Used for smooth speed and movement calculations.
+     */
     public abstract void update(Board board, float dt);
 
-    // deactivates (in purpose to delete) agent
+    /**
+     * Deactivates (in purpose to delete) agent.
+     */
     public void deactivate() {
         this.isActive = false;
     }
@@ -98,9 +129,5 @@ public abstract class  Agent implements SimSubject {
 
     protected void setRenderY(float renderY) {
         this.renderY = renderY;
-    }
-
-    protected void setActive(boolean active) {
-        isActive = active;
     }
 }

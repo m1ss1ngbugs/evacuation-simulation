@@ -62,8 +62,8 @@ public class Smoke extends Hazard{
                 float newDensity = existingSmoke.getDensity() + this.density * 0.6f;
                 existingSmoke.density = Math.min(newDensity, 1.0f); // Cap density at 1.0f
             } else { // there is no Smoke on this sell - need to make a new one
-                notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_SMOKE, nx,
-                        ny, this.density*0.6f));
+                notifyObservers(new SimEvent(SimEvent.EventType.SPAWN_SMOKE, cell.getLogicalX(),
+                        cell.getLogicalY(), this.density*0.6f));
             }
         }
     }

@@ -8,7 +8,10 @@ import evacuation.sim.model.Board;
 import java.util.*;
 
 /**
- * Pathfinding strategy for simulation evacuees.
+ * Klass responsible for pathfinding strategy for simulation evacuees.
+ * Realize AStar pathfinding strategy.
+ * Manages methods to transform cells into nodes to sort them more efficiently
+ * in PriorityQueue and find the shortest path.
  * @author Bartłomiej Krajewski (293439)
  */
 public class AStarPathfinder implements PathfindingStrategy{
@@ -66,12 +69,10 @@ public class AStarPathfinder implements PathfindingStrategy{
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * It calculates the shortest and most cost-effective path to the nearest available exit.
      * The algorithm dynamically takes into account penalties for passing through fire and smoke.
-     * @param Start The starting cell where the agent is located.
-     * @param ends A list of all exits detected and remembered by the agent.
-     * @param board A virtual board mockup (mental map) for analyzing the route.
-     * @return A list of cells leading to the destination, or an empty list if the route is blocked.
      */
     @Override
     public List<Cell> findPath(Cell Start, List<Cell> ends, Board board){
@@ -143,8 +144,8 @@ public class AStarPathfinder implements PathfindingStrategy{
 
     /**
      * Using Manhattan distance to the closest exit as heuristic.
-     * @param a the Cell on which the algorithm is currently located.
-     * @param ends list of all exits.
+     * @param a the {@link Cell} object on which the algorithm is currently located.
+     * @param ends list of all exits cells (objects of class {@link Cell} with EXIT {@link BaseType}).
      * @return double minDistance - estimated, shortest distance (measured in tiles)
      * from cell to the nearest of all available exits.
      */
@@ -160,9 +161,9 @@ public class AStarPathfinder implements PathfindingStrategy{
     }
 
     /**
-     * Recreates the final evacuation path.
-     * @param node the end node, i.e. the one representing the exit from the building.
-     * @return List<Cell> - an ordered list of Cell tiles arranged chronologically.
+     * Recreates the final evacuation path, by getting cells from the parents nodes and reversing the path.
+     * @param node The end node (object of class {@link Node}), i.e. the one representing the exit from the building.
+     * @return List<Cell> - an ordered list of cells (objects of class {@link Cell}) tiles arranged chronologically.
      */
     private List<Cell> reconstructPath(Node node) {
         List<Cell> path = new ArrayList<>();

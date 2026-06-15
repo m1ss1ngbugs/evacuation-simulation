@@ -2,6 +2,8 @@ package evacuation.sim.model;
 
 /**
  * A class responsible for cells. Storing their properties (coordinates, states, types and so on).
+ * Allows to build maps from its objects; to check cell's coordinates, type or state;
+ * or to set its new state.
  * @author Heorhii Yartsev (293562)
  */
 public class Cell {
@@ -19,11 +21,11 @@ public class Cell {
         this.visitCount = 0;
     }
 
+    // standard getters and setters
+
     public int getLogicalX() {
         return logicalX;
     }
-
-    // standard getters and setters
 
     public int getLogicalY() {
         return logicalY;

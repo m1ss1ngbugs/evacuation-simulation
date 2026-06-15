@@ -15,6 +15,10 @@ import java.io.IOException;
 
 /**
  * A class responsible for the board and the position of agents on it. It consists of Cells (composition).
+ * Represents the two-dimensional space (tile grid) of the building where the evacuation is taking place.
+ * Responsible for loading the map structure from text files, verifying movement boundaries, and
+ * providing spatial data for pathfinding algorithms.
+ * Has a built-in spatial indexing for quickly locating agents.
  * @author Heorhii Yartsev (293562)
  * @author Bartłomiej Krajewski (293439)
  */
@@ -42,8 +46,9 @@ public class Board {
     }
 
     /**
-     * Method which updates spatial index (makes map: agent - position on the board).
-     * @param agentsFromSimulation actual list of agents in the simulation.
+     * Updates the spatial index by rebuilding the mapping between agents and their current grid positions.
+     * Occurs on every simulation tick to enable neighbor lookups and collision detection.
+     * @param agentsFromSimulation the list of currently alive agents in the simulation.
      */
     public void updateSpatialIndex(List<Agent> agentsFromSimulation) {
         spatialIndex.clear();
@@ -61,9 +66,11 @@ public class Board {
     }
 
     /**
-     * Helps to get agents on the specific cell (using coordinates).
-     * @param cell The cell we want to learn about.
-     * @return list of agents on this cell.
+     * Helps to get agents on the specific cell.
+     * Uses the current spatial index for this purpose.
+     * @param cell an object of class {@link Cell}, that represents
+     *            the cell from which we want to get a list of agents.
+     * @return list of agents (objects of class {@link Agent}) on this cell.
      */
     public List<Agent> getAgentsAt(Cell cell) {
         String key = cell.getLogicalX() + "," + cell.getLogicalY();
@@ -72,9 +79,9 @@ public class Board {
 
     /**
      * Checks whether the cell is within the board's boundaries.
-     * @param x the x coordinate of the cell.
-     * @param y the y coordinate of the cell.
-     * @return true or false - in bounds or not.
+     * @param x the integer logical x coordinate of the cell.
+     * @param y the integer logical y coordinate of the cell.
+     * @return true or false depending on whether the cell is within the grid boundaries or not.
      */
     boolean inBounds(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
@@ -82,9 +89,10 @@ public class Board {
 
     /**
      * Safe cell getter.
-     * @param x the x coordinate of the cell.
-     * @param y the y coordinate of the cell.
-     * @return the Cell that has these coordinates.
+     * @param x the integer logical x coordinate of the cell.
+     * @param y the integer logical y coordinate of the cell.
+     * @return the cell (the object of class {@link Cell}), that has these coordinates,
+     * or {@code null} if this cell is not in bounds of the grid
      */
     public Cell getCell(int x, int y) {
         if(!inBounds(x, y)){
@@ -95,8 +103,9 @@ public class Board {
 
     /**
      * Helps to get the neighbors of the cell.
-     * @param cell The cell we want to learn about.
-     * @return List of cells - neighbors of the current cell.
+     * Allows to verify the surroundings in four directions: return list of 4 neighbor cells.
+     * @param cell The cell whose neighbors we want to receive.
+     * @return List of cells (objects of type {@link Cell}) - neighbors of the current cell.
      */
     public List<Cell> getNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
@@ -114,7 +123,12 @@ public class Board {
 
     /**
      * Auxiliary method for finding a safe starting point.
-     * @return empty floor cell for evacuee to be placed.
+     * Searches the board for a safe, free spot to spawn a new agent.
+     * Randomly selects the coordinates and checks whether the tile is a clean floor, not on fire,
+     * and whether another agent is not already on it.
+     *
+     * @return an object of class {@link Cell} representing the free floor,
+     * or {@code null} if no free spot has been found after 1000 attempts.
      */
     public Cell getRandomEmptyFloor() {
         int maxAttempts = 1000;
@@ -141,7 +155,10 @@ public class Board {
 
     /**
      * Method designed for loading a map from a text file.
-     * @param path Path to the .txt file with map to load.
+     * It checks whether the file is empty, reads and saves the map dimensions,
+     * and converts all symbols in the file into cells of various types.
+     * If an error occurs, it generates a base map.
+     * @param path String object, path to the .txt file with map to load.
      */
     public void loadMapFromFile(String path){
         try {
@@ -186,6 +203,7 @@ public class Board {
 
     /**
      * Auxiliary method for loadMapFromFile method.
+     * Generates default simple map for the simulation.
      */
     private void generateDefaultFloor() {
         this.width = 10;
@@ -211,11 +229,11 @@ public class Board {
      * Checks the line of sight between two points on the board.
      * Uses the Bresenham algorithm to map tiles along the sight path
      * and verifies that none of them are walls blocking the view.
-     * @param x1 Logical x coordinate of the start cell, cell1.
-     * @param y1 Logical y coordinate of the start cell, cell1.
-     * @param x2 Logical x coordinate of the end cell, cell2.
-     * @param y2 Logical y coordinate of the end cell, cell2.
-     * @return Is the cell2 is visible from the cell1?
+     * @param x1 Integer logical x coordinate of the start cell, cell1.
+     * @param y1 Integer logical y coordinate of the start cell, cell1.
+     * @param x2 Integer logical x coordinate of the end cell, cell2.
+     * @param y2 Integer logical y coordinate of the end cell, cell2.
+     * @return Returns true if the cell2 is visible from the cell1. Otherwise, it returns false.
      */
     public boolean hasLineOfSight(int x1, int y1, int x2, int y2) { // Bresenham algorithm
         // total vertical and horizontal distance between points:
