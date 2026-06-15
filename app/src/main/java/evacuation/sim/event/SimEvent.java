@@ -1,5 +1,11 @@
 package evacuation.sim.event;
 
+/**
+ * A class that represents an event that occurred in the simulation - the appearance of a new agent.
+ * It allows you to create a new object representing an event using a constructor,
+ * which can then be passed from the transmitter (Agent) to the listener (Simulation) signed to it.
+ * @author Heorhii Yartsev (293562)
+ */
 public class SimEvent {
     public enum EventType {
         SPAWN_FIRE,

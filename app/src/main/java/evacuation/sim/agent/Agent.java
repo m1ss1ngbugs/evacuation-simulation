@@ -39,8 +39,9 @@ public abstract class Agent implements SimSubject {
     // implementation of methods from interface SimSubject
 
     /**
+     * {@inheritDoc}
+     * <p>
      * Adds a new observer to the list if it hasn't been added before.
-     * @param observer An object of class {@link SimObserver} that must listen for messages from the transmitter.
      */
     @Override
     public void addObserver(SimObserver observer) {
@@ -50,8 +51,7 @@ public abstract class Agent implements SimSubject {
     }
 
     /**
-     * Removes an agent from the list of observers.
-     * @param observer Object of class {@link SimObserver} that needs to be removed from the list.
+     * {@inheritDoc}
      */
     @Override
     public void removeObserver(SimObserver observer) {
@@ -59,31 +59,30 @@ public abstract class Agent implements SimSubject {
     }
 
     /**
-     * Notifies all the observers about the event.
+     * {@inheritDoc}
+     * <p>
      * For example, if we want the simulation to create a new agent.
-     * @param event An event (object of class {@link SimEvent}) that needs to be reported.
      */
     @Override
     public void notifyObservers(SimEvent event) {
         for (SimObserver observer : observers) {
-            observer.onNotify(event); // Wypychamy paczkę do słuchacza!
+            observer.onNotify(event); // pushing the package out to the listener
         }
     }
 
     /**
      * This is the agent's main lifecycle method, invoked periodically in each simulation frame.
      * Updates the agent's logical and physical state by a specified time step.
-     * It is responsible for triggering environmental perception processes,
-     * deciding on the direction of escape, and physically moving objects on the board.
+     * It is responsible for implementing the agent logic at every tick of the simulation.
      * @param board Current state of the board layout (object of class {@link Board} from the Simulation class),
      *             allowing for checking the environment and collisions.
      * @param dt Delta time (in seconds) gone since the last simulation frame.
-     *           Used for smooth speed and movement calculations.
+     *           Used for agents logic calculations.
      */
     public abstract void update(Board board, float dt);
 
     /**
-     * Deactivates (in purpose to delete) agent.
+     * Deactivates agent (in purpose to delete).
      */
     public void deactivate() {
         this.isActive = false;

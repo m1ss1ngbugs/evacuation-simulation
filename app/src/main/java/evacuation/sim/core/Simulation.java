@@ -268,6 +268,7 @@ public class Simulation implements SimObserver {
     public void removeAgent(Agent a) {
         // put agent to remove to the remove buffer
         if (a != null) {
+            a.removeObserver(this);
             agentsToRemove.add(a);
         }
     }

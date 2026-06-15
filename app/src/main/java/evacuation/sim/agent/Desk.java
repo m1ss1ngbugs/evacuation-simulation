@@ -7,6 +7,13 @@ import evacuation.sim.event.SimEvent;
 import evacuation.sim.model.BaseType;
 import java.util.List;
 
+/**
+ * Class, which represents a typical obstacle in the building (for example desk).
+ * It's responsible for the table object, which is transparent to evacuees
+ * but also does not allow the evacuees to move through the cell.
+ * It also helps the fire to spread.
+ * @author Bartłomiej Krajewski (293439)
+ */
 public class Desk extends Agent implements Damageable {
     private float health;
     private float fireSpreadTimer = 0.0f;
@@ -17,9 +24,17 @@ public class Desk extends Agent implements Damageable {
         this.health = health;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void takeDamage(float amount){ this.health -= amount; } // logic of taking damage by the desk from fire only
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This method is responsible for the logic of checking the state of the object and helping the spread of fire.
+     */
     @Override
     public void update(Board board, float dt){
          Cell currentCell = board.getCell(this.getLogicalX(), this.getLogicalY());
