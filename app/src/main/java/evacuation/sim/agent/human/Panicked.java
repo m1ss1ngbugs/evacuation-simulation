@@ -8,6 +8,14 @@ import evacuation.sim.model.BaseType;
 import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
 
+/**
+ * Panicked class is responsible for psychological panicked profile of evacuee type agents.
+ * Manage Panicked agents panic handling logic.
+ * The Panicked class represents an agent that actually exists on the board.
+ * It has its own builder.
+ * @author Heorhii Yartsev (293562)
+ * @author Bartłomiej Krajewski (293439)
+ */
 public class Panicked extends Evacuee{
 
     private Panicked(int id, int logicalX, int logicalY, float health, float baseSpeed,
@@ -15,9 +23,13 @@ public class Panicked extends Evacuee{
         super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
     }
 
+    /**
+     * {@inheritDoc}
+     * Increases agent speed when panicking.
+     * Forces the agent to take random steps when panicking.
+     */
     @Override
     protected void handlePanic(float dt, Board board){
-        
         if (shouldPanic()) {
             setCurrentSpeed(getBaseSpeed() * 1.6f);
 
@@ -46,14 +58,24 @@ public class Panicked extends Evacuee{
             }
         } else {
             setCurrentSpeed(getBaseSpeed());
+
+            if (!sawHazard && getPanicLevel() > 0.0f) {
+                setPanicLevel(Math.max(0.0f, getPanicLevel() - 0.1f * dt));
+            }
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean shouldPanic(){
         return getPanicLevel() > getPanicThreshold();
     }
 
+    /**
+     * An internal class responsible for creating new Panicked agents via the agent factory.
+     */
     public static class Builder {
         private int id;
         private int logicalX;

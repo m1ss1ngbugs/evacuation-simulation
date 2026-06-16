@@ -6,6 +6,14 @@ import evacuation.sim.model.Board;
 
 import java.util.List;
 
+/**
+ * Leader class is responsible for psychological leader profile of evacuee type agents.
+ * Manage Leader agents panic handling logic.
+ * The Leader class represents an agent that actually exists on the board.
+ * It has its own builder.
+ * @author Heorhii Yartsev (293562)
+ * @author Bartłomiej Krajewski (293439)
+ */
 public class Leader extends Evacuee{
 
     private Leader(int id, int logicalX, int logicalY, float health, float baseSpeed,
@@ -13,6 +21,10 @@ public class Leader extends Evacuee{
         super(id, logicalX, logicalY, health, baseSpeed, pathfinder, panicThreshold, reactionTime, visionRadius);
     }
 
+    /**
+     * {@inheritDoc}
+     * Leader never panics.
+     */
     @Override
     protected void handlePanic(float dt, Board board){
 
@@ -20,19 +32,27 @@ public class Leader extends Evacuee{
         // doesn't need this logic, because he never panics
     }
 
+    /**
+     * {@inheritDoc}
+     * Leader never panics.
+     */
     @Override
     protected boolean shouldPanic(){
-        // leader never panic
-
-        boolean shouldPanic = false;
-
-        return shouldPanic;
+        // leader never panics
+        return false;
     }
 
+    /**
+     * This method is responsible for getting path of the leader.
+     * @return list of cells ({@link Cell class}}, path of the evacuee
+     */
     public List<Cell> sharePath(){
         return getPlannedPath();
     }
 
+    /**
+     * An internal class responsible for creating new Leader agents via the agent factory.
+     */
     public static class Builder {
         private int id;
         private int logicalX;
