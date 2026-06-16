@@ -8,7 +8,7 @@ package evacuation.sim.agent;
 @FunctionalInterface
 public interface Damageable {
     /**
-     * Reduces agent's health by a certain amount. Checks if it's alive.
+     * Reduces agent's health by a certain amount.
      * @param amount the variable responsible for amount of damage agent needs to take.
      */
     void takeDamage(float amount);

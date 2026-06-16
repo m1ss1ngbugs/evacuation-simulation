@@ -11,6 +11,18 @@ import evacuation.sim.routing.PathfindingStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract base class for evacuee agents with different psychological types (leader, follower, panicked)
+ * <p>
+ * Inherits from the {@link Agent} class.
+ * This allows them to have their own lifecycle (update method) and
+ * can be managed by the main loop of the simulation engine, just like hazards.
+ * This class is responsible for evacuees common properties and logic of evacuees such as:
+ * movement, the ability to perceive the world, receiving damage, searching for exits,
+ * a mental map and its management and its use to check the existing route.
+ * @author Heorhii Yartsev (293562)
+ * @author Bartłomiej Krajewski (293439)
+ */
 public abstract class Evacuee extends Agent implements Damageable {
     private float health;
     private final float baseSpeed;
@@ -44,6 +56,12 @@ public abstract class Evacuee extends Agent implements Damageable {
         this.sawHazard = false;
     }
 
+    /**
+     * {@inheritDoc}
+     * Scans the environment, looks for hazards, and places them on its mental map.
+     * Searches for a way out after spotting a hazard using the selected pathfinder strategy.
+     * Checks the existing route, moves, and panics when the panic threshold is exceeded.
+     */
     @Override
     public void update(Board board, float dt){
         this.internalTimer += dt;
@@ -74,6 +92,12 @@ public abstract class Evacuee extends Agent implements Damageable {
         move(dt, board);
     }
 
+    /**
+     * Metoda odpowiadająca za poruszania się agenta planszą symulacji do wyjścia.
+     * Nie pozwala na najeżdżanie na drugich agentów
+     * @param board Current state of the board layout (object of class {@link Board}.
+     * @param dt Delta time (in seconds) gone since the last simulation frame.
+     */
     protected void move(float dt, Board board) {
     if (plannedPath == null || plannedPath.isEmpty()) {
         return;
@@ -90,6 +114,7 @@ public abstract class Evacuee extends Agent implements Damageable {
             
             // checking if next tile is free
             boolean isNextOccupied = false;
+            Evacuee blockingEvacuee = null;
             List<Agent> agentsOnTarget = board.getAgentsAt(nextCell);
             if (agentsOnTarget != null) {
                 for (Agent a : agentsOnTarget) {
@@ -97,10 +122,10 @@ public abstract class Evacuee extends Agent implements Damageable {
                         isNextOccupied = true;
                         
                         // letting know of a danger
-                        Evacuee blockedEvacuee = (Evacuee) a;
-                        if (!blockedEvacuee.isAwareOfHazard) {
-                            blockedEvacuee.isAwareOfHazard = true;
-                            blockedEvacuee.internalTimer = 0.0f;
+                        blockingEvacuee = (Evacuee) a;
+                        if (!blockingEvacuee.isAwareOfHazard) {
+                            blockingEvacuee.isAwareOfHazard = true;
+                            blockingEvacuee.internalTimer = 0.0f;
                         }
                         break;
                     }
@@ -108,6 +133,11 @@ public abstract class Evacuee extends Agent implements Damageable {
             }
 
             if (isNextOccupied) {
+                // info exchange
+                this.shareKnowledgeWith(blockingEvacuee);
+                blockingEvacuee.shareKnowledgeWith(this);
+                // path update
+                this.plannedPath.clear();
                 // waiting
                 return; 
             }
@@ -146,11 +176,56 @@ public abstract class Evacuee extends Agent implements Damageable {
     }
 }
 
+    /**
+     * Simulates communication between agents (transferring threat information).
+     * Retrieves fire or smoke tiles from the other agent's mental map and
+     * updates its own mental map.
+     * @param other another evacuated agent with whom we are exchanging information
+     */
+    protected void shareKnowledgeWith(Evacuee other) {
+        if (this.mentalMap == null || other.mentalMap == null) return;
+
+        int width = this.mentalMap.length;
+        int height = this.mentalMap[0].length;
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Cell otherCell = other.mentalMap[x][y];
+
+                // If the other evacuee has information about the danger in this field stored in his head
+                if (otherCell != null && (otherCell.getDynamicState() == DynamicState.FIRE || otherCell.getDynamicState() == DynamicState.SMOKE)) {
+
+                    Cell myCell = this.mentalMap[x][y];
+                    // this agent info is outdated
+                    if (myCell != null && myCell.getDynamicState() != otherCell.getDynamicState()) {
+                        // updating the memory, replacing safe cell with a dangerous cell.
+                        this.mentalMap[x][y] = new Cell(x, y, myCell.getBaseType());
+                        this.mentalMap[x][y].setDynamicState(otherCell.getDynamicState());
+
+                        this.sawHazard = true;
+                        this.isAwareOfHazard = true;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Method psychoReaction increases panicLevel of the agent depending on
+     * whether the agent sees a threat and how much time has passed.
+     * @param sawHazard the agent's logical variable responsible for whether it sees fire
+     * @param dt delta time - minimal time change between simulation ticks.
+     */
     protected void psychoReaction(boolean sawHazard, float dt){
         // evacuee panic increases in case he sees the hazard
         panicLevel += 0.5f * dt;
     }
 
+    /**
+     * Makes deep copy of the board ({@link Board} class) and saves it like a mental map of the evacuee.
+     * @param board Current state of the board layout (object of class {@link Board}.
+     * @param dt Delta time (in seconds) gone since the last simulation frame.
+     */
     private void initializeMentalMap(Board board, float dt){
         // make deep copy of the initial board
         int width = board.getWidth();
@@ -167,6 +242,12 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
+    /**
+     * This method updates the agent's mental map based on what it sees along a straight line
+     * in its vision radius.
+     * It uses the hasLineOfSight method in the {@link Board} class to check if evacuee sees this Cell.
+     * @param board Current state of the board layout (object of class {@link Board}).
+     */
     protected void perceive(Board board) {
         sawHazard = false;
         int myX = this.getLogicalX();
@@ -200,8 +281,11 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
-    // This method finds a path for the evacuee using a pathfinding strategy.
-    // It passes to the AStarPathfinder class its starting cell, exits list, and a copy of the mental map.
+    /**
+     * This method finds a path for the evacuee using a pathfinding strategy.
+     * It passes to the findPath method from {@link evacuation.sim.routing.AStarPathfinder} class
+     * its starting cell, exits list, and a copy of the mental map.
+     */
     protected void calculatePath(){
         Cell startCell = mentalMap[this.getLogicalX()][this.getLogicalY()];
         List<Cell> exitCells = findAllExits();
@@ -214,6 +298,9 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
+    /**
+     * Checks the evacuee's route for obstacles and resets his planned route if any are noticed.
+     */
     protected void verifyPath(){
         // current mental map verification
         if (plannedPath != null && !plannedPath.isEmpty()) {
@@ -224,7 +311,8 @@ public abstract class Evacuee extends Agent implements Damageable {
                 Cell mentalCell = this.mentalMap[pathCell.getLogicalX()][pathCell.getLogicalY()];
 
                 // checks road safety
-                if (mentalCell != null && mentalCell.getBaseType() == BaseType.OBSTACLE) {
+                if (mentalCell != null && (mentalCell.getBaseType() == BaseType.OBSTACLE ||
+                        mentalCell.getDynamicState() == DynamicState.FIRE)) {
                     // the route is useless --> forgot about it
                     plannedPath.clear();
                     // evacuee must find another way
@@ -235,7 +323,10 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
-    // gets a list of all outputs the agent has in memory
+    /**
+     * Gets a list of all exits the agent has in memory
+     * @return list of cells (objects of class {@link Cell}) with exits
+     */
     private List<Cell> findAllExits() {
         List<Cell> exits = new ArrayList<>();
         if (mentalMap == null) return exits;
@@ -250,6 +341,10 @@ public abstract class Evacuee extends Agent implements Damageable {
         return exits;
     }
 
+    /**
+     * {@inheritDoc}
+     * Checks if it's alive.
+     */
     @Override
     public void takeDamage(float amount) {
         // health reduce by a certain amount
@@ -262,7 +357,18 @@ public abstract class Evacuee extends Agent implements Damageable {
         }
     }
 
+    /**
+     * Responsible for the logic that the agent executes after exceeding the panic threshold
+     * (entering a panic state)
+     * @param board Current state of the board layout (object of class {@link Board}).
+     * @param dt Delta time (in seconds) gone since the last simulation frame.
+     */
     protected abstract void handlePanic(float dt, Board board);
+
+    /**
+     * Checks if the agent's panic level has exceeded his panic threshold.
+     * @return {@code true} if he exceeded; {@code false} otherwise.
+     */
     protected abstract boolean shouldPanic();
 
     // getters and setters below
@@ -302,8 +408,6 @@ public abstract class Evacuee extends Agent implements Damageable {
     public float getPanicThreshold() {
         return panicThreshold;
     }
-
-    
 
     public float getBaseSpeed() {
         return baseSpeed;

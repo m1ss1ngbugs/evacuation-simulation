@@ -51,7 +51,6 @@ public class Panicked extends Evacuee{
 
     @Override
     protected boolean shouldPanic(){
-
         return getPanicLevel() > getPanicThreshold();
     }
 
