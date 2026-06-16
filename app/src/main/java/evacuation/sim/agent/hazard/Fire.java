@@ -10,6 +10,16 @@ import evacuation.sim.model.DynamicState;
 
 import java.util.List;
 
+/**
+ * Fire class is responsible for fire hazard agents.
+ * Manage fire agents tick and spread logic.
+ * The Fire class represents an agent that actually exists on the board.
+ * It has its own builder.
+ * It can send messages to the Simulation class
+ * to provide information about a new hazard agent that needs to be created.
+ *  @author Heorhii Yartsev (293562)
+ *  @author Bartłomiej Krajewski (293439)
+ */
 public class Fire extends Hazard{
     private float incubationDelay;
     private boolean isIncubation;
@@ -21,6 +31,12 @@ public class Fire extends Hazard{
         this.isIncubation = true;
     }
 
+    /**
+     * {@inheritDoc}
+     * First, the fire enters a state of incubation.
+     * Once the incubation ends, it activates and begins propagating,
+     * imitating smoke and dealing damage.
+     */
     @Override
     public void update(Board board, float dt) {
 
@@ -47,6 +63,11 @@ public class Fire extends Hazard{
         }
     }
 
+    /**
+     * The emitSmoke method manages the mechanism of smoke emitting by fire in tick of the simulation.
+     * Tries to create a new instance of smoke on free cells adjacent to the burning cell.
+     * @param board Current state of the board layout (object of class {@link Board})
+     */
     private void emitSmoke(Board board) {
         // gets neighbors of this cell
         List<Cell> neighbors = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()));
@@ -61,6 +82,11 @@ public class Fire extends Hazard{
         }
     }
 
+    /**
+     * The propagate method sends request to spawn a new fire agent instance
+     * on the free neighbor cell to Simulation class with 30% chance.
+     * @param board Current state of the board layout (object of class {@link Board})
+     */
     private void propagate(Board board){
         List<Cell> neighbors = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()) );
 
@@ -76,6 +102,9 @@ public class Fire extends Hazard{
         }
     }
 
+    /**
+     * An internal class responsible for creating new fire agents via the agent factory.
+     */
     public static class Builder {
         private int id;
         private int logicalX;

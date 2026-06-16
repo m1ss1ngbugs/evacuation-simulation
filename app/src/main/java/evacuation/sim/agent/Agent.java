@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is the class responsible for all agents in the simulation.
+ * This is the abstract class responsible for all agents in the simulation.
  * All secondary classes responsible for different types of agents inherit from this class.
+ * They communicate with the environment via the Simulation class,
+ * from which they receive information about the board ({@link Board} class) and
+ * dt - delta time (min time change between simulation ticks).
  * It implements the SimSubject interface - agents are transmitters for the Simulation.
  * @author Heorhii Yartsev (293562)
  */

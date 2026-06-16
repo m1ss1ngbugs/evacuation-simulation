@@ -8,6 +8,16 @@ import evacuation.sim.model.Cell;
 import evacuation.sim.agent.Agent;
 import java.util.List;
 
+/**
+ * Smoke class is responsible for smoke hazard agents.
+ * Manage smoke agents tick and spread logic.
+ * The Smoke class represents an agent that actually exists on the board.
+ * It has its own builder.
+ * It can send messages to the Simulation class
+ * to provide information about a new smoke agent that needs to be created.
+ *  @author Heorhii Yartsev (293562)
+ *  @author Bartłomiej Krajewski (293439)
+ */
 public class Smoke extends Hazard{
     private float density;
     private float fadeRatePerSecond;
@@ -21,6 +31,11 @@ public class Smoke extends Hazard{
         this.duplicationThreshold = duplicationThreshold;
     }
 
+    /**
+     * {@inheritDoc}
+     * The smoke fades a little each tick,
+     * tries to multiply if it has enough density, and deals damage to evacuees.
+     */
     @Override
     public void update(Board board, float dt){
         fade(dt);
@@ -34,6 +49,12 @@ public class Smoke extends Hazard{
         hit(board, dt);
     }
 
+    /**
+     * The duplicate method is responsible for smoke propagation logic.
+     * Check neighbors sells, sends request to spawn a new smoke agent if the cell is free and
+     * increases neighbor smoke agent density if the neighbor cell is busy by it.
+     * @param board Current state of the board layout (object of class {@link Board})
+     */
     private void duplicate(Board board){
         List<Cell> neighborCells = board.getNeighbors(board.getCell(this.getLogicalX(), this.getLogicalY()));
 
@@ -68,6 +89,11 @@ public class Smoke extends Hazard{
         }
     }
 
+    /**
+     * The fade method is responsible for smoke fade logic.
+     * It reduces the density of smoke in each tick.
+     * @param dt delta time - minimal time change between simulation ticks.
+     */
     private void fade(float dt) {
         this.density -= this.fadeRatePerSecond * dt; // decrease density based on fade rate and time
         if (this.density < 0.0f) {
@@ -75,10 +101,17 @@ public class Smoke extends Hazard{
         }
     }
 
+    /**
+     * Smoke density getter.
+     * @return density of the smoke.
+     */
     public float getDensity(){
         return density;
     }
 
+    /**
+     * An internal class responsible for creating new smoke agents via the agent factory.
+     */
     public static class Builder {
         private int id;
         private int logicalX;
