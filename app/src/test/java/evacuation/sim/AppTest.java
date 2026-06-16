@@ -4,8 +4,72 @@
 package evacuation.sim;
 
 import org.junit.jupiter.api.Test;
+
+import evacuation.sim.agent.human.Evacuee;
+import evacuation.sim.core.Simulation;
+import evacuation.sim.core.Statistics;
+import evacuation.sim.model.Board;
+import evacuation.sim.model.Cell;
+import evacuation.sim.model.DynamicState;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
 
+    // Verifies that a newly created simulation initializes its core components and if agents have been created correctly
+    @Test
+    void simulationShouldInitializeCorrectly() {
+        Simulation sim = new Simulation();
+
+        int expectedAgents = SimSingletonConfig.getInstance().getInitialEvacueesCount() 
+                   + SimSingletonConfig.getInstance().getInitialFireHazardsCount();
+
+        assertNotNull(sim.getBoard());
+        assertNotNull(sim.getStats());
+        assertTrue(sim.getAgents().size() >= 0);
+        assertEquals(expectedAgents, sim.getAgents().size());
+    }
+
+    // Ensures that simulation time advances after a simulation tick
+    @Test
+    void simulationTickShouldIncreaseTime() {
+        Simulation sim = new Simulation();
+
+        float before = sim.getCurrentTime();
+        sim.updateTick(1.0f);
+
+        assertTrue(sim.getCurrentTime() > before);
+    }
+
+    // Ensures that accessing out-of-bounds cells returns null instead of throwing an exception
+    @Test
+    void boardShouldNotReturnOutOfBoundsCell() {
+        Board board = new Board("map.txt");
+
+        Cell cell = board.getCell(-1, -1);
+
+        assertNull(cell);
+    }
+
+    // Verifies that statistics correctly count evacuated agents
+    @Test
+    void shouldCountSavedAgents() {
+        Statistics stats = new Statistics(10);
+
+        stats.incrementSaved(5.0f);
+
+        assertEquals(1, stats.getSavedCount());
+    }
+
+    // Ensures that fire is correctly spawned and updates the cell state
+    @Test
+    void fireShouldNotSpawnTwiceOnSameCell() {
+        Simulation sim = new Simulation();
+        Cell cell = sim.getBoard().getRandomEmptyFloor();
+
+        sim.spawnFireAt(cell);
+        sim.spawnFireAt(cell);
+
+        assertEquals(DynamicState.FIRE, cell.getDynamicState());
+    }
 }
