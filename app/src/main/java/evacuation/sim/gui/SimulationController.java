@@ -28,9 +28,9 @@ import java.io.File;
  * Implements the Controller layer in the MVC design pattern.
  * Acting as a bridge between the view defined in the FXML file and the simulation's logic ({@link Simulation}).
  * Manage the main simulation time loop using {@link AnimationTimer}.
- * Retrieving and validating parameters from the user, then updating {@link SimSingletonConfig}.</li>
- * Cyclic rendering of the board state, agents, and threats on the {@link Canvas} object.</li>
- * Presenting statistics and generating a heatmap after the evacuation is complete.</li>
+ * Retrieving and validating parameters from the user, then updating {@link SimSingletonConfig}.
+ * Cyclic rendering of the board state, agents, and threats on the {@link Canvas} object.
+ * Presenting statistics and generating a heatmap after the evacuation is complete.
  * @author Heorhii Yartsev (293562)
  */
 public class SimulationController {

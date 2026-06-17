@@ -3,6 +3,7 @@
  */
 package evacuation.sim;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import evacuation.sim.agent.human.Evacuee;
@@ -16,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
 
-    // Verifies that a newly created simulation initializes its core components and if agents have been created correctly
+    @DisplayName("Verifies that a newly created simulation initializes" +
+            " its core components and if agents have been created correctly")
     @Test
     void simulationShouldInitializeCorrectly() {
         Simulation sim = new Simulation();
@@ -30,7 +32,7 @@ class AppTest {
         assertEquals(expectedAgents, sim.getAgents().size());
     }
 
-    // Ensures that simulation time advances after a simulation tick
+    @DisplayName("Ensures that simulation time advances after a simulation tick")
     @Test
     void simulationTickShouldIncreaseTime() {
         Simulation sim = new Simulation();
@@ -41,7 +43,8 @@ class AppTest {
         assertTrue(sim.getCurrentTime() > before);
     }
 
-    // Ensures that accessing out-of-bounds cells returns null instead of throwing an exception
+
+    @DisplayName("Ensures that accessing out-of-bounds cells returns null instead of throwing an exception")
     @Test
     void boardShouldNotReturnOutOfBoundsCell() {
         Board board = new Board("map.txt");
@@ -51,7 +54,7 @@ class AppTest {
         assertNull(cell);
     }
 
-    // Verifies that statistics correctly count evacuated agents
+    @DisplayName("Verifies that statistics correctly count evacuated agents")
     @Test
     void shouldCountSavedAgents() {
         Statistics stats = new Statistics(10);
@@ -61,7 +64,7 @@ class AppTest {
         assertEquals(1, stats.getSavedCount());
     }
 
-    // Ensures that fire is correctly spawned and updates the cell state
+    @DisplayName("Ensures that fire is correctly spawned and updates the cell state")
     @Test
     void fireShouldNotSpawnTwiceOnSameCell() {
         Simulation sim = new Simulation();
