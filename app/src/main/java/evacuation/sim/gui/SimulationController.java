@@ -93,7 +93,7 @@ public class SimulationController {
     @FXML private Slider smokeFadeRatePerSecondSlider;
     @FXML private Label smokeFadeRatePerSecondLabel;
     @FXML private Slider smokeDuplicationThresholdSlider;
-    @FXML private Label smokeDuplicationThreasholdLabel;
+    @FXML private Label smokeDuplicationThresholdLabel;
     // bottom panel statistics
     @FXML private Label timeLabel;
     @FXML private Label savedCountLabel;
@@ -179,7 +179,7 @@ public class SimulationController {
         setupSlider(smokeFadeRatePerSecondSlider, smokeFadeRatePerSecondLabel,
                 5, 25, config.getSmokeFadeRatePerSecond(), "%.0f");
         // Initial smokeDuplicationThreshold slider and label
-        setupSlider(smokeDuplicationThresholdSlider, smokeDuplicationThreasholdLabel,
+        setupSlider(smokeDuplicationThresholdSlider, smokeDuplicationThresholdLabel,
                 5, 30, config.getSmokeDuplicationThreshold(), "%.0f");
         // simulation time scale label and slider initialization
         setupSlider(timeScaleSlider, timeScaleLabel,
@@ -252,7 +252,7 @@ public class SimulationController {
 
                 if (currentResolved >= initialCount) {
                     this.stop(); // stops timer
-                    System.out.println("Ewakuacja zakończona! Wszyscy agenci opuścili planszę lub zginęli.");
+                    System.out.println("Evacuation has ended! All evacuees have exit the building or died.");
 
                     onShowHeatmapClicked();
                 }

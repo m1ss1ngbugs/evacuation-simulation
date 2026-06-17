@@ -12,6 +12,7 @@
 * [Application View](#application-view)
 * [Authors](#authors)
 * [Instructor](#instructor)
+* [Additional Information](#additional-information)
 
 ## General Information
 <details>
@@ -66,7 +67,7 @@ To run the simulation on your local computer, follow these steps:
     ./gradlew run
     ```
 
-Note!
+**Note!**
 You can load your map into the simulation as a plain text file. This file must be a symbol file, where 'O' represents an obstacle, 
 '#' represents a wall, 'E' represents an exit, and any other symbol is treated as a floor.
 (Sample maps added to the project: "mapa1.txt", "mapa2.txt", "mapa3.txt", "mapa4.txt", "map_test.txt")
@@ -131,3 +132,21 @@ This project was carried out as part of the Object-Oriented Programming laborato
 
     Ph.D. Eng. Paweł Majewski
     pawel.majewski@pwr.edu.pl
+
+## Additional Information
+
+![Class Diagram](app/assets/classdiagram2.png)
+*Class diagram of the project*
+
+![Object Diagram](app/assets/objectdiagram.png)
+*Object diagram of the project*
+
+![State Machine Diagram](app/assets/statemachinediagram.png)
+*State machine diagram of the project*
+
+![Sequence Diagram](app/assets/sequencediagram.png)
+*Sequence diagram of the project*
+
+Full technical documentation including local package diagrams has been automatically generated (in Javadoc). To **view it**, open the `index.html` file located in the `build/docs/javadoc/` directory.
+
+*Note: The `build` directory is generated locally. If you cannot find this directory, build the documentation manually by running the* `./gradlew javadoc` *command in your terminal (or `gradlew.bat javadoc` on Windows).*

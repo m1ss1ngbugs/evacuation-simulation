@@ -93,8 +93,8 @@ public abstract class Evacuee extends Agent implements Damageable {
     }
 
     /**
-     * Metoda odpowiadająca za poruszania się agenta planszą symulacji do wyjścia.
-     * Nie pozwala na najeżdżanie na drugich agentów
+     * Method responsible for moving the agent across the simulation board towards the exit.
+     * Prevents agents from overlapping with one another.
      * @param board Current state of the board layout (object of class {@link Board}.
      * @param dt Delta time (in seconds) gone since the last simulation frame.
      */

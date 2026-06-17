@@ -109,8 +109,8 @@ public class Statistics {
     }
 
     /**
-     * Calculates current survival rato of the simulation.
-     * @return Current survival ratio.
+     * Calculates current survival rate of the simulation.
+     * @return Current survival rate.
      */
     public float calculateSurvivalRate(){
         return (float) savedCount / totalPeople;

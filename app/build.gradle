@@ -18,6 +18,10 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml' ]
 }
 
+configurations {
+    umlDoclet
+}
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -31,6 +35,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation libs.guava
+
+    umlDoclet "nl.talsmasoftware:umldoclet:2.3.0"
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -72,12 +78,14 @@ tasks.withType(Javadoc).configureEach {
     options.encoding = 'UTF-8'
     options.charSet = 'UTF-8'
     options.author = true
-}
 
-tasks.withType(Javadoc).configureEach {
     options.memberLevel = JavadocMemberLevel.PRIVATE
 
     options.addStringOption('Xdoclint:none', '-quiet')
     options.encoding = 'UTF-8'
     options.charSet = 'UTF-8'
+
+    source = sourceSets.main.allJava
+    options.docletpath = configurations.umlDoclet.files.asType(List)
+    options.doclet = "nl.talsmasoftware.umldoclet.UMLDoclet"
 }

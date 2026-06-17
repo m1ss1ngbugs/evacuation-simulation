@@ -8,7 +8,7 @@ import evacuation.sim.model.Board;
 import java.util.*;
 
 /**
- * Klass responsible for pathfinding strategy for simulation evacuees.
+ * Class responsible for pathfinding strategy for simulation evacuees.
  * Realize AStar pathfinding strategy.
  * Manages methods to transform cells into nodes to sort them more efficiently
  * in PriorityQueue and find the shortest path.
@@ -161,7 +161,7 @@ public class AStarPathfinder implements PathfindingStrategy{
     }
 
     /**
-     * Recreates the final evacuation path, by getting cells from the parents nodes and reversing the path.
+     * Recreates the final evacuation path, by getting cells from the parent nodes and reversing the path.
      * @param node The end node (object of class {@link Node}), i.e. the one representing the exit from the building.
      * @return List<Cell> - an ordered list of cells (objects of class {@link Cell}) tiles arranged chronologically.
      */

@@ -12,6 +12,7 @@
 * [Widok aplikacji](#widok-aplikacji)
 * [Autorzy](#autorzy)
 * [Prowadzący](#prowadzący)
+* [Dodatkowe Informacje](#dodatkowe-informacje)
 
 ## Informacje ogólne
 <details>
@@ -131,3 +132,21 @@ Projekt realizowany w ramach zajęć laboratoryhnych z Programowania Obiektowego
 
     dr inż. Paweł Majewski
     pawel.majewski@pwr.edu.pl
+
+## Dodatkowe informacje
+
+![Diagram klas](app/assets/classdiagram2.png)
+*Diagram klas projektu*
+
+![Diagram obiektów](app/assets/objectdiagram.png)
+*Diagram obiektów projektu*
+
+![Diagram maszyny stanów](app/assets/statemachinediagram.png)
+*Diagram maszyny stanów projektu*
+
+![Diagram sekwencji](app/assets/sequencediagram.png)
+*Diagram sekwencji projektu*
+
+Pełna, szczegółowa dokumentacja techniczna wraz z lokalnymi diagramami pakietów została wygenerowana automatycznie (w Javadoc). Aby ją otworzyć, uruchom plik `index.html` znajdujący się w folderze `build/docs/javadoc/`.
+
+*Uwaga: Folder `build` generowany jest lokalnie. Jeśli nie widzisz tego katalogu, zbuduj dokumentację samodzielnie, wpisując w terminalu polecenie:* `./gradlew javadoc` *(lub `gradlew.bat javadoc` na systemie Windows).*
