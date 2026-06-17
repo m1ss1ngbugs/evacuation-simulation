@@ -22,6 +22,17 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import java.io.File;
 
+
+/**
+ * JavaFX view controller responsible for handling the GUI.
+ * Implements the Controller layer in the MVC design pattern.
+ * Acting as a bridge between the view defined in the FXML file and the simulation's logic ({@link Simulation}).
+ * Manage the main simulation time loop using {@link AnimationTimer}.
+ * Retrieving and validating parameters from the user, then updating {@link SimSingletonConfig}.</li>
+ * Cyclic rendering of the board state, agents, and threats on the {@link Canvas} object.</li>
+ * Presenting statistics and generating a heatmap after the evacuation is complete.</li>
+ * @author Heorhii Yartsev (293562)
+ */
 public class SimulationController {
 
     // dynamic size of the cell on the canvas
@@ -100,6 +111,12 @@ public class SimulationController {
     private GraphicsContext gc;
     private AnimationTimer timer;
 
+    /**
+     * Method automatically called by the JavaFX framework after injecting FXML elements.
+     * Initializes the canvas graphics context and configures all sliders.
+     * and labels based on default values retrieved from {@link SimSingletonConfig}.
+     * Also establishes listeners for dynamic agent aspect ratio balancing.
+     */
     @FXML
     public void initialize() {
         gc = simulationCanvas.getGraphicsContext2D();
@@ -172,7 +189,11 @@ public class SimulationController {
         inputMap.setText(config.getMapFilePath());
     }
 
-    // file selecting
+    /**
+     * Handles the map selection button click event.
+     * Opens a system dialog allowing the user to select a text file
+     * containing the map layout, filtering only files with the .txt extension.
+     */
     @FXML
     public void onBrowseMapClicked() {
         FileChooser fileChooser = new FileChooser();
@@ -185,7 +206,12 @@ public class SimulationController {
         }
     }
 
-    // simulation launching and scaling
+    /**
+     * Starts or resumes the simulation loop.
+     * If this is the first run, then creates a new simulation world and initializes the {@link AnimationTimer}.
+     * Calculates the frame time - delta time, taking into account the timescale slider,
+     * invokes agent update logic and refreshes the graphical interface.
+     */
     @FXML
     public void onStartClicked() {
         if (timer != null) timer.stop();
@@ -235,7 +261,11 @@ public class SimulationController {
         timer.start();
     }
 
-    // pause and reset
+    /**
+     * Pauses the main simulation loop.
+     * Stops the {@link AnimationTimer} object, which freezes the state of the agents and board,
+     * but allows the simulation to be resumed later without losing progress.
+     */
     @FXML
     public void onPauseClicked() {
         if (timer != null) {
@@ -243,6 +273,11 @@ public class SimulationController {
         }
     }
 
+    /**
+     * Resets the entire simulation to its initial state.
+     * Stops the clock, loads the latest settings from the control panel (sliders)
+     * and creates a new, clean simulation environment.
+     */
     @FXML
     public void onResetClicked() {
         if (timer != null) {
@@ -255,6 +290,11 @@ public class SimulationController {
         setupSimulationWorld();
     }
 
+    /**
+     * Displays a heatmap on the canvas after the simulation is complete.
+     * This method gets the generated color matrix from the {@link Statistics} object and applies it
+     * to a grid of tiles, visualizing traffic density in specific areas of the building.
+     */
     @FXML
     public void onShowHeatmapClicked() {
         // stops the simulation (in case we click this button during simulation going on)
@@ -288,6 +328,11 @@ public class SimulationController {
         System.out.println("Wygenerowano i wyświetlono Heatmapę!");
     }
 
+    /**
+     * Initializes a new instance of the simulation engine and prepares the canvas.
+     * Gets the dimensions of the loaded map and dynamically recalculates the size of a single tile
+     * ({@code tileSize}) to optimally fit the entire board to the available window size.
+     */
     private void setupSimulationWorld() {
         simulation = new Simulation();
         Board board = simulation.getBoard();
@@ -314,6 +359,12 @@ public class SimulationController {
         clearStatisticsUI();
     }
 
+    /**
+     * Main drawing function (Render Loop).
+     * Clears the canvas, then iterates through all the board tiles and active agents,
+     * assigning them appropriate colors and drawing them on the {@link Canvas} object.
+     * @param gc graphics context (GraphicsContext2D) assigned to the main canvas (the brush).
+     */
     private void render(GraphicsContext gc) {
         Board board = simulation.getBoard();
         gc.clearRect(0, 0, board.getWidth() * tileSize, board.getHeight() * tileSize);
@@ -352,7 +403,11 @@ public class SimulationController {
         }
     }
 
-    // Bottom statistics bar update
+    /**
+     * Periodically updates the bottom information panel in the graphical interface.
+     * Downloads the {@link Statistics} object from the engine and refreshes the text labels (Labels)
+     * with data including time, number of agents saved, and number of victims.
+     */
     private void updateStatisticsUI() {
         if (simulation == null || simulation.getStats() == null) return;
 
@@ -368,6 +423,10 @@ public class SimulationController {
         TotalEvacuationTimeLabel.setText(String.format("%.1f s", stats.getTotalEvacuationTime()));
     }
 
+    /**
+     * Resets all text values in the lower statistics panel,
+     * preparing the interface for a clean, new simulation run.
+     */
     private void clearStatisticsUI() {
     if (timeLabel != null) timeLabel.setText("0.0 s");
     if (savedCountLabel != null) savedCountLabel.setText("0");
@@ -379,7 +438,18 @@ public class SimulationController {
     if (TotalEvacuationTimeLabel != null) TotalEvacuationTimeLabel.setText("0.0 s");
 }
 
-    // universal slider configuration
+    /**
+     * A general-purpose helper method for initializing sliders (Sliders).
+     * Sets the range of acceptable values, the starting position, and attaches a listener
+     * that automatically refreshes the assigned text label with each slider.
+     *
+     * @param slider the slider object to configure.
+     * @param label the text label displaying the current slider value.
+     * @param min the minimum value on the scale.
+     * @param max the maximum value on the scale.
+     * @param startValue the initial value of the slider retrieved from the configuration.
+     * @param format a formatting string (e.g., "%.1f") specifying the appearance of the number.
+     */
     private void setupSlider(Slider slider, Label label, double min, double max, double startValue, String format) {
         slider.setMin(min);
         slider.setMax(max);
@@ -394,7 +464,10 @@ public class SimulationController {
         });
     }
 
-    // startup method for evacuees ratio parameters
+    /**
+     * Initializes the interconnection mechanism for the sliders defining the percentage distribution of the agents'
+     * psychological roles (Leader, Follower, Panicker).
+     */
     private void setupRatioLogic() {
         SimSingletonConfig config = SimSingletonConfig.getInstance();
 
@@ -417,7 +490,15 @@ public class SimulationController {
                                                         adjustRatios(panickedRatioSlider, newVal.doubleValue()));
     }
 
-    //  slider balance algorithm
+    /**
+     * Implements an algorithm for automatically balancing agent role ratios.
+     * Ensures that, regardless of user movements, the sum of the values of the three main
+     * sliders will always be exactly 100%. Blocks recursive event loops
+     * using the {@code isUpdatingRatios} flag.
+     *
+     * @param changedSlider the slider that has currently been moved by the user.
+     * @param newValue the new value set on the moving slider.
+     */
     private void adjustRatios(Slider changedSlider, double newValue) {
         if (isUpdatingRatios) return; 
         isUpdatingRatios = true;      
@@ -449,13 +530,23 @@ public class SimulationController {
         isUpdatingRatios = false; // unlock other sliders modifying
     }
 
-    // updates labels
+    /**
+     * A short helper method that formats role slider values to percentages.
+     */
     private void updateRatioLabels() {
         leaderRatioLabel.setText(String.format("%.0f%%", leaderRatioSlider.getValue()));
         followerRatioLabel.setText(String.format("%.0f%%", followerRatioSlider.getValue()));
         panickedRatioLabel.setText(String.format("%.0f%%", panickedRatioSlider.getValue()));
     }
 
+    /**
+     * Collects all values from interface controls (sliders, text fields) and saves
+     * them to the global template {@link SimSingletonConfig}.
+     * Acts as a validation layer before each simulation start or reset.
+     *
+     * @return {@code false} if the configuration was saved successfully;
+     * {@code true} if an exception occurred (displays an error message - Alert)
+     */
     private boolean updateConfigFromUI() {
         try {
             // Updating the Singleton with data from sliders

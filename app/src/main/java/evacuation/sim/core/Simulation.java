@@ -20,6 +20,14 @@ import java.util.List;
 
 import static evacuation.sim.factory.AgentFactory.createRandomEvacuee;
 
+/**
+ *  This is the main simulation class.
+ *  This class connects all simulation objects: the board, agents, statistics, and configurations.
+ *  It initializes the simulation and agents, manages agent lists, can create new smoke and fire instances
+ *  during the simulation (it listens for agent messages to do so), and performs updates every simulation tick.
+ *  @author Heorhii Yartsev (293562)
+ *  @author Bartłomiej Krajewski (293439)
+ */
 public class Simulation implements SimObserver {
     private Board board;
     private Statistics stats;
@@ -53,6 +61,7 @@ public class Simulation implements SimObserver {
         initialize();
     }
 
+    // this feature was moved to GUI
     public void restartSimulation() {
         this.agents.clear();
         this.agentsToAdd.clear();
@@ -65,6 +74,10 @@ public class Simulation implements SimObserver {
         initialize(); 
     }
 
+    /**
+     * {@inheritDoc}
+     * Checks the event (message from the hazard agent) and decides: spawn fire or smoke.
+     */
     @Override
     public void onNotify(SimEvent event) {
         Cell targetCell = board.getCell(event.getX(), event.getY());
@@ -80,6 +93,10 @@ public class Simulation implements SimObserver {
         }
     }
 
+    /**
+     * Method initialize the simulation, when it is started.
+     * Clears all last simulation data and spawns new starting agents using spawnInitialAgents method.
+     */
     public void initialize() {
         // resets simulation time and state (will be useful for restart)
         this.currentTime = 0.0f;
@@ -95,6 +112,12 @@ public class Simulation implements SimObserver {
         this.stats = new Statistics(totalPeople);
     }
 
+    /**
+     * Initial method which is used to spawn starting instances of agents.
+     * Use auxiliary methods to find free random cells and create random agents on them.
+     * Then creates Fire instances on random free cells.
+     * Begin first simulation tick.
+     */
     public void spawnInitialAgents() {
         int peopleToSpawn = config.getInitialEvacueesCount();
         int firesToSpawn = config.getInitialFireHazardsCount();
@@ -104,7 +127,7 @@ public class Simulation implements SimObserver {
             // finding free space
             Cell spawnPoint = board.getRandomEmptyFloor();
             if (spawnPoint == null) {
-                System.err.println("Ostrzeżenie: Brak wolnego miejsca na mapie dla ewakuantów!");
+                System.err.println("Warning: No free space on the map for evacuees!");
                 break; // board is full, stop
             }
             // generate random evacuee
@@ -146,6 +169,7 @@ public class Simulation implements SimObserver {
         updateTick(0.0f);
     }
 
+    // now GUI is responsible for the main loop
     public void run(){
         System.out.println(" === ROZPOCZĘCIE SYMULACJI === ");
 
@@ -193,6 +217,12 @@ public class Simulation implements SimObserver {
         System.out.println("=== KONIEC SYMULACJI ===");
     }
 
+    /**
+     * Method responsible for simulation ticks updating.
+     * Updates all agents in the list, collects statistics of agent cells attendance,
+     * removes and adds agent to the simulation, updates agents lists.
+     * @param dt delta time - minimal time change between simulation ticks.
+     */
     public void updateTick(float dt) {
         this.currentTime += dt;
 
@@ -257,6 +287,11 @@ public class Simulation implements SimObserver {
         }
     }
 
+    /**
+     * Adds agent to the simulation and to the agents to add list.
+     * Begins agent observing.
+     * @param a object of class {@link Agent} that needed to be added to the sim.
+     */
     public void addAgent(Agent a) {
         // put new agent to add to the add buffer
         if (a != null) {
@@ -265,6 +300,11 @@ public class Simulation implements SimObserver {
         }
     }
 
+    /**
+     * Removes agent from the simulation and to the agents to remove list.
+     * Stops agent observing.
+     * @param a object of class {@link Agent} that needed to be removed from the sim.
+     */
     public void removeAgent(Agent a) {
         // put agent to remove to the remove buffer
         if (a != null) {
@@ -273,6 +313,14 @@ public class Simulation implements SimObserver {
         }
     }
 
+    /**
+     * Removes smoke from the cell and adds here a new instance of the
+     * {@link evacuation.sim.agent.hazard.Fire} class on that cell.
+     * Use {@link AgentFactory} for this purpose.
+     * Changes the {@link DynamicState} of the cell on FIRE.
+     * @param cell The cell ({@link Cell} class) on which a new
+     * {@link evacuation.sim.agent.hazard.Fire} object must be created.
+     */
     public void spawnFireAt(Cell cell) {
         if (cell == null || cell.getDynamicState() == DynamicState.FIRE) {
             return; // if it's already a fire - do nothing
@@ -294,6 +342,13 @@ public class Simulation implements SimObserver {
         addAgent(newFire);
     }
 
+    /**
+     * Adds here a new instance of the {@link Smoke} class on that cell.
+     * Use {@link AgentFactory} for this purpose.
+     * Changes the {@link DynamicState} of the cell on SMOKE.
+     * @param cell The cell ({@link Cell} class) on which a new
+     * {@link Smoke} object must be created.
+     */
     public void spawnSmokeAt(Cell cell, float density) {
         if (cell == null || cell.getDynamicState() == DynamicState.SMOKE) {
             return; // if it's already a smoke - do nothing

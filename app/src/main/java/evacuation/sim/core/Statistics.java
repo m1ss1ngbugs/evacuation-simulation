@@ -4,6 +4,12 @@ import evacuation.sim.model.Board;
 import evacuation.sim.model.Cell;
 import javafx.scene.paint.Color;
 
+/**
+ * This is a class that manages statistics.
+ * It calculates and records all statistics.
+ * It allows to receive and display this information later.
+ * @author Bartłomiej Krajewski (293439)
+ */
 public class Statistics {
     private int totalPeople;
     private int savedCount;
@@ -21,6 +27,11 @@ public class Statistics {
         this.totalEvacuationTime = 0.0f;
     }
 
+    /**
+     * Counts the number of agents who successfully evacuated.
+     * Records the time of the last and first evacuation.
+     * @param time internal time of the simulation
+     */
     public void incrementSaved(float time){
         savedCount++;
         if(savedCount == 1){
@@ -30,10 +41,21 @@ public class Statistics {
         this.totalEvacuationTime = time;
     }
 
+    /**
+     * Counts the number of agents dead from fire.
+     */
     public void incrementCasualtiesFire(){casualtiesFire++;}
 
+    /**
+     * Counts the number of agents dead from smoke.
+     */
     public void incrementCasualtiesSmoke(){casualtiesSmoke++;}
 
+    /**
+     * Generates the heatmap using visits count of each cell.
+     * @param board Current state of the board layout (object of class {@link Board}).
+     * @return Color[][] grid, which represents the heatmap.
+     */
     public Color[][] generateHeatmap(Board board){
         int width = board.getWidth();
         int height = board.getHeight();
@@ -86,10 +108,18 @@ public class Statistics {
         return heatmapColors;
     }
 
+    /**
+     * Calculates current survival rato of the simulation.
+     * @return Current survival ratio.
+     */
     public float calculateSurvivalRate(){
         return (float) savedCount / totalPeople;
     }
 
+    /**
+     * Calculates the evacuation scenario using current survival rate.
+     * @return current evacuation scenario.
+     */
     public String determineFinalScenario(){
         if (savedCount == totalPeople) {
             return "Best Scenario: All Evacuees Escaped";
