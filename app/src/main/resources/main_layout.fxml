@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="765.0" prefWidth="1146.0" style="-fx-background-color: linear-gradient(to bottom, #6c0ab7, #4214ad);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="evacuation.sim.gui.SimulationController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="765.0" prefWidth="1146.0" style="-fx-background-color: linear-gradient(to bottom, #6c0ab7, #4214ad);" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="evacuation.sim.gui.SimulationController">
    <left>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;" BorderPane.alignment="CENTER">
          <content>
@@ -438,7 +438,7 @@
                                     <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                        <children>
                                           <Slider fx:id="smokeDuplicationThresholdSlider" majorTickUnit="5.0" max="30.0" min="5.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
-                                          <Label fx:id="smokeDuplicationThreasholdLabel" text="0" />
+                                          <Label fx:id="smokeDuplicationThresholdLabel" text="0" />
                                        </children>
                                        <opaqueInsets>
                                           <Insets />
